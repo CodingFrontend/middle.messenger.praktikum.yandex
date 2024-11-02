@@ -1,0 +1,23 @@
+{{#if fileName}}
+	{{#> Modal title="Файл загружен" labelOk="Поменять" error=emptyError}}
+		<div class="avatar-modal-body">
+			<p class="avatar-modal-file">{{fileName}}</p>
+		</div>
+	{{/ Modal}}
+{{else if uploadError}}
+	{{#> Modal title="Ошибка, попробуйте еще раз" labelOk="Поменять" titleError=uploadError}}
+		<div class="avatar-modal-body">
+			<div class="avatar-modal-button">
+				{{> LinkButton label="Выберите файл на компьютере" type="primary"}}
+			</div>
+		</div>
+	{{/ Modal}}
+{{else}}
+	{{#> Modal title="Загрузите файл" labelOk="Поменять" error=emptyError}}
+		<div class="avatar-modal-body">
+			<div class="avatar-modal-button">
+				{{> LinkButton label="Выберите файл на компьютере" type="primary"}}
+			</div>
+		</div>
+	{{/ Modal}}
+{{/if}}

@@ -1,0 +1,24 @@
+{
+  "name": "messenger",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "handlebars": "4.7.8",
+    "typescript": "^5.0.2",
+    "vite": "^5.4.10"
+  },
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "handlebars": "^4.7.8",
+    "vite-plugin-handlebars": "^2.0.0"
+  },
+  "engines": {
+    "node": "16.x"
+  }
+}

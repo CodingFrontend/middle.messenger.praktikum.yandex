@@ -1,0 +1,35 @@
+@import '_variables';
+
+body {
+  overflow: auto;
+
+  margin: 0;
+
+  font-size: var(--text-md);
+  color: var(--main-text-color);
+
+  background-color: var(--main-background-color);
+}
+
+#app {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+}
+
+ul,
+li {
+  all: unset;
+}
+
+p,
+h1,
+h2,
+h3 {
+  margin: unset;
+}
+
+.page {
+  flex-grow: 1;
+}

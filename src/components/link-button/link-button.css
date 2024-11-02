@@ -1,0 +1,35 @@
+.link-button {
+  all: unset;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  cursor: pointer;
+}
+
+.link-button--primary {
+  color: var(--primary-color);
+}
+
+.link-button--attention {
+  color: var(--attention-color);
+}
+
+.link-button__icon {
+  color: var(--primary-color);
+  font-size: var(--text-sm);
+}
+
+.link-button__label {
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.link-button--secondary {
+  color: var(--secondary-text-color);
+}
+
+.link-button--secondary .link-button__icon {
+  color: var(--secondary-text-color);
+}
