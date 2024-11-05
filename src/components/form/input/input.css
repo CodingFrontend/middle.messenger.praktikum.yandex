@@ -1,0 +1,28 @@
+.input {
+  position: relative;
+}
+
+.input__field {
+  all: unset;
+  padding: 7px 0;
+
+  border-bottom: 1px solid var(--primary-color);
+}
+
+.input__label {
+  position: absolute;
+  left: 0;
+  top: 7px;
+
+  transition: 0.2s ease all;
+
+  color: var(--secondary-text-color);
+
+  pointer-events: none;
+}
+
+.input__field:focus + .input__label {
+  top: -9px;
+
+  font-size: 10px;
+}

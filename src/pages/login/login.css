@@ -1,0 +1,11 @@
+.login-page .page-title {
+  margin-bottom: 57px;
+}
+
+.login-page .form__body {
+  gap: 32px;
+}
+
+.login-page .form__footer {
+  gap: 32px;
+}

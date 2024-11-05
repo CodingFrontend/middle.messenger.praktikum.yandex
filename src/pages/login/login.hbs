@@ -1,0 +1,15 @@
+<div class="login-page">
+	{{#> FormWrapper}}
+	 	{{#*inline "title"}}
+			<h1 class="page-title">Вход</h1>
+  	{{/inline}}
+		{{#*inline "body"}}
+			{{> Input label="Логин" }}
+    	{{> Input label="Пароль" }}
+  	{{/inline}}
+		{{#*inline "footer"}}
+    	{{> Button label="Авторизоваться" type="primary" }}
+    	{{> Button label="Нет аккаунта?" type="secondary" }}
+  	{{/inline}}
+	{{/ FormWrapper}}
+</div>
