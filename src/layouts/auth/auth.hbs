@@ -1,0 +1,17 @@
+<div class='page auth-page'>
+	<div class="auth-page__card">
+		{{#> FormWrapper}}
+			{{#*inline "title"}}
+				<h1 class="page-title">
+					{{> title}}
+				</h1>
+			{{/inline}}
+			{{#*inline "content"}}
+				<div class="auth-page__body">
+					{{> content}}
+				</div>
+				{{> buttons}}
+			{{/inline}}
+		{{/ FormWrapper}}
+	</div>
+</div>

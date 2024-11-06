@@ -1,10 +1,27 @@
 @import '_variables';
 
 body {
-  overflow: hidden;
+  overflow: auto;
+
   margin: 0;
-  background-color: #ffffff;
 
   font-size: 14px;
   color: var(--main-text-color);
+
+  background-color: var(--main-background-color);
+}
+
+#app {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  flex-grow: 1;
+}
+
+.page-title {
+  margin: 0 0 57px 0;
 }

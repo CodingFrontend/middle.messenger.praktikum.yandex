@@ -1,4 +1,14 @@
 <div class='input'>
-  <input type='text' class='input__field' />
-  <label class='input__label'>{{label}}</label>
+  <input
+    type='{{type}}'
+		{{#if error}} class="input__field-error"{{/if}}
+    name='{{name}}'
+    id='{{name}}'
+    autocomplete='off'
+    placeholder='label'
+  />
+  <label for='{{name}}' class='input__label'>{{label}}</label>
+  {{#if errorText}}
+    <span class='input__error'>{{errorText}}</span>
+  {{/if}}
 </div>

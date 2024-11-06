@@ -1,0 +1,32 @@
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 52px;
+}
+
+.auth-page__card {
+  width: 340px;
+  padding: 50px 30px 30px 30px;
+
+  border-radius: 16px;
+
+  box-shadow: 0px 0px 6px 0px #00000024;
+}
+
+.auth-page__body {
+  display: flex;
+  flex-direction: column;
+
+  gap: 32px;
+}
+
+.auth-page__buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 14px;
+}

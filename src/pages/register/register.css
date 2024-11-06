@@ -1,9 +1,9 @@
-.login-page-buttons {
+.register-page-buttons {
   display: flex;
   flex-direction: column;
   align-items: center;
 
   gap: 14px;
 
-  margin-top: 159px;
+  margin-top: 50px;
 }

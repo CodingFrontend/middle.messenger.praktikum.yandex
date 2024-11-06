@@ -1,5 +1,10 @@
 :root {
   --primary-color: #3369f3;
+  --primary-color-hover: #0348f8;
+  --contrast-color: #ffffff;
   --main-text-color: #1e1e1e;
   --secondary-text-color: #999999;
+  --error-color: #ff2f2f;
+
+  --main-background-color: var(--contrast-color);
 }

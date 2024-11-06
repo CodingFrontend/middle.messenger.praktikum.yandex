@@ -1,6 +1,7 @@
 import Handlebars from 'handlebars';
 import * as Components from './components';
 import * as Pages from './pages';
+import * as Layouts from './layouts';
 
 const pages = {
   login: [Pages.LoginPage],
@@ -9,6 +10,10 @@ const pages = {
 };
 
 Object.entries(Components).forEach(([name, template]) => {
+  Handlebars.registerPartial(name, template);
+});
+
+Object.entries(Layouts).forEach(([name, template]) => {
   Handlebars.registerPartial(name, template);
 });
 
@@ -21,7 +26,7 @@ function navigate(page: string) {
   container.innerHTML = temlpatingFunction(context);
 }
 
-document.addEventListener('DOMContentLoaded', () => navigate('login'));
+document.addEventListener('DOMContentLoaded', () => navigate('register'));
 
 document.addEventListener('click', (e) => {
   //@ts-ignore

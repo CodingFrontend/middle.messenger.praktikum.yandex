@@ -2,11 +2,18 @@
   position: relative;
 }
 
-.input__field {
+input {
   all: unset;
+
+  width: 100%;
   padding: 7px 0;
 
   border-bottom: 1px solid var(--primary-color);
+}
+
+.input__field-error {
+  color: var(--error-color);
+  caret-color: var(--main-text-color);
 }
 
 .input__label {
@@ -21,8 +28,19 @@
   pointer-events: none;
 }
 
-.input__field:focus + .input__label {
+input::placeholder {
+  opacity: 0;
+}
+
+input:focus + .input__label,
+input:not(:placeholder-shown) + .input__label {
   top: -9px;
 
   font-size: 10px;
+}
+
+.input__error {
+  font-size: 10px;
+
+  color: var(--error-color);
 }

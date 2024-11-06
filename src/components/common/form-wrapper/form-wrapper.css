@@ -3,7 +3,12 @@
   flex-direction: column;
 }
 
-.form__body {
+.form__title {
+  display: flex;
+  justify-content: center;
+}
+
+.form__content {
   display: flex;
   flex-direction: column;
 }
