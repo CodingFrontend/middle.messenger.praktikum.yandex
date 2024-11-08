@@ -19,9 +19,15 @@ body {
 }
 
 ul,
-li,
-p {
+li {
   all: unset;
+}
+
+p,
+h1,
+h2,
+h3 {
+  margin: unset;
 }
 
 .page {

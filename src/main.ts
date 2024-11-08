@@ -59,6 +59,9 @@ const pages = {
           ],
         },
       ],
+      showModal: true,
+      modalTitle: 'Добавить пользователя',
+      modalButtonLabelOk: 'Добавить',
     },
   ],
 };

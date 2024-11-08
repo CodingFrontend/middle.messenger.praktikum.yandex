@@ -2,14 +2,10 @@
 	{{#*inline "title"}}
 		Вход
 	{{/inline}}
-	{{#*inline "content"}}
-		{{> Input label="Логин" name="login" type="text"}}
-		{{> Input label="Пароль" name="password" type="password"}}
-	{{/inline}}
-	{{#*inline "buttons"}}
+	{{> Input label="Логин" name="login" type="text"}}
+	{{> Input label="Пароль" name="password" type="password"}}
 	<div class="login-page-buttons">
 		{{> Button label="Авторизоваться" type="primary" }}
 		{{> Button label="Нет аккаунта?" type="link"}}
 	</div>
-	{{/inline}}
 {{/ AuthLayout}}

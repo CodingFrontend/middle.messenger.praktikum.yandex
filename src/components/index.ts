@@ -8,3 +8,5 @@ export { ChatWidgetItem } from './chat/chat-widget-item';
 export { ChatDialog } from './chat/chat-dialog';
 export { ChatMessage } from './chat/chat-message';
 export { ChatMessageGroup } from './chat/chat-message-group';
+export { Modal } from './modal';
+export { ChatModal } from './chat/chat-modal';
