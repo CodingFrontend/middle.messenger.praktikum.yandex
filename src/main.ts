@@ -64,6 +64,39 @@ const pages = {
       modalButtonLabelOk: 'Добавить',
     },
   ],
+  profile: [
+    Pages.ProfilePage,
+    {
+      email: 'email@yandex.ru',
+      login: 'admin',
+      first_name: 'Вадим',
+      last_name: 'Иванов',
+      display_name: 'Вадим',
+      phone: '+7 (909) 967 30 30',
+      showModal: true,
+      fileUploaded: false,
+      emptyError: '',
+      fileName: '',
+      uploadError: true,
+    },
+  ],
+  profileEditInfo: [
+    Pages.ProfileEditInfoPage,
+    {
+      email: 'email@yandex.ru',
+      login: 'admin',
+      first_name: 'Вадим',
+      last_name: 'Иванов',
+      display_name: 'Вадим',
+      phone: '+7 (909) 967 30 30',
+    },
+  ],
+  profileEditPassword: [
+    Pages.ProfileEditPasswordPage,
+    {
+      password: 'admin',
+    },
+  ],
 };
 
 Object.entries(Components).forEach(([name, template]) => {
@@ -90,7 +123,7 @@ function navigate(page: string) {
   container.innerHTML = temlpatingFunction(context);
 }
 
-document.addEventListener('DOMContentLoaded', () => navigate('chat'));
+document.addEventListener('DOMContentLoaded', () => navigate('profile'));
 
 document.addEventListener('click', (e) => {
   //@ts-ignore

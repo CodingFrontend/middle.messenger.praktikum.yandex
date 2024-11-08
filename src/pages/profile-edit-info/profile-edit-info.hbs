@@ -1,0 +1,25 @@
+{{#> ProfileLayout}}
+	<div class="profile-edit-info">
+		<div class="profile-row">
+			{{> CustomInput label="Почта" type="text" value=email name="email"}}
+		</div>
+		<div class="profile-row">
+			{{> CustomInput label="Логин" type="text" value=login name="login"}}
+		</div>
+		<div class="profile-row">
+			{{> CustomInput label="Имя" type="text" value=first_name name="first_name"}}
+		</div>
+		<div class="profile-row">
+			{{> CustomInput label="Фамилия" type="text" value=last_name name="last_name"}}
+		</div>
+		<div class="profile-row">
+			{{> CustomInput label="Имя в чате" type="text" value=display_name name="display_name"}}
+		</div>
+		<div class="profile-row">
+			{{> CustomInput label="Телефон" type="text" value=phone name="phone"}}
+		</div>
+	</div>
+	<div class="profile-edit-info__confirm-button">
+		{{> Button label="Сохранить" type="primary"}}
+	</div>
+{{/ ProfileLayout}}

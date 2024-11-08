@@ -4,7 +4,7 @@
 		<div class="modal-dialog__close-button">
 			<i class="fa-solid fa-x"></i>
 		</div>
-		<h2 class="modal-dialog__title">{{title}}</h2>
+		<h2 {{#if titleError}}class="modal-dialog__title modal-dialog__title--error"{{/if}} class="modal-dialog__title">{{title}}</h2>
 		<div class="modal-dialog__body">
 			{{> @partial-block }}
 		</div>
@@ -12,6 +12,9 @@
 			{{> Button label=labelOk type="primary" }}
 			{{#if labelCancel}}
 				{{> Button label=labelCancel type="link"}}
+			{{/if}}
+			{{#if error}}
+				<p class="modal-dialog__error">{{error}}</p>
 			{{/if}}
 		</div>
 	</div>

@@ -1,0 +1,37 @@
+{{#> ProfileLayout name=display_name}}
+	<div class="profile-info">
+		<div class="profile-row">
+			{{> CustomInput label="Почта" type="text" disabled="true" value=email name="email"}}
+		</div>
+		<div class="profile-row">
+			{{> CustomInput label="Логин" type="text" disabled="true" value=login name="login"}}
+		</div>
+		<div class="profile-row">
+			{{> CustomInput label="Имя" type="text" disabled="true" value=first_name name="first_name"}}
+		</div>
+		<div class="profile-row">
+			{{> CustomInput label="Фамилия" type="text" disabled="true" value=last_name name="last_name"}}
+		</div>
+		<div class="profile-row">
+			{{> CustomInput label="Имя в чате" type="text" disabled="true" value=display_name name="display_name"}}
+		</div>
+		<div class="profile-row">
+			{{> CustomInput label="Телефон" type="text" disabled="true" value=phone name="phone"}}
+		</div>
+	</div>
+	<div class="profile-actions">
+		<div class="profile-row">
+			{{> Button label="Изменить данные" type="link"}}
+		</div>
+		<div class="profile-row">
+			{{> Button label="Изменить пароль" type="link"}}
+		</div>
+		<div class="profile-row">
+			{{> Button label="Выйти" type="link"}}
+		</div>
+	</div>
+
+	{{#if showModal}}
+		{{> ChangeAvatarModal}}
+	{{/if}}
+{{/ ProfileLayout}}

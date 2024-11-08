@@ -47,17 +47,32 @@
 }
 
 .modal-dialog__title {
-  margin-bottom: 50px;
+  margin-bottom: 45px;
+}
+
+.modal-dialog__title--error {
+  color: var(--error-color);
 }
 
 .modal-dialog__footer {
   display: flex;
+  flex-direction: column;
 
   width: 100%;
 
-  margin-top: 30px;
+  margin-top: 45px;
 }
 
 .modal-dialog__footer button {
   flex-grow: 1;
+}
+
+.modal-dialog__error {
+  align-self: center;
+
+  margin-top: 14px;
+
+  color: var(--error-color);
+
+  font-size: var(--text-xs);
 }

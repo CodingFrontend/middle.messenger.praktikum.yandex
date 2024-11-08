@@ -3,7 +3,7 @@
 }
 
 .chat-item:hover {
-  background-color: var(--background-contrast-color);
+  background-color: var(--gray-400);
 }
 
 .chat-item__wrapper {

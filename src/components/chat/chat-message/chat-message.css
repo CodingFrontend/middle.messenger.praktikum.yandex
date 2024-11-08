@@ -31,7 +31,7 @@
 }
 
 .chat-message--upcoming .chat-message-text {
-  background-color: var(--background-contrast-color);
+  background-color: var(--gray-400);
 
   border-bottom-right-radius: 0;
 }

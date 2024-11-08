@@ -1,6 +1,7 @@
 export { Button } from './button';
 export { FormWrapper } from './form-wrapper';
 export { Input } from './form/input';
+export { CustomInput } from './form/custom-input';
 export { ChatList } from './chat/chat-list';
 export { ChatItem } from './chat/chat-item';
 export { ChatWidget } from './chat/chat-widget';
@@ -10,3 +11,5 @@ export { ChatMessage } from './chat/chat-message';
 export { ChatMessageGroup } from './chat/chat-message-group';
 export { Modal } from './modal';
 export { ChatModal } from './chat/chat-modal';
+export { GoBack } from './go-back';
+export { ChangeAvatarModal } from './profile/change-avatar-modal';
