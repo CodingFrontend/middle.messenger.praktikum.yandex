@@ -1,0 +1,35 @@
+<div class='chat-dialog'>
+  <div class='chat-dialog-top'>
+    <div class='chat-dialog-top__user'>
+      {{! Avatar component }}
+      <div class='chat-dialog-top__user-name'>{{userName}}</div>
+    </div>
+    {{! Сделать компонент кнопки иконки }}
+		<div class="chat-dialog-top__actions">
+			<div class='chat-dialog-top__actions-button'>
+				<i class='fa-solid fa-ellipsis-vertical'></i>
+			</div>
+			<div class="chat-dialog-top__actions-widget">
+				{{> ChatWidget chatWidgetItems=chatWidgetItems}}
+			</div>
+		</div>
+  </div>
+	<div class="chat-dialog-content">
+		{{> ChatMessageGroup }}
+	</div>
+	<div class="chat-dialog-bottom">
+		{{!-- <div class="chat-dialog-bottom__actions">
+			<div class="chat-dialog-bottom__actions-button">
+		  	{{! Сделать компонент кнопки иконки }}
+				<i class="fa-solid fa-paperclip"></i>
+			</div>
+		</div> --}}
+		<div class="chat-dialog-bottom__field">
+			<input type="text" placeholder="Сообщение">
+		</div>
+		  {{! Сделать компонент кнопки иконки }}
+		<div class="chat-dialog-bottom__send-button">
+			Button
+		</div>
+	</div>
+</div>

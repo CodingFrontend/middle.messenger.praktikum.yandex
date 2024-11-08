@@ -5,7 +5,7 @@ body {
 
   margin: 0;
 
-  font-size: 14px;
+  font-size: var(--text-md);
   color: var(--main-text-color);
 
   background-color: var(--main-background-color);
@@ -16,6 +16,12 @@ body {
 
   display: flex;
   flex-direction: column;
+}
+
+ul,
+li,
+p {
+  all: unset;
 }
 
 .page {

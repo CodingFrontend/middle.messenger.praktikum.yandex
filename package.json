@@ -14,6 +14,7 @@
     "vite": "^5.4.10"
   },
   "dependencies": {
+    "font-awesome": "^4.7.0",
     "vite-plugin-handlebars": "^2.0.0"
   }
 }

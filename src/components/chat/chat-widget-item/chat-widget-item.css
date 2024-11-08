@@ -1,0 +1,16 @@
+.chat-widget__item {
+  display: flex;
+  align-items: center;
+}
+
+.chat-widget__icon {
+  margin-inline-end: 15px;
+
+  color: var(--primary-color);
+}
+
+.chat-widget__text {
+  font-size: var(--text-sm);
+
+  text-wrap: nowrap;
+}

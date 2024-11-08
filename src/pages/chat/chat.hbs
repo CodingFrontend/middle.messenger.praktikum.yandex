@@ -1,0 +1,25 @@
+<div class='page chat-page'>
+  <div class='chat-left'>
+    <div class='chat-left__top'>
+			<a href="#" class="chat-left__profile-link">
+				Профиль
+				<span class="arrow"></span>
+			</a>
+    </div>
+		<div class='chat-left__search'>
+			  <input type='search' name='search' autocomplete='off' placeholder='Поиск'/>
+    </div>
+		<div class='chat-left__content'>
+			{{> ChatList }}
+    </div>
+  </div>
+  <div class='chat-content'>
+		{{#if isChatSelected}}
+			{{> ChatDialog }}
+		{{else}}
+			<div class="chat-content-empty">
+				<p>Выберите чат чтобы отправить сообщение</p>
+			</div>
+		{{/if}}
+	</div>
+</div>

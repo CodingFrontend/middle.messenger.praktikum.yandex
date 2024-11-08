@@ -1,0 +1,28 @@
+<div class='chat-item'>
+  <div class='chat-item__wrapper'>
+    <div class='chat-item__image'>
+      {{#if image}}
+        <img src='{{image}}' alt='avatar-image' />
+      {{/if}}
+    </div>
+    <div class='chat-item__content'>
+      <div class='chat-item__top'>
+        <div class='chat-item__name'>{{name}}</div>
+        <div class='chat-item__date'>{{date}}</div>
+      </div>
+      <div class='chat-item__body'>
+        <div class='chat-item__message'>
+          {{#if isMessgaeUpcoming}}
+            <span class='chat-item__message-mine'>Вы: </span>
+          {{/if}}
+          <span class='chat-item__message-text'>{{message}}</span>
+        </div>
+      </div>
+      {{#if count}}
+        <div class='chat-item__count'>
+          {{count}}
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</div>

@@ -5,6 +5,17 @@
   --main-text-color: #1e1e1e;
   --secondary-text-color: #999999;
   --error-color: #ff2f2f;
+  --light-color: #eaeaea;
+  --light-gray-color: #efefef;
+  --gray-color: #f8f8f8;
+  --background-contrast-color: #e4edfd;
 
   --main-background-color: var(--contrast-color);
+  --secondary-background-color: var(--light-gray-color);
+  --light-background-color: var(--gray-color);
+  --border-color: var(--light-color);
+
+  --text-sm: 13px;
+  --text-md: 14px;
+  --text-xs: 10px;
 }
