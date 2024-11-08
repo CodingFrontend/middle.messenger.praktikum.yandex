@@ -65,3 +65,33 @@
   top: 35px;
   right: -10px;
 }
+
+.chat-dialog-bottom__field {
+  display: flex;
+}
+
+.chat-dialog-bottom__field input {
+  all: unset;
+
+  flex-grow: 1;
+  padding: 10px 20px;
+
+  background-color: var(--secondary-background-color);
+
+  border-radius: 30px;
+}
+
+.chat-dialog-bottom__field input::placeholder {
+  color: var(--secondary-text-color);
+}
+
+.chat-dialog-top__user {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.chat-dialog-top__user-name {
+  font-weight: 600;
+}

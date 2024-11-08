@@ -21,12 +21,14 @@ const pages = {
           message:
             'Друзья, у меня для вас особенный выпуск новостей! В общем говоря,',
           count: 4,
+          image: '',
         },
         {
           name: 'Вадим',
           date: '12:00',
           message: 'Круто',
-          isMessgaeUpcoming: true,
+          isMessageUpcoming: true,
+          image: '',
         },
       ],
       isChatSelected: true,
@@ -59,7 +61,7 @@ const pages = {
           ],
         },
       ],
-      showModal: true,
+      // showModal: true,
       modalTitle: 'Добавить пользователя',
       modalButtonLabelOk: 'Добавить',
     },
@@ -73,7 +75,7 @@ const pages = {
       last_name: 'Иванов',
       display_name: 'Вадим',
       phone: '+7 (909) 967 30 30',
-      showModal: true,
+      // showModal: true,
       fileUploaded: false,
       emptyError: '',
       fileName: '',
@@ -125,7 +127,7 @@ function navigate(page: string) {
   container.innerHTML = temlpatingFunction(context);
 }
 
-document.addEventListener('DOMContentLoaded', () => navigate('notFound'));
+document.addEventListener('DOMContentLoaded', () => navigate('profile'));
 
 document.addEventListener('click', (e) => {
   //@ts-ignore

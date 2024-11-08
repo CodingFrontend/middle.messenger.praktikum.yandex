@@ -3,7 +3,7 @@
 	<div class="profile-page__content">
 		<div class="profile-page__card">
 				<div class="profile-page__avatar">
-					<div class="profile-page__avatar-image">Avatar</div>
+					{{> Avatar image=image size="large"}}
 					{{#if name}}
 						<p class="profile-page__avatar-name">{{name}}</p>
 					{{/if}}

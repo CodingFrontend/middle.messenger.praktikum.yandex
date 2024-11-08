@@ -46,12 +46,16 @@
   width: 100%;
 }
 
+.modal-dialog__body input {
+  flex-grow: 1;
+}
+
 .modal-dialog__title {
   margin-bottom: 45px;
 }
 
 .modal-dialog__title--error {
-  color: var(--error-color);
+  color: var(--attention-color);
 }
 
 .modal-dialog__footer {
@@ -72,7 +76,7 @@
 
   margin-top: 14px;
 
-  color: var(--error-color);
+  color: var(--attention-color);
 
   font-size: var(--text-xs);
 }

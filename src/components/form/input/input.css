@@ -12,7 +12,7 @@
 }
 
 .input__field-error {
-  color: var(--error-color);
+  color: var(--attention-color);
   caret-color: var(--main-text-color);
 }
 
@@ -42,5 +42,5 @@
 .input__error {
   font-size: var(--text-xs);
 
-  color: var(--error-color);
+  color: var(--attention-color);
 }

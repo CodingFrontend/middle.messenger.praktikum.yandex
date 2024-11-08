@@ -1,11 +1,13 @@
 export { Button } from './button';
+export { IconButton } from './icon-button';
+export { LinkButton } from './link-button';
 export { FormWrapper } from './form-wrapper';
+export { Avatar } from './avatar';
 export { Input } from './form/input';
 export { CustomInput } from './form/custom-input';
 export { ChatList } from './chat/chat-list';
 export { ChatItem } from './chat/chat-item';
 export { ChatWidget } from './chat/chat-widget';
-export { ChatWidgetItem } from './chat/chat-widget-item';
 export { ChatDialog } from './chat/chat-dialog';
 export { ChatMessage } from './chat/chat-message';
 export { ChatMessageGroup } from './chat/chat-message-group';
