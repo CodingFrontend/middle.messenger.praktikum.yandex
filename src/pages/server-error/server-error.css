@@ -1,0 +1,18 @@
+.server-error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.server-error__number {
+  font-size: 40px;
+
+  margin-bottom: 20px;
+}
+
+.server-error__text {
+  font-size: 20px;
+
+  margin-bottom: 69px;
+}

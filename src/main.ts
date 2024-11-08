@@ -97,6 +97,8 @@ const pages = {
       password: 'admin',
     },
   ],
+  serverError: [Pages.ServerErrorPage],
+  notFound: [Pages.NotFoundPage],
 };
 
 Object.entries(Components).forEach(([name, template]) => {
@@ -123,7 +125,7 @@ function navigate(page: string) {
   container.innerHTML = temlpatingFunction(context);
 }
 
-document.addEventListener('DOMContentLoaded', () => navigate('profile'));
+document.addEventListener('DOMContentLoaded', () => navigate('notFound'));
 
 document.addEventListener('click', (e) => {
   //@ts-ignore

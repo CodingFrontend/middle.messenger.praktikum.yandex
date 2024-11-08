@@ -5,3 +5,5 @@ export { ChatPage } from './chat';
 export { ProfilePage } from './profile';
 export { ProfileEditInfoPage } from './profile-edit-info';
 export { ProfileEditPasswordPage } from './profile-edit-password';
+export { ServerErrorPage } from './server-error';
+export { NotFoundPage } from './not-found';
