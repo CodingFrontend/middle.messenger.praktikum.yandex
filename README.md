@@ -1,3 +1,3 @@
-PR Sprint 1
+## PR Sprint 1
 
-https://github.com/CodingFrontend/middle.messenger.praktikum.yandex/pull/3
+[link text itself] https://github.com/CodingFrontend/middle.messenger.praktikum.yandex/pull/3
