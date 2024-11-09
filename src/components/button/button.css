@@ -1,6 +1,5 @@
 .button {
-  all: unset;
-
+  border: unset;
   text-align: center;
 
   cursor: pointer;
@@ -19,12 +18,4 @@
 
 .button--primary:hover {
   background-color: var(--primary-color-hover);
-}
-
-.button--link {
-  color: var(--primary-color);
-}
-
-.button--link:hover {
-  text-decoration: underline;
 }

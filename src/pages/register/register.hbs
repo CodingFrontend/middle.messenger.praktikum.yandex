@@ -1,20 +1,9 @@
-{{#> AuthLayout}}
-	{{#*inline "title"}}
-		Регистрация
-	{{/inline}}
-	{{#*inline "content"}}
-		{{> Input label="Почта" name="email" type="email" errorText="Неверная почта"}}
-		{{> Input label="Логин" name="login" type="text"}}
-		{{> Input label="Имя" name="first_name" type="text"}}
-		{{> Input label="Фамилия" name="second_name" type="text"}}
-		{{> Input label="Телефон" name="phone" type="phone"}}
-		{{> Input label="Пароль" name="password" type="password" error="true"}}
-		{{> Input label="Пароль (еще раз)" name="password_repeat" type="password" error="true" errorText="Пароли не совпадают"}}
-	{{/inline}}
-	{{#*inline "buttons"}}
-	<div class="register-page-buttons">
-		{{> Button label="Зарегистрироваться" type="primary" }}
-		{{> Button label="Войти" type="link"}}
-	</div>
-	{{/inline}}
+{{#> AuthLayout title="Регистрация" labelOk="Зарегистрироваться" labelCancel="Войти"}}
+	{{> Input label="Почта" name="email" type="email" errorText="Неверная почта"}}
+	{{> Input label="Логин" name="login" type="text"}}
+	{{> Input label="Имя" name="first_name" type="text"}}
+	{{> Input label="Фамилия" name="second_name" type="text"}}
+	{{> Input label="Телефон" name="phone" type="phone"}}
+	{{> Input label="Пароль" name="password" type="password" error="true"}}
+	{{> Input label="Пароль (еще раз)" name="password_repeat" type="password" error="true" errorText="Пароли не совпадают"}}
 {{/ AuthLayout}}

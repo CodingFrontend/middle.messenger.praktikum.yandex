@@ -1,4 +1,16 @@
 {{#> ProfileLayout name=display_name}}
+	<div class="profile-page-avatar">
+		{{#> Avatar image=image size="large"}}
+			<div class="profile-page-avatar__image">
+				<div class="profile-page-avatar__image-hover">
+					<span>Поменять аватар</span>
+				</div>
+			</div>
+		{{/ Avatar}}
+		{{#if display_name}}
+			<p class="profile-page-avatar-name">{{display_name}}</p>
+		{{/if}}
+	</div>
 	<div class="profile-info">
 		<div class="profile-row">
 			{{> CustomInput label="Почта" type="text" disabled="true" value=email name="email"}}

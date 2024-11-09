@@ -20,3 +20,12 @@
 .profile-edit-password__confirm-button button {
   width: 280px;
 }
+
+.profile-edit-page-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+
+  margin-bottom: 85px;
+}

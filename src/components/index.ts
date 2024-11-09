@@ -15,3 +15,4 @@ export { Modal } from './modal';
 export { ChatModal } from './chat/chat-modal';
 export { GoBack } from './go-back';
 export { ChangeAvatarModal } from './profile/change-avatar-modal';
+export { PageTitle } from './page-title';

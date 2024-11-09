@@ -2,16 +2,15 @@
 	<div class="auth-page__card">
 		{{#> FormWrapper}}
 			{{#*inline "title"}}
-				<h1 class="page-title">
-					{{> title}}
-				</h1>
+				{{> PageTitle title=title}}
 			{{/inline}}
-			{{#*inline "content"}}
-				<div class="auth-page__body">
-					{{> content}}
-				</div>
-				{{> buttons}}
-			{{/inline}}
+			<div class="auth-page__body">
+				{{> @partial-block}}
+			</div>
+			<div class="auth-page__buttons">
+				{{> Button label=labelOk type="primary" }}
+				{{> LinkButton label=labelCancel type="primary" }}
+			</div>
 		{{/ FormWrapper}}
 	</div>
 </div>
