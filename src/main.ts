@@ -113,8 +113,10 @@ Object.entries(Layouts).forEach(([name, template]) => {
 
 Handlebars.registerHelper('ifCond', function (v1, v2, options) {
   if (v1 === v2) {
+    //@ts-ignore
     return options.fn(this);
   }
+  //@ts-ignore
   return options.inverse(this);
 });
 
