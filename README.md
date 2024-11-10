@@ -5,7 +5,7 @@
 
 ## Netlify link
 
-[[https://voluble-valkyrie-23052a.netlify.app/](https://voluble-valkyrie-23052a.netlify.app/)]
+https://fantastic-sorbet-d8ea1a.netlify.app/
 
 ## Project Setup
 
