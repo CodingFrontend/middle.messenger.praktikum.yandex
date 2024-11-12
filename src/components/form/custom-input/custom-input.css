@@ -1,0 +1,21 @@
+.custom-input {
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom-input__label {
+  font-weight: 500;
+}
+
+.custom-input input {
+  all: unset;
+
+  text-align: right;
+  font-weight: 500;
+
+  color: var(--secondary-text-color);
+}
+
+.custom-input input:focus {
+  color: var(--main-text-color);
+}
