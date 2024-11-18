@@ -3,6 +3,8 @@ import * as Components from './components';
 import * as Pages from './pages';
 import * as Layouts from './layouts';
 
+import { render } from '@/src/core/renderDom';
+
 const pages = {
   login: [Pages.LoginPage],
   register: [Pages.RegisterPage],
@@ -104,10 +106,18 @@ const pages = {
 };
 
 Object.entries(Components).forEach(([name, template]) => {
+  if (typeof template === 'function') {
+    return;
+  }
+
   Handlebars.registerPartial(name, template);
 });
 
 Object.entries(Layouts).forEach(([name, template]) => {
+  if (typeof template === 'function') {
+    return;
+  }
+
   Handlebars.registerPartial(name, template);
 });
 
@@ -123,13 +133,16 @@ Handlebars.registerHelper('ifCond', function (v1, v2, options) {
 function navigate(page: string) {
   //@ts-ignore
   const [source, context] = pages[page];
-  const container = document.getElementById('app')!;
+  if (typeof source === 'function') {
+    render('#app', new source());
+    return;
+  }
 
   const temlpatingFunction = Handlebars.compile(source);
   container.innerHTML = temlpatingFunction(context);
 }
 
-document.addEventListener('DOMContentLoaded', () => navigate('nav'));
+document.addEventListener('DOMContentLoaded', () => navigate('register'));
 
 document.addEventListener('click', (e) => {
   //@ts-ignore

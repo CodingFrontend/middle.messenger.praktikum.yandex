@@ -11,7 +11,7 @@
   border-bottom: 1px solid var(--primary-color);
 }
 
-.input__field-error {
+input.input__field-error {
   color: var(--attention-color);
   caret-color: var(--main-text-color);
 }
