@@ -1,0 +1,18 @@
+export default {
+  isGeneralInfo: true,
+  isEditInfo: false,
+  isEditPassword: false,
+  email: 'email@yandex.ru',
+  login: 'admin',
+  first_name: 'Вадим',
+  last_name: 'Иванов',
+  display_name: 'Вадим',
+  phone: '+7 (909) 967 30 30',
+  showModal: false,
+  fileUploaded: false,
+  emptyError: '',
+  fileName: '',
+  uploadError: true,
+  password: 'admin',
+  image: '',
+};

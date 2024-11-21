@@ -1,16 +1,23 @@
 {{#> ProfileLayout name=display_name}}
 	<div class="profile-page-avatar">
-		{{#> Avatar image=image size="large"}}
-			<div class="profile-page-avatar__image">
-				<div class="profile-page-avatar__image-hover">
-					<span>Поменять аватар</span>
-				</div>
+		{{#if isGeneralInfo}}
+			{{#> Avatar image=image size="large"}}
+					<div class="profile-page-avatar-image">
+						<div class="profile-page-avatar-image__hover">
+							<span>Поменять аватар</span>
+						</div>
+					</div>
+			{{/ Avatar}}
+			{{#if display_name}}
+				<p class="profile-page-avatar-name">{{display_name}}</p>
+			{{/if}}
+		{{#else}}
+			<div class="profile-edit-password-avatar">
+				{{#> Avatar image=image size="large"}}{{/ Avatar}}
 			</div>
-		{{/ Avatar}}
-		{{#if display_name}}
-			<p class="profile-page-avatar-name">{{display_name}}</p>
 		{{/if}}
 	</div>
+	{{#if isGeneralInfo}}
 	<div class="profile-info">
 		<div class="profile-row">
 			{{> CustomInput label="Почта" type="text" disabled="true" value=email name="email"}}
@@ -31,17 +38,58 @@
 			{{> CustomInput label="Телефон" type="text" disabled="true" value=phone name="phone"}}
 		</div>
 	</div>
-	<div class="profile-actions">
-		<div class="profile-row">
-			{{> LinkButton label="Изменить данные" type="primary"}}
+	{{#elseif isEditInfo}}
+		<div class="profile-edit-info">
+			<div class="profile-row">
+				{{> CustomInput label="Почта" type="text" value=email name="email"}}
+			</div>
+			<div class="profile-row">
+				{{> CustomInput label="Логин" type="text" value=login name="login"}}
+			</div>
+			<div class="profile-row">
+				{{> CustomInput label="Имя" type="text" value=first_name name="first_name"}}
+			</div>
+			<div class="profile-row">
+				{{> CustomInput label="Фамилия" type="text" value=last_name name="last_name"}}
+			</div>
+			<div class="profile-row">
+				{{> CustomInput label="Имя в чате" type="text" value=display_name name="display_name"}}
+			</div>
+			<div class="profile-row">
+				{{> CustomInput label="Телефон" type="text" value=phone name="phone"}}
+			</div>
 		</div>
-		<div class="profile-row">
-			{{> LinkButton label="Изменить пароль" type="primary"}}
+	{{#elseif isEditPassword}}
+		<div class="profile-edit-password">
+			<div class="profile-row">
+				{{> CustomInput label="Старый пароль" type="password" value=password name="oldPassword"}}
+			</div>
+			<div class="profile-row">
+				{{> CustomInput label="Новый пароль" type="password" name="new_password"}}
+			</div>
+			<div class="profile-row">
+				{{> CustomInput label="Повторите новый пароль" type="password" name="new_password_repeat"}}
+			</div>
 		</div>
-		<div class="profile-row">
-			{{> LinkButton label="Выйти" type="attention"}}
+	{{/if}}
+
+	{{#if isGeneralInfo}}
+		<div class="profile-actions">
+			<div class="profile-row">
+				{{> LinkButton label="Изменить данные" type="primary"}}
+			</div>
+			<div class="profile-row">
+				{{> LinkButton label="Изменить пароль" type="primary"}}
+			</div>
+			<div class="profile-row">
+				{{> LinkButton label="Выйти" type="attention"}}
+			</div>
 		</div>
+	{{#else}}
+	<div class="profile-edit-info__confirm-button">
+		{{> Button label="Сохранить" type="primary"}}
 	</div>
+	{{/if}}
 
 	{{#if showModal}}
 		{{> ChangeAvatarModal}}

@@ -1,20 +1,20 @@
-.chat-message {
+.chat-messages-item {
   max-width: 402px;
 }
 
-.chat-message:not(:last-child) {
+.chat-messages-item:not(:last-child) {
   margin-bottom: 30px;
 }
 
-.chat-message--incoming:has(+ .chat-message--incoming) {
+.chat-messages-item--incoming:has(+ .chat-messages-item--incoming) {
   margin-bottom: 10px;
 }
 
-.chat-message--upcoming:has(+ .chat-message--upcoming) {
+.chat-messages-item--upcoming:has(+ .chat-messages-item--upcoming) {
   margin-bottom: 10px;
 }
 
-.chat-message-text {
+.chat-messages-item-text {
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
@@ -24,19 +24,19 @@
   border-radius: 7px;
 }
 
-.chat-message--incoming .chat-message-text {
+.chat-messages-item--incoming .chat-messages-item-text {
   background-color: var(--light-background-color);
 
   border-top-left-radius: 0;
 }
 
-.chat-message--upcoming .chat-message-text {
+.chat-messages-item--upcoming .chat-messages-item-text {
   background-color: var(--gray-400);
 
   border-bottom-right-radius: 0;
 }
 
-.chat-message-text__info {
+.chat-messages-item-text__info {
   align-self: end;
 
   display: flex;
@@ -47,14 +47,14 @@
   font-size: var(--text-xs);
 }
 
-.chat-message--incoming .chat-message-text__info {
+.chat-messages-item--incoming .chat-messages-item-text__info {
   color: var(--secondary-text-color);
 }
 
-.chat-message--upcoming .chat-message-text__info {
+.chat-messages-item--upcoming .chat-messages-item-text__info {
   color: var(--primary-color);
 }
 
-.chat-message-text__status {
+.chat-messages-item-text__status {
   font-size: 9px;
 }

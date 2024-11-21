@@ -62,9 +62,7 @@ export default class Block {
     }
 
     if (typeof props.attrs === 'object') {
-      console.log(true);
       Object.entries(props.attrs).forEach(([attrName, attrValue]) => {
-        console.log(attrName, attrValue);
         this._element.setAttribute(attrName, attrValue);
       });
     }
@@ -97,7 +95,6 @@ export default class Block {
         props[key] = value;
       }
     });
-    console.log(children);
     return { children, props };
   }
 
@@ -183,7 +180,6 @@ export default class Block {
         stub?.replaceWith(child.getContent());
       }
     });
-    console.log(5, fragment);
     return fragment.content;
   }
 

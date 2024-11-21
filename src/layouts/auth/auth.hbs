@@ -1,9 +1,7 @@
 <main class='page auth-page'>
-	<div class="auth-page__card">
-		{{#> FormWrapper}}
-			{{#*inline "title"}}
-				{{> PageTitle title=title}}
-			{{/inline}}
+	<div class="auth-page-card">
+		<form class="form">
+			{{> PageTitle title=title}}
 			<div class="auth-page__body">
 				{{> @partial-block}}
 			</div>
@@ -11,6 +9,6 @@
 				{{> Button label=labelOk type="primary" }}
 				{{> LinkButton label=labelCancel type="primary" }}
 			</div>
-		{{/ FormWrapper}}
+		</form>
 	</div>
 </main>

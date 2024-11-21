@@ -5,7 +5,7 @@ import { Input } from '@/src/components/form/Input';
 class RegisterContent extends Block {
   constructor() {
     super('div', {
-      classList: 'auth-page__body',
+      classList: 'auth-form-body',
       InputEmail: new Input({
         label: 'Почта',
         name: 'email',
@@ -59,7 +59,8 @@ class RegisterContent extends Block {
 
 export default class RegisterPage extends Block {
   constructor() {
-    super('div', {
+    super('main', {
+      classList: 'page auth-page',
       AuthLayout: new AuthLayout({
         title: 'Регистрация',
         labelOk: 'Зарегистрироваться',

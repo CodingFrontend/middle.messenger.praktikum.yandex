@@ -1,2 +1,2 @@
 import './chat-dialog.css';
-export { default as ChatDialog } from './chat-dialog.hbs?raw';
+export { default as ChatDialog } from './chat-dialog.ts';

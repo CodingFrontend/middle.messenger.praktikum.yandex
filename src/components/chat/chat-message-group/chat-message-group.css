@@ -13,12 +13,3 @@
 
   font-size: var(--text-sm);
 }
-
-.chat-message-group__items {
-  display: flex;
-  flex-direction: column;
-}
-
-.chat-message-group__items .chat-message--upcoming {
-  align-self: end;
-}

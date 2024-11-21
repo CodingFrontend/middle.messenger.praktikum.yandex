@@ -1,12 +1,8 @@
 <div class="chat-message-group">
 	{{#each messages}}
-		<div class="chat-message-group__date">
+		<div class="chat-messages__date">
 			<span>{{date}}</span>
 		</div>
-		<div class="chat-message-group__items">
-			{{#each items}}
-				{{> ChatMessage}}
-			{{/each}}
-		</div>
+		{{> ChatMessages}}
   {{/each}}
 </div>

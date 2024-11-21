@@ -1,2 +1,2 @@
 import './server-error.css';
-export { default as ServerErrorPage } from './server-error.hbs?raw';
+export { default as ServerErrorPage } from './server-error.ts';

@@ -38,7 +38,7 @@ const pages = {
       messages: [
         {
           date: '19 июня',
-          items: [
+          messages: [
             {
               type: 'incoming',
               content: 'text',
@@ -71,6 +71,9 @@ const pages = {
   profile: [
     Pages.ProfilePage,
     {
+      isGeneralInfo: true,
+      isEditInfo: false,
+      isEditPassword: false,
       email: 'email@yandex.ru',
       login: 'admin',
       first_name: 'Вадим',
@@ -82,22 +85,6 @@ const pages = {
       emptyError: '',
       fileName: '',
       uploadError: true,
-    },
-  ],
-  profileEditInfo: [
-    Pages.ProfileEditInfoPage,
-    {
-      email: 'email@yandex.ru',
-      login: 'admin',
-      first_name: 'Вадим',
-      last_name: 'Иванов',
-      display_name: 'Вадим',
-      phone: '+7 (909) 967 30 30',
-    },
-  ],
-  profileEditPassword: [
-    Pages.ProfileEditPasswordPage,
-    {
       password: 'admin',
     },
   ],
@@ -138,11 +125,13 @@ function navigate(page: string) {
     return;
   }
 
+  const container = document.getElementById('app')!;
+
   const temlpatingFunction = Handlebars.compile(source);
   container.innerHTML = temlpatingFunction(context);
 }
 
-document.addEventListener('DOMContentLoaded', () => navigate('register'));
+document.addEventListener('DOMContentLoaded', () => navigate('login'));
 
 document.addEventListener('click', (e) => {
   //@ts-ignore
