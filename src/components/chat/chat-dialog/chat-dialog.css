@@ -38,16 +38,6 @@
   border-top: 1px solid var(--border-color);
 }
 
-.chat-dialog-bottom__field {
-  flex-grow: 1;
-
-  display: flex;
-}
-
-.chat-dialog-bottom__field input {
-  flex-grow: 1;
-}
-
 .chat-dialog-top__actions {
   position: relative;
 }
@@ -68,21 +58,8 @@
 
 .chat-dialog-bottom__field {
   display: flex;
-}
-
-.chat-dialog-bottom__field input {
-  all: unset;
 
   flex-grow: 1;
-  padding: 10px 20px;
-
-  background-color: var(--secondary-background-color);
-
-  border-radius: 30px;
-}
-
-.chat-dialog-bottom__field input::placeholder {
-  color: var(--secondary-text-color);
 }
 
 .chat-dialog-top__user {

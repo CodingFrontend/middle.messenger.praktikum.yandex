@@ -4,6 +4,7 @@ import {
   checkPhone,
   checkPassword,
   checkFirstAndLastNames,
+  checkEmpty,
 } from './rules.ts';
 
 export const validateField = (key: string, value: string) => {
@@ -27,6 +28,9 @@ export const validateField = (key: string, value: string) => {
       break;
     case 'second_name':
       error = checkFirstAndLastNames(value, 'Фамилия');
+      break;
+    case 'message':
+      error = checkEmpty(value);
       break;
   }
 
