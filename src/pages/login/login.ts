@@ -1,6 +1,7 @@
 import Block from '@/src/core/block';
 import { AuthLayout } from '@/src/layouts/auth';
 import { Input, Button, LinkButton } from '@/src/components';
+import { checkLogin } from '@/src/utils/rules';
 
 class AuthContent extends Block {
   constructor() {
@@ -20,7 +21,7 @@ class AuthContent extends Block {
         type: 'text',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          const error = value === 'error' ? 'Some error' : '';
+          let error = checkLogin(value);
 
           this.children.InputLogin.setProps({
             error,
@@ -34,8 +35,6 @@ class AuthContent extends Block {
               login: value,
             },
           });
-
-          console.log(this.props.loginForm);
         },
       }),
       InputPassword: new Input({
@@ -60,10 +59,12 @@ class AuthContent extends Block {
           });
         },
       }),
-      // ToDo: Добавить type confirm
       ButtonOk: new Button({
         label: 'Авторизоваться',
         type: 'primary',
+        attrs: {
+          type: 'confirm',
+        },
         onClick: (e) => {
           e.preventDefault();
           console.log(this.props.loginForm);
@@ -74,7 +75,6 @@ class AuthContent extends Block {
         type: 'primary',
         onClick: (e) => {
           e.preventDefault();
-          console.log(this.props);
         },
       }),
     });

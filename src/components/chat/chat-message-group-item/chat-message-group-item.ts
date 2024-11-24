@@ -1,5 +1,5 @@
 import Block from '@/src/core/block';
-import { ChatMessageGroupItem } from '@/src/components';
+import { ChatMessages } from '@/src/components';
 export interface IChatMessageGroup {
   id: string;
   date: string;
@@ -11,17 +11,15 @@ export default class ChatMessageGroup extends Block {
     super('div', {
       ...props,
       classList: 'chat-message-group',
-      groupsList: props.groups.map(
-        (group) => new ChatMessageGroupItem({ ...group })
-      ),
+      messages: new ChatMessages({ messages: props.messages }),
     });
   }
   public render(): string {
-    console.log(11, this.props);
     return `
-    {{#each groupsList}}
-			{{{ this }}}
-		{{/each}}
+			<div class="chat-messages__date">
+				<span>{{date}}</span>
+			</div>
+			{{{ messages }}}
     `;
   }
 }

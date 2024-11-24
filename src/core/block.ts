@@ -77,6 +77,8 @@ export default class Block {
     const children = {};
     const props = {};
 
+    // console.log(1, propsWithChildren);
+
     Object.entries(propsWithChildren).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         value.forEach((obj) => {
@@ -89,12 +91,21 @@ export default class Block {
 
         return;
       }
+
       if (value instanceof Block) {
-        children[key] = value;
+        console.log('value', value);
+        // if (Object.keys(value.children).length) {
+        //   this._getChildrenAndProps(value.children);
+        // } else
+        {
+          children[key] = value;
+        }
       } else {
         props[key] = value;
       }
     });
+
+    console.log(children);
     return { children, props };
   }
 
@@ -150,7 +161,6 @@ export default class Block {
 
   _compile() {
     const propsAndStubs = { ...this.props };
-
     Object.entries(this.children).forEach(([key, child]) => {
       if (Array.isArray(child)) {
         propsAndStubs[key] = child.map(
@@ -160,11 +170,9 @@ export default class Block {
         propsAndStubs[key] = `<div data-id="${child._id}"></div>`;
       }
     });
-
     const fragment = this._createDocumentElement('template');
     const template = Handlebars.compile(this.render());
     fragment.innerHTML = template(propsAndStubs);
-
     Object.values(this.children).forEach((child) => {
       if (Array.isArray(child)) {
         child.forEach((component) => {
@@ -177,6 +185,7 @@ export default class Block {
       } else {
         const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
 
+        // console.log(this._element, stub, child.getContent());
         stub?.replaceWith(child.getContent());
       }
     });

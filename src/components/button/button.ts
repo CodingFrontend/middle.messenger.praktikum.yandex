@@ -1,10 +1,10 @@
 import Block from '@/src/core/block';
 
-type ButtonProps = {
+interface ButtonProps {
   label: string;
   type?: string;
   onClick?: (e: Event) => void;
-};
+}
 
 export default class Button extends Block {
   constructor(props: ButtonProps) {

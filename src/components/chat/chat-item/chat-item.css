@@ -2,6 +2,7 @@
   padding: 0px 10px;
 }
 
+.chat-item--active,
 .chat-item:hover {
   background-color: var(--gray-400);
 }

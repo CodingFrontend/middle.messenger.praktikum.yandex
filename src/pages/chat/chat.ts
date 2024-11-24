@@ -1,33 +1,39 @@
 import Block from '@/src/core/block';
-import { LinkButton, ChatList, ChatModal, ChatDialog } from '@/src/components';
-import { chatWidgetItems, chatItems, messagesGroup } from './chatDataMock';
+import { LinkButton, ChatList, ChatDialog } from '@/src/components';
+import { chatItems, chatDialogs } from '../../mockData/chatDataMock';
 
 export default class Chat extends Block {
   constructor() {
     super('main', {
+      activeChatId: '1',
       classList: 'page chat-page',
+      showChatWidget: false,
       LinkButton: new LinkButton({
         label: 'Профиль',
         type: 'secondary',
       }),
       ChatList: new ChatList({
         items: chatItems,
+        onChatSelect: (id) =>
+          this.setProps({ activeChatId: id, showChatDialog: true }),
       }),
-      ChatDialog: new ChatDialog({
-        userName: 'Вадим',
-        image: '',
-        chatWidgetItems: chatWidgetItems,
-        messages: messagesGroup,
-      }),
-      ChatModal: new ChatModal({
-        modalTitle: 'Добавить пользователя',
-        modalButtonLabelOk: 'Добавить',
-      }),
-      isChatSelected: true,
+      ChatDialog: new ChatDialog(chatDialogs[0]),
     });
   }
 
   public render(): string {
+    // const { activeChatId } = this.props;
+    // const { ChatDialog } = this.children;
+
+    // const activeChatDialog = activeChatId
+    //   ? chatDialogs.find((dialog) => dialog.id === activeChatId)
+    //   : null;
+
+    // activeChatId && ChatDialog.setProps({ ...activeChatDialog });
+    // ChatMessageGroup.setProps({ group: activeChatDialog });
+
+    // this.setProps({ name });
+
     return `
       <div class='chat-left'>
 				<div class='chat-left__top'>
@@ -44,7 +50,7 @@ export default class Chat extends Block {
 				</div>
 			</div>
 			<div class='chat-content'>
-				{{#if isChatSelected}}
+				{{#if activeChatId}}
 					{{{ ChatDialog }}}
 				{{else}}
 					<div class="chat-content-empty">

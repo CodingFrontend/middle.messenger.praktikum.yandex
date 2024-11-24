@@ -17,14 +17,17 @@ export default class Modal extends Block {
       IconButton: new IconButton({
         faIcon: 'fa-solid fa-x',
         type: 'secondary',
+        onClick: () => props.onCloseModal(),
       }),
       ButtonOk: new Button({
         label: props.labelOk,
         type: 'primary',
+        onClick: () => props.onConfirm(),
       }),
       ButtonCancel: new Button({
         label: props.labelCancel,
         type: 'link',
+        onClick: () => props.onCancel(),
       }),
     });
   }

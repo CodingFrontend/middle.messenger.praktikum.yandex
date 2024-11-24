@@ -12,7 +12,7 @@ export default class ChatMessages extends Block {
       ...props,
       classList: 'chat-messages__items',
       messages: props.messages.map(
-        (props: IChatMessagesItem) => new ChatMessagesItem({ ...props })
+        (message) => new ChatMessagesItem({ ...message })
       ),
     });
   }

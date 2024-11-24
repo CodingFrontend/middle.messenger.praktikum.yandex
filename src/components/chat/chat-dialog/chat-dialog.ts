@@ -7,45 +7,62 @@ import {
 } from '@/src/components';
 import type { IChatWidgetItem } from '@/src/components/chat/chat-widget';
 import type { IChatMessageGroup } from '@/src/components/chat/chat-message-group';
+import { chatWidgetItems } from '@/src/mockData/chatDataMock';
 
 export interface IChatDialog {
-  userName: string;
-  image: string;
-  chatWidgetItems: IChatWidgetItem[];
-  messages: IChatMessageGroup[];
+  // chatDialog: any;
+  activeChatId: string;
+  // userName: string;
+  // image: string;
+  // chatWidgetItems: IChatWidgetItem[];
+  // messages: IChatMessageGroup[];
 }
 
 export default class ChatDialog extends Block {
-  constructor(props: IChatDialog) {
+  constructor(props: any) {
     super('div', {
       ...props,
+      showChatWidget: false,
       classList: 'chat-dialog',
       Avatar: new Avatar({
         image: props.image,
         size: 'small',
       }),
-      ChatWidget: new ChatWidget({ items: props.chatWidgetItems }),
-      ChatMessageGroup: new ChatMessageGroup({ messages: props.messages }),
+      ChatWidget: new ChatWidget({ items: chatWidgetItems }),
+      ChatMessageGroup: new ChatMessageGroup({ groups: props.groups }),
       IconButton: new IconButton({
-        faIcon: 'fa-solid fa-arrow-right',
-        type: 'primary',
+        faIcon: 'fa-solid fa-ellipsis-vertical',
+        type: 'secondary',
+        onClick: () =>
+          this.setProps({
+            showChatWidget: !this.props.showChatWidget,
+          }),
       }),
     });
   }
   public render(): string {
+    const { groups, activeChatId } = this.props;
+
+    console.log(activeChatId, this.props);
+    // const { ChatMessageGroup } = this.children;
+
+    // if (groups) ChatMessageGroup.setProps({ groups });
+
     return `
       <div class='chat-dialog-top'>
 				<div class='chat-dialog-top__user'>
 					{{{ Avatar }}}
-					<div class='chat-dialog-top__user-name'>{{userName}}</div>
+					<div class='chat-dialog-top__user-name'>{{name}}</div>
 				</div>
 				<div class="chat-dialog-top__actions">
 					<div class='chat-dialog-top__actions-button'>
-						<i class='fa-solid fa-ellipsis-vertical'></i>
+						{{{ IconButton }}}
 					</div>
-					<div class="chat-dialog-top__actions-widget">
-						{{{ ChatWidget }}}
-					</div>
+					{{#if showChatWidget}}
+						<div class="chat-dialog-top__actions-widget">
+							{{{ ChatWidget }}}
+						</div>
+					{{/if}}
 				</div>
 			</div>
 			<div class="chat-dialog-content">

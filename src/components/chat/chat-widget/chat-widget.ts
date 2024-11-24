@@ -20,6 +20,10 @@ export default class ChatWidget extends Block {
           new LinkButton({
             label: props.text,
             iconLeft: props.faIcon,
+            onClick: (e: Event) => {
+              e.preventDefault();
+              console.log(props.text);
+            },
           })
       ),
     });

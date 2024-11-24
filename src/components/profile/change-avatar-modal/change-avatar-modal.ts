@@ -45,28 +45,37 @@ export default class ChangeAvatarModal extends Block {
   constructor(props: ChangeAvatarModalProps) {
     super('div', {
       ...props,
+      // Todo: Отрефакторить
       Modal: new Modal({
         title: 'Файл загружен',
         labelOk: 'Поменять',
         error: props.emptyError,
         Body: new ModalBody(),
+        onCloseModal: () => props.onCloseModal(),
+        onConfirm: () => props.onConfirm(),
+        onCancel: () => props.onCancel(),
       }),
       ModalError: new Modal({
         title: 'Ошибка, попробуйте еще раз',
         labelOk: 'Поменять',
         error: props.emptyError,
         Body: new ModalBodyUpload(),
+        onCloseModal: () => props.onCloseModal(),
+        onCancel: () => props.onCancel(),
       }),
       ModalUpload: new Modal({
         title: 'Загрузите файл',
         labelOk: 'Поменять',
         error: props.emptyError,
         Body: new ModalBodyUpload(),
+        onCloseModal: () => props.onCloseModal(),
+        onCancel: () => props.onCancel(),
       }),
     });
   }
 
   public render(): string {
+    // Todo: Отрефакторить
     return `
 		{{#if fileName}}
 			{{{ Modal }}}

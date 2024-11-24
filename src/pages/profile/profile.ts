@@ -1,4 +1,5 @@
 import Block from '@/src/core/block';
+import { checkFirstAndLastNames, checkLogin } from '@/src/utils/rules';
 
 import {
   GoBack,
@@ -21,7 +22,7 @@ interface IProfileContentProps {
   last_name: string;
   display_name: string;
   phone: string;
-  showModal: boolean;
+  showChangeAvatarModal: boolean;
   fileUploaded: boolean;
   emptyError: string;
   fileName: string;
@@ -30,10 +31,18 @@ interface IProfileContentProps {
   image: string;
 }
 
+interface AvatarEditSlotProps {
+  onClick?: (e: Event) => void;
+}
+
 class AvatarEditSlot extends Block {
-  constructor() {
+  constructor(props: AvatarEditSlotProps) {
     super('div', {
+      ...props,
       classList: 'profile-page-avatar-image',
+      events: {
+        click: props.onClick,
+      },
     });
   }
   render(): string {
@@ -49,11 +58,29 @@ class ProfileContent extends Block {
   constructor(props: IProfileContentProps) {
     super('div', {
       ...props,
+      editInfoForm: {
+        email: '',
+        login: '',
+        first_name: '',
+        last_name: '',
+        display_name: '',
+        phone: '',
+      },
+      editInfoErrors: {
+        email: '',
+        login: '',
+        first_name: '',
+        last_name: '',
+        display_name: '',
+        phone: '',
+      },
       classList: 'profile-page-card',
       AvatarGeneralInfo: new Avatar({
         image: props.image,
         size: 'large',
-        Slot: new AvatarEditSlot(),
+        Slot: new AvatarEditSlot({
+          onClick: () => this.setProps({ showChangeAvatarModal: true }),
+        }),
       }),
       Avatar: new Avatar({
         image: props.image,
@@ -112,18 +139,69 @@ class ProfileContent extends Block {
         value: props.login,
         name: 'login',
         type: 'text',
+        onChange: (e: Event) => {
+          const value = (e.target as HTMLInputElement).value;
+          let error = checkLogin(value);
+
+          this.children.InputLoginEdit.setProps({
+            error,
+          });
+
+          if (error) return;
+
+          this.setProps({
+            editInfoForm: {
+              ...this.props.editInfoForm,
+              login: value,
+            },
+          });
+        },
       }),
       InputFirstNameEdit: new CustomInput({
         label: 'Имя',
         value: props.first_name,
         name: 'first_name',
         type: 'text',
+        onChange: (e: Event) => {
+          const value = (e.target as HTMLInputElement).value;
+          let error = checkFirstAndLastNames(value, 'Имя');
+
+          this.children.InputFirstNameEdit.setProps({
+            error,
+          });
+
+          if (error) return;
+
+          this.setProps({
+            editInfoForm: {
+              ...this.props.editInfoForm,
+              first_name: value,
+            },
+          });
+        },
       }),
       InputLastNameEdit: new CustomInput({
         label: 'Фамилия',
         value: props.last_name,
         name: 'last_name',
         type: 'text',
+        onChange: (e: Event) => {
+          const value = (e.target as HTMLInputElement).value;
+          let error = checkFirstAndLastNames(value, 'Фамилия');
+
+          this.children.InputLastNameEdit.setProps({
+            error,
+          });
+
+          if (error) return;
+
+          this.setProps({
+            editInfoForm: {
+              ...this.props.editInfoForm,
+              last_name: value,
+            },
+          });
+        },
       }),
       InputDisplayNameEdit: new CustomInput({
         label: 'Имя в чате',
@@ -158,29 +236,44 @@ class ProfileContent extends Block {
       LinkButtonChangeInfo: new LinkButton({
         label: 'Изменить данные',
         type: 'primary',
+        onClick: (e) => {
+          e.preventDefault();
+          this.setProps({ isEditInfo: true });
+        },
       }),
       LinkButtonChangePassword: new LinkButton({
         label: 'Изменить пароль',
         type: 'primary',
+        onClick: (e) => {
+          e.preventDefault();
+          this.setProps({ isEditPassword: true });
+        },
       }),
       LinkButtonLogout: new LinkButton({
         label: 'Выйти',
         type: 'attention',
       }),
-      ButtonConfirm: new Button({
+      ButtonConfirmEditInfo: new Button({
         label: 'Сохранить',
         type: 'primary',
+        onClick: () => this.setProps({}),
+      }),
+      ButtonConfirmEditPassword: new Button({
+        label: 'Сохранить',
+        type: 'primary',
+        onClick: () => this.setProps({}),
       }),
       ChangeAvatarModal: new ChangeAvatarModal({
-        fileName: props.fileName,
-        uploadError: props.uploadError,
+        fileName: '',
+        uploadError: '',
+        onCloseModal: () => this.setProps({ showChangeAvatarModal: false }),
       }),
     });
   }
 
   render(): string {
     return `
-			{{#if isGeneralInfo}}
+			{{#ifCond isEditInfo isEditPassword}}
 				<div class="profile-page-avatar">
 					{{{ AvatarGeneralInfo }}}
 					{{#if display_name}}
@@ -191,30 +284,10 @@ class ProfileContent extends Block {
 				<div class="profile-page-avatar">
 					{{{ Avatar }}}
 				</div>
-			{{/if}}
+			{{/ifCond}}
 
-			{{#if isGeneralInfo}}
-				<div class="profile-info">
-					<div class="profile-row">
-						{{{ InputEmail }}}
-					</div>
-					<div class="profile-row">
-						{{{ InputLogin }}}
-					</div>
-					<div class="profile-row">
-						{{{ InputFirstName }}}
-					</div>
-					<div class="profile-row">
-						{{{ InputLastName }}}
-					</div>
-					<div class="profile-row">
-						{{{ InputDisplayName }}}
-					</div>
-					<div class="profile-row">
-						{{{ InputPhone }}}
-					</div>
-				</div>
-			{{else if isEditInfo}}
+				
+			{{#if isEditInfo}}
 				<div class="profile-edit-info">
 					<div class="profile-row">
 						{{{ InputEmailEdit }}}
@@ -235,6 +308,9 @@ class ProfileContent extends Block {
 						{{{ InputPhoneEdit }}}
 					</div>
 				</div>
+				<div class="profile-edit-info__confirm-button">
+					{{{ ButtonConfirmEditInfo }}}
+				</div>
 			{{else if isEditPassword}}
 				<div class="profile-edit-password">
 					<div class="profile-row">
@@ -247,9 +323,30 @@ class ProfileContent extends Block {
 						{{{ InputNewPasswordRepeat }}}
 					</div>
 				</div>
-			{{/if}}
-
-			{{#if isGeneralInfo}}
+				<div class="profile-edit-info__confirm-button">
+					{{{ ButtonConfirmEditPassword }}}
+				</div>
+			{{ else }}
+			 <div class="profile-info">
+					<div class="profile-row">
+						{{{ InputEmail }}}
+					</div>
+					<div class="profile-row">
+						{{{ InputLogin }}}
+					</div>
+					<div class="profile-row">
+						{{{ InputFirstName }}}
+					</div>
+					<div class="profile-row">
+						{{{ InputLastName }}}
+					</div>
+					<div class="profile-row">
+						{{{ InputDisplayName }}}
+					</div>
+					<div class="profile-row">
+						{{{ InputPhone }}}
+					</div>
+				</div>
 				<div class="profile-actions">
 					<div class="profile-row">
 						{{{ LinkButtonChangeInfo }}}
@@ -261,13 +358,9 @@ class ProfileContent extends Block {
 						{{{ LinkButtonLogout }}}
 					</div>
 				</div>
-			{{else}}
-				<div class="profile-edit-info__confirm-button">
-					{{{ ButtonConfirm }}}
-				</div>
 			{{/if}}
 
-			{{#if showModal}}
+			{{#if showChangeAvatarModal}}
 				{{{ ChangeAvatarModal }}}
 			{{/if}}
 		`;
