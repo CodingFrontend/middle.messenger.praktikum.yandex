@@ -7,7 +7,6 @@ interface InputFieldProps {
   disabled: boolean;
   error: string;
   onChange: (e: Event) => void;
-  onBlur: (e: Event) => void;
 }
 
 export default class CustomInputField extends Block {
@@ -21,7 +20,6 @@ export default class CustomInputField extends Block {
       },
       events: {
         change: props.onChange,
-        blur: props.onBlur,
       },
       classList: `${props.error ? 'custom-input__field-error' : ''}`,
     });

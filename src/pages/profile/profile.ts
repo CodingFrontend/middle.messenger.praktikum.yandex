@@ -1,5 +1,6 @@
 import Block from '@/src/core/block';
-import { checkFirstAndLastNames, checkLogin } from '@/src/utils/rules';
+
+import { validateField } from '@/src/utils/validate';
 
 import {
   GoBack,
@@ -19,7 +20,7 @@ interface IProfileContentProps {
   email: string;
   login: string;
   first_name: string;
-  last_name: string;
+  second_name: string;
   display_name: string;
   phone: string;
   showChangeAvatarModal: boolean;
@@ -59,20 +60,30 @@ class ProfileContent extends Block {
     super('div', {
       ...props,
       editInfoForm: {
+        email: props.email,
+        login: props.login,
+        first_name: props.first_name,
+        second_name: props.second_name,
+        display_name: props.display_name,
+        phone: props.phone,
+      },
+      editInfoFormErrors: {
         email: '',
         login: '',
         first_name: '',
-        last_name: '',
+        second_name: '',
         display_name: '',
         phone: '',
       },
-      editInfoErrors: {
-        email: '',
-        login: '',
-        first_name: '',
-        last_name: '',
-        display_name: '',
-        phone: '',
+      editPasswordForm: {
+        old_password: '',
+        new_password: '',
+        new_password_repeat: '',
+      },
+      editPasswordFormErrors: {
+        old_password: '',
+        new_password: '',
+        new_password_repeat: '',
       },
       classList: 'profile-page-card',
       AvatarGeneralInfo: new Avatar({
@@ -109,8 +120,8 @@ class ProfileContent extends Block {
       }),
       InputLastName: new CustomInput({
         label: 'Фамилия',
-        value: props.last_name,
-        name: 'last_name',
+        value: props.second_name,
+        name: 'second_name',
         type: 'text',
         disabled: true,
       }),
@@ -133,6 +144,30 @@ class ProfileContent extends Block {
         value: props.email,
         name: 'email',
         type: 'email',
+        onChange: (e: Event) => {
+          const value = (e.target as HTMLInputElement).value;
+          let error = validateField('email', value);
+
+          this.children.InputEmailEdit.setProps({
+            error,
+          });
+
+          this.setProps({
+            editInfoFormErrors: {
+              ...this.props.editInfoFormErrors,
+              email: error,
+            },
+          });
+
+          if (error) return;
+
+          this.setProps({
+            editInfoForm: {
+              ...this.props.editInfoForm,
+              email: value,
+            },
+          });
+        },
       }),
       InputLoginEdit: new CustomInput({
         label: 'Логин',
@@ -141,10 +176,17 @@ class ProfileContent extends Block {
         type: 'text',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = checkLogin(value);
+          let error = validateField('login', value);
 
           this.children.InputLoginEdit.setProps({
             error,
+          });
+
+          this.setProps({
+            editInfoFormErrors: {
+              ...this.props.editInfoFormErrors,
+              login: error,
+            },
           });
 
           if (error) return;
@@ -164,10 +206,17 @@ class ProfileContent extends Block {
         type: 'text',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = checkFirstAndLastNames(value, 'Имя');
+          let error = validateField('first_name', value);
 
           this.children.InputFirstNameEdit.setProps({
             error,
+          });
+
+          this.setProps({
+            editInfoFormErrors: {
+              ...this.props.editInfoFormErrors,
+              first_name: error,
+            },
           });
 
           if (error) return;
@@ -182,15 +231,22 @@ class ProfileContent extends Block {
       }),
       InputLastNameEdit: new CustomInput({
         label: 'Фамилия',
-        value: props.last_name,
-        name: 'last_name',
+        value: props.second_name,
+        name: 'second_name',
         type: 'text',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = checkFirstAndLastNames(value, 'Фамилия');
+          let error = validateField('second_name', value);
 
           this.children.InputLastNameEdit.setProps({
             error,
+          });
+
+          this.setProps({
+            editInfoFormErrors: {
+              ...this.props.editInfoFormErrors,
+              second_name: error,
+            },
           });
 
           if (error) return;
@@ -198,7 +254,7 @@ class ProfileContent extends Block {
           this.setProps({
             editInfoForm: {
               ...this.props.editInfoForm,
-              last_name: value,
+              second_name: value,
             },
           });
         },
@@ -214,26 +270,127 @@ class ProfileContent extends Block {
         value: props.phone,
         name: 'phone',
         type: 'phone',
+        onChange: (e: Event) => {
+          const value = (e.target as HTMLInputElement).value;
+          let error = validateField('phone', value);
+
+          this.children.InputPhoneEdit.setProps({
+            error,
+          });
+
+          this.setProps({
+            editInfoFormErrors: {
+              ...this.props.editInfoFormErrors,
+              phone: error,
+            },
+          });
+
+          if (error) return;
+
+          this.setProps({
+            editInfoForm: {
+              ...this.props.editInfoForm,
+              phone: value,
+            },
+          });
+        },
       }),
       InputOldPassword: new CustomInput({
         label: 'Старый пароль',
         value: '',
-        name: 'oldPassword',
+        name: 'old_password',
         type: 'password',
+        onChange: (e: Event) => {
+          const value = (e.target as HTMLInputElement).value;
+          let error = '';
+
+          if (this.props.password !== value) error = 'Неверный пароль';
+
+          this.children.InputOldPassword.setProps({
+            error,
+          });
+
+          this.setProps({
+            editPasswordFormErrors: {
+              ...this.props.editPasswordFormErrors,
+              old_password: error,
+            },
+          });
+
+          if (error) return;
+
+          this.setProps({
+            editPasswordForm: {
+              ...this.props.editPasswordForm,
+              old_password: value,
+            },
+          });
+        },
       }),
       InputNewPassword: new CustomInput({
         label: 'Новый пароль',
         value: '',
         name: 'new_password',
         type: 'password',
+        onChange: (e: Event) => {
+          const value = (e.target as HTMLInputElement).value;
+          let error = validateField('password', value);
+
+          this.children.InputNewPassword.setProps({
+            error,
+          });
+
+          this.setProps({
+            editPasswordFormErrors: {
+              ...this.props.editPasswordFormErrors,
+              new_password: error,
+            },
+          });
+
+          if (error) return;
+
+          this.setProps({
+            editPasswordForm: {
+              ...this.props.editPasswordForm,
+              new_password: value,
+            },
+          });
+        },
       }),
       InputNewPasswordRepeat: new CustomInput({
         label: 'Повторите новый пароль',
         value: '',
         name: 'new_password_repeat',
         type: 'password',
+        onChange: (e: Event) => {
+          const value = (e.target as HTMLInputElement).value;
+          let error = '';
+
+          if (this.props.editPasswordForm.new_password !== value)
+            error = 'Пароли не совпадают';
+
+          this.children.InputNewPasswordRepeat.setProps({
+            error,
+          });
+
+          this.setProps({
+            editPasswordForm: {
+              ...this.props.editPasswordForm,
+              new_password_repeat: error,
+            },
+          });
+
+          if (error) return;
+
+          this.setProps({
+            editPasswordForm: {
+              ...this.props.editPasswordForm,
+              new_password_repeat: value,
+            },
+          });
+        },
       }),
-      LinkButtonChangeInfo: new LinkButton({
+      LinkButtonBlurInfo: new LinkButton({
         label: 'Изменить данные',
         type: 'primary',
         onClick: (e) => {
@@ -241,7 +398,7 @@ class ProfileContent extends Block {
           this.setProps({ isEditInfo: true });
         },
       }),
-      LinkButtonChangePassword: new LinkButton({
+      LinkButtonBlurPassword: new LinkButton({
         label: 'Изменить пароль',
         type: 'primary',
         onClick: (e) => {
@@ -256,12 +413,31 @@ class ProfileContent extends Block {
       ButtonConfirmEditInfo: new Button({
         label: 'Сохранить',
         type: 'primary',
-        onClick: () => this.setProps({}),
+        attrs: {
+          type: 'submit',
+        },
+        onClick: () => {
+          setTimeout(() => {
+            for (let key in this.props.editInfoFormErrors) {
+              if (this.props.editInfoFormErrors[key]) return;
+            }
+
+            console.log(this.props.editInfoForm);
+          }, 0);
+        },
       }),
       ButtonConfirmEditPassword: new Button({
         label: 'Сохранить',
         type: 'primary',
-        onClick: () => this.setProps({}),
+        onClick: () => {
+          setTimeout(() => {
+            for (let key in this.props.editPasswordFormErrors) {
+              if (this.props.editPasswordFormErrors[key]) return;
+            }
+
+            console.log(this.props.editPasswordForm);
+          }, 0);
+        },
       }),
       ChangeAvatarModal: new ChangeAvatarModal({
         fileName: '',
@@ -349,10 +525,10 @@ class ProfileContent extends Block {
 				</div>
 				<div class="profile-actions">
 					<div class="profile-row">
-						{{{ LinkButtonChangeInfo }}}
+						{{{ LinkButtonBlurInfo }}}
 					</div>
 					<div class="profile-row">
-						{{{ LinkButtonChangePassword }}}
+						{{{ LinkButtonBlurPassword }}}
 					</div>
 					<div class="profile-row">
 						{{{ LinkButtonLogout }}}

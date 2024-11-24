@@ -93,7 +93,6 @@ export default class Block {
       }
 
       if (value instanceof Block) {
-        console.log('value', value);
         // if (Object.keys(value.children).length) {
         //   this._getChildrenAndProps(value.children);
         // } else
@@ -105,7 +104,6 @@ export default class Block {
       }
     });
 
-    console.log(children);
     return { children, props };
   }
 

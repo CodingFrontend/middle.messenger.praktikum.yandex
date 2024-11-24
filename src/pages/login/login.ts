@@ -1,7 +1,7 @@
 import Block from '@/src/core/block';
 import { AuthLayout } from '@/src/layouts/auth';
 import { Input, Button, LinkButton } from '@/src/components';
-import { checkLogin } from '@/src/utils/rules';
+import { validateField } from '@/src/utils/validate';
 
 class AuthContent extends Block {
   constructor() {
@@ -21,10 +21,17 @@ class AuthContent extends Block {
         type: 'text',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = checkLogin(value);
+          let error = validateField('login', value);
 
           this.children.InputLogin.setProps({
             error,
+          });
+
+          this.setProps({
+            errors: {
+              ...this.props.errors,
+              login: error,
+            },
           });
 
           if (error) return;
@@ -43,10 +50,17 @@ class AuthContent extends Block {
         type: 'password',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          const error = value === 'error' ? 'Some error' : '';
+          let error = validateField('password', value);
 
           this.children.InputPassword.setProps({
             error,
+          });
+
+          this.setProps({
+            errors: {
+              ...this.props.errors,
+              password: error,
+            },
           });
 
           if (error) return;
@@ -63,11 +77,16 @@ class AuthContent extends Block {
         label: 'Авторизоваться',
         type: 'primary',
         attrs: {
-          type: 'confirm',
+          type: 'button',
         },
-        onClick: (e) => {
-          e.preventDefault();
-          console.log(this.props.loginForm);
+        onClick: () => {
+          setTimeout(() => {
+            for (let key in this.props.errors) {
+              if (this.props.errors[key]) return;
+            }
+
+            console.log(this.props.loginForm);
+          }, 0);
         },
       }),
       ButtonCancel: new LinkButton({
@@ -98,8 +117,6 @@ export default class LoginPage extends Block {
       classList: 'page auth-page',
       AuthLayout: new AuthLayout({
         title: 'Логин',
-        labelOk: 'Авторизоваться',
-        labelCancel: 'Нет аккаунта?',
         Content: new AuthContent(),
       }),
     });

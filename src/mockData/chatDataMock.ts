@@ -75,18 +75,6 @@ export const chatDialogs = [
     image: '',
     groups: [
       {
-        date: '18 июня',
-        messages: [
-          {
-            type: 'incoming',
-            content: 'text',
-            date: '11:56',
-            value:
-              'Друзья, у меня для вас особенный выпуск новостей! В общем говоря...',
-          },
-        ],
-      },
-      {
         date: '19 июня',
         messages: [
           {

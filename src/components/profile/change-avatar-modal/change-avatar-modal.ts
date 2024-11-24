@@ -28,6 +28,7 @@ class ModalBodyUpload extends Block {
       LinkButton: new LinkButton({
         label: 'Выберите файл на компьютере',
         type: 'primary',
+        onClick: () => props.onSelectFile(),
       }),
     });
   }

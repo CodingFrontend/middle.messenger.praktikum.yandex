@@ -12,7 +12,7 @@ export default class Button extends Block {
       ...props,
       classList: `button button--${props.type}`,
       events: {
-        click: props.onClick,
+        mousedown: props.onClick,
       },
     });
   }

@@ -9,7 +9,6 @@ interface InputProps {
   disabled: boolean;
   error: string;
   onChange?: (e: Event) => void;
-  onBlur?: (e: Event) => void;
 }
 
 export default class Input extends Block {
@@ -23,7 +22,6 @@ export default class Input extends Block {
         type: props.type || 'text',
         error: props.error,
         onChange: props.onChange,
-        onBlur: props.onBlur,
       }),
     });
   }

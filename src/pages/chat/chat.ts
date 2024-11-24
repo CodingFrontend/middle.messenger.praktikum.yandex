@@ -14,8 +14,15 @@ export default class Chat extends Block {
       }),
       ChatList: new ChatList({
         items: chatItems,
-        onChatSelect: (id) =>
-          this.setProps({ activeChatId: id, showChatDialog: true }),
+        onChatSelect: (id) => {
+          const activeChatDialog = id
+            ? chatDialogs.find((dialog) => dialog.id === id)
+            : null;
+
+          this.setProps({ showChatDialog: true });
+
+          this.children.ChatDialog.setProps({ ...activeChatDialog });
+        },
       }),
       ChatDialog: new ChatDialog(chatDialogs[0]),
     });

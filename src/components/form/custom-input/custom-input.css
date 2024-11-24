@@ -30,7 +30,7 @@ input.custom-input__field-error {
 .custom-input__error {
   color: var(--attention-color);
   caret-color: var(--main-text-color);
-  max-width: 50%;
+  max-width: 350px;
   margin-left: auto;
   text-align: right;
   font-size: var(--text-xs);

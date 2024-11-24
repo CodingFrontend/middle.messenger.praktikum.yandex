@@ -44,9 +44,9 @@ export default class ChatDialog extends Block {
     const { groups, activeChatId } = this.props;
 
     console.log(activeChatId, this.props);
-    // const { ChatMessageGroup } = this.children;
+    const { ChatMessageGroup } = this.children;
 
-    // if (groups) ChatMessageGroup.setProps({ groups });
+    if (groups) ChatMessageGroup.setProps({ groups });
 
     return `
       <div class='chat-dialog-top'>
