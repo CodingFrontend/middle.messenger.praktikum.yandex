@@ -22,7 +22,7 @@ export default class ChatItem extends Block {
         size: 'medium',
       }),
       events: {
-        click: props.onClick,
+        mousedown: props.onClick,
       },
     });
   }

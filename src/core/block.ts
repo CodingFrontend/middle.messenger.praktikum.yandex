@@ -81,6 +81,7 @@ export default class Block {
 
     Object.entries(propsWithChildren).forEach(([key, value]) => {
       if (Array.isArray(value)) {
+        // console.log(888, value);
         value.forEach((obj) => {
           if (obj instanceof Block) {
             children[key] = value;
@@ -96,6 +97,14 @@ export default class Block {
         // if (Object.keys(value.children).length) {
         //   this._getChildrenAndProps(value.children);
         // } else
+        // console.log(value, 888);
+        if (
+          value.hasOwnProperty('children') &&
+          Object.keys(value.children).length
+        ) {
+          console.log(value, 888, Object.values(value.children));
+          // this._getChildrenAndProps(Object.values(value.children));
+        }
         {
           children[key] = value;
         }
@@ -129,12 +138,21 @@ export default class Block {
     return true;
   }
 
+  forceUpdate(oldProps, newProps) {
+    this._render();
+  }
+
   setProps = (nextProps) => {
     if (!nextProps) {
       return;
     }
 
     Object.assign(this.props, nextProps);
+  };
+
+  setChild = (child) => {
+    // console.log(key, value);
+    Object.assign(this.children, child);
   };
 
   get element() {

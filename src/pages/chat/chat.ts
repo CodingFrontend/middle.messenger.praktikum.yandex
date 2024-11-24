@@ -5,7 +5,7 @@ import { chatItems, chatDialogs } from '../../mockData/chatDataMock';
 export default class Chat extends Block {
   constructor() {
     super('main', {
-      activeChatId: '1',
+      activeChatId: '',
       classList: 'page chat-page',
       showChatWidget: false,
       LinkButton: new LinkButton({
@@ -17,30 +17,24 @@ export default class Chat extends Block {
         onChatSelect: (id) => {
           const activeChatDialog = id
             ? chatDialogs.find((dialog) => dialog.id === id)
-            : null;
-
-          this.setProps({ showChatDialog: true });
-
-          this.children.ChatDialog.setProps({ ...activeChatDialog });
+            : {};
+          setTimeout(() => {
+            this.setProps({
+              activeChatId: id,
+            });
+            this.setChild({
+              ChatDialog: new ChatDialog({
+                ...activeChatDialog,
+              }),
+            });
+            this.forceUpdate();
+          }, 0);
         },
       }),
-      ChatDialog: new ChatDialog(chatDialogs[0]),
     });
   }
 
   public render(): string {
-    // const { activeChatId } = this.props;
-    // const { ChatDialog } = this.children;
-
-    // const activeChatDialog = activeChatId
-    //   ? chatDialogs.find((dialog) => dialog.id === activeChatId)
-    //   : null;
-
-    // activeChatId && ChatDialog.setProps({ ...activeChatDialog });
-    // ChatMessageGroup.setProps({ group: activeChatDialog });
-
-    // this.setProps({ name });
-
     return `
       <div class='chat-left'>
 				<div class='chat-left__top'>

@@ -41,13 +41,6 @@ export default class ChatDialog extends Block {
     });
   }
   public render(): string {
-    const { groups, activeChatId } = this.props;
-
-    console.log(activeChatId, this.props);
-    const { ChatMessageGroup } = this.children;
-
-    if (groups) ChatMessageGroup.setProps({ groups });
-
     return `
       <div class='chat-dialog-top'>
 				<div class='chat-dialog-top__user'>
@@ -66,7 +59,9 @@ export default class ChatDialog extends Block {
 				</div>
 			</div>
 			<div class="chat-dialog-content">
-				{{{ ChatMessageGroup }}}
+				{{#if groups}}
+					{{{ ChatMessageGroup }}}
+				{{/if}}
 			</div>
 			<div class="chat-dialog-bottom">
 				<div class="chat-dialog-bottom__field">

@@ -17,11 +17,6 @@ export default class ChatMessageGroup extends Block {
     });
   }
   public render(): string {
-    console.log(11, this.props);
-
-    const { groupsList } = this.children;
-    const { groups } = this.props;
-    if (groups) groupsList.forEach((list) => list.setProps({ ...groups }));
     return `
     {{#each groupsList}}
 			{{{ this }}}

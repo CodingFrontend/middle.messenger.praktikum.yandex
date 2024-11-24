@@ -15,8 +15,6 @@ export default class ChatMessageGroup extends Block {
     });
   }
   public render(): string {
-    console.log(2, this.props);
-
     return `
 			<div class="chat-messages__date">
 				<span>{{date}}</span>
