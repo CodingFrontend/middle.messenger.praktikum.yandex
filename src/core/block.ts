@@ -2,14 +2,19 @@ import EventBus from './eventBus';
 import { nanoid } from 'nanoid';
 import Handlebars from 'handlebars';
 
-type TElement = HTMLElement | null;
-// interface IMeta<T> {
-// 	tagName?: string;
-// 	props?: T extends any
-// }
+type TObjProp = Record<string, string>;
+type TProps = Record<string, string | string[] | Function | TObjProp>;
+type TChildren = Record<string, string | string[] | Function>;
+
+interface IMeta {
+  tagName?: string;
+  props?: TProps;
+}
 
 export default class Block {
   private eventBus: Function;
+  private children: TChildren;
+  private props: TProps;
 
   static EVENTS = {
     INIT: 'init',
@@ -18,8 +23,8 @@ export default class Block {
     FLOW_RENDER: 'flow:render',
   };
 
-  _element: TElement = null;
-  _meta = null;
+  _element: HTMLElement | null = null;
+  _meta: IMeta | null = null;
   _id = nanoid(6);
 
   /** JSDoc
@@ -46,7 +51,7 @@ export default class Block {
     eventBus.emit(Block.EVENTS.INIT);
   }
 
-  _registerEvents(eventBus) {
+  _registerEvents(eventBus: EventBus<string>) {
     eventBus.on(Block.EVENTS.INIT, this.init.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
@@ -54,16 +59,16 @@ export default class Block {
   }
 
   _createResources() {
-    const { tagName, props } = this._meta;
-    this._element = this._createDocumentElement(tagName);
-    if (typeof props.classList === 'string' && props.classList) {
+    const { tagName, props } = this._meta as IMeta;
+    if (tagName) this._element = this._createDocumentElement(tagName);
+    if (typeof props?.classList === 'string' && props.classList) {
       const classes = props.classList.split(' ');
-      this._element.classList.add(...classes);
+      this._element?.classList.add(...classes);
     }
 
-    if (typeof props.attrs === 'object') {
+    if (typeof props?.attrs === 'object') {
       Object.entries(props.attrs).forEach(([attrName, attrValue]) => {
-        this._element.setAttribute(attrName, attrValue);
+        this._element?.setAttribute(attrName, attrValue);
       });
     }
   }
@@ -73,16 +78,13 @@ export default class Block {
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
   }
 
-  _getChildrenAndProps(propsWithChildren) {
-    const children = {};
-    const props = {};
-
-    // console.log(1, propsWithChildren);
+  _getChildrenAndProps(propsWithChildren: TProps) {
+    const children: TChildren = {};
+    const props: TProps = {};
 
     Object.entries(propsWithChildren).forEach(([key, value]) => {
       if (Array.isArray(value)) {
-        // console.log(888, value);
-        value.forEach((obj) => {
+        value.forEach((obj: unknown) => {
           if (obj instanceof Block) {
             children[key] = value;
           } else {
@@ -94,26 +96,6 @@ export default class Block {
       }
 
       if (value instanceof Block) {
-        // if (Object.keys(value.children).length) {
-        //   this._getChildrenAndProps(value.children);
-        // } else
-        // console.log(value, 888);
-        if (
-          value.hasOwnProperty('children') &&
-          Object.keys(value.children).length
-        ) {
-          // if (Array.isArray(Object.values(value.children))) {
-          //   console.log('TRUE', Object.values(value.children));
-          //   Object.values(value.children).forEach((obj) => {
-          //     console.log(111, obj);
-          //     if (obj instanceof Block) {
-          //       children[key] = value;
-          //     } else {
-          //       props[key] = value;
-          //     }
-          //   });
-          // }
-        }
         {
           children[key] = value;
         }
@@ -131,30 +113,30 @@ export default class Block {
     this.componentDidMount();
   }
 
-  componentDidMount(oldProps) {}
+  componentDidMount(oldProps?: TProps) {}
 
   dispatchComponentDidMount() {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
-  _componentDidUpdate(oldProps, newProps) {
+  _componentDidUpdate(oldProps: TProps, newProps: TProps) {
     const response = this.componentDidUpdate(oldProps, newProps);
     if (!response) {
       return;
     }
-    // console.log('updated', oldProps, newProps);
+
     this._render();
   }
 
-  componentDidUpdate(oldProps, newProps) {
+  componentDidUpdate(oldProps: TProps, newProps: TProps) {
     return true;
   }
 
-  forceUpdate(oldProps, newProps) {
+  forceUpdate(oldProps: TProps, newProps: TProps) {
     this._render();
   }
 
-  setProps = (nextProps) => {
+  setProps = (nextProps: TProps) => {
     if (!nextProps) {
       return;
     }
@@ -162,8 +144,7 @@ export default class Block {
     Object.assign(this.props, nextProps);
   };
 
-  setChild = (child) => {
-    // console.log(key, value);
+  setChild = (child: TChildren) => {
     Object.assign(this.children, child);
   };
 
@@ -174,16 +155,16 @@ export default class Block {
   _addEvents() {
     const { events = {} } = this.props;
 
-    Object.keys(events).forEach((eventName) => {
-      this._element.addEventListener(eventName, events[eventName]);
+    Object.keys(events).forEach((eventName: string) => {
+      this._element?.addEventListener(eventName, events[eventName]);
     });
   }
 
   _removeEvents() {
     const { events = {} } = this.props;
 
-    Object.keys(events).forEach((eventName) => {
-      this._element.removeEventListener(eventName, events[eventName]);
+    Object.keys(events).forEach((eventName: string) => {
+      this._element?.removeEventListener(eventName, events[eventName]);
     });
   }
 
@@ -204,8 +185,7 @@ export default class Block {
     fragment.innerHTML = template(propsAndStubs);
     Object.values(this.children).forEach((child) => {
       if (Array.isArray(child)) {
-        console.log(child);
-        child.forEach((component) => {
+        child.forEach((component: typeof Block) => {
           const stub = fragment.content.querySelector(
             `[data-id="${component._id}"]`
           );
@@ -225,10 +205,10 @@ export default class Block {
     this._removeEvents();
     const block = this._compile();
 
-    if (this._element.children.length === 0) {
-      this._element.appendChild(block);
+    if (this._element?.children.length === 0) {
+      this._element?.appendChild(block);
     } else {
-      this._element.replaceChildren(block);
+      this._element?.replaceChildren(block);
     }
 
     this._addEvents();
@@ -242,7 +222,7 @@ export default class Block {
     return this.element;
   }
 
-  _makePropsProxy(props) {
+  _makePropsProxy(props: TProps) {
     const eventBus = this.eventBus();
     const emitBind = eventBus.emit.bind(eventBus);
 
@@ -252,7 +232,6 @@ export default class Block {
         return typeof value === 'function' ? value.bind(target) : value;
       },
       set(target, prop, value) {
-        // console.log('proxy', target, prop, value);
         const oldTarget = { ...target };
         target[prop] = value;
         console.log('proxy', oldTarget, target);
@@ -266,8 +245,7 @@ export default class Block {
     });
   }
 
-  _createDocumentElement(tagName) {
-    // Можно сделать метод, который через фрагменты в цикле создаёт сразу несколько блоков
+  _createDocumentElement(tagName: string) {
     return document.createElement(tagName);
   }
 

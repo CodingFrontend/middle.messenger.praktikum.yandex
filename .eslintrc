@@ -1,0 +1,13 @@
+{
+  "extends": "airbnb",
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "import/no-unresolved": "error",
+    "no-console": "off",
+    "no-unsafe-optional-chaining": "off",
+    "no-debugger": "warn",
+    "max-len": [2, 100],
+    "@typescript-eslint/no-unused-vars": 2
+  }
+}
