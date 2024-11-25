@@ -12,7 +12,7 @@ export default class LinkButton extends Block {
       ...props,
       classList: `icon-button icon-button--${props.type}`,
       events: {
-        click: props.onClick,
+        mousedown: props.onClick,
       },
     });
   }

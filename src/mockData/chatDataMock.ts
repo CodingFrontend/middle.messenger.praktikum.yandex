@@ -1,8 +1,17 @@
 export const chatWidgetItems = [
-  { faIcon: 'fa-regular fa-square-plus', text: 'Добавить пользователя' },
-  { faIcon: 'fa-regular fa-square-minus', text: 'Удалить пользователя' },
+  {
+    faIcon: 'fa-regular fa-square-plus',
+    text: 'Добавить пользователя',
+    action: 'add',
+  },
+  {
+    faIcon: 'fa-regular fa-square-minus',
+    text: 'Удалить пользователя',
+    action: 'remove',
+  },
 ];
 
+// TODO Отрефакторить
 export const chatItems = [
   {
     id: '1',

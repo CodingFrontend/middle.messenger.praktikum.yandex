@@ -1,5 +1,10 @@
 import Block from '@/src/core/block';
-import { LinkButton, ChatList, ChatDialog } from '@/src/components';
+import {
+  LinkButton,
+  ChatList,
+  ChatDialog,
+  SearchChatsInput,
+} from '@/src/components';
 import { chatItems, chatDialogs } from '../../mockData/chatDataMock';
 
 export default class Chat extends Block {
@@ -7,13 +12,29 @@ export default class Chat extends Block {
     super('main', {
       activeChatId: '',
       classList: 'page chat-page',
-      showChatWidget: false,
+      searchValue: '',
       LinkButton: new LinkButton({
         label: 'Профиль',
         type: 'secondary',
       }),
+      SearchChatsInput: new SearchChatsInput({
+        onKeydown: (e: KeyboardEvent) => {
+          const value = (e.target as HTMLInputElement).value;
+          if (e.code === 'Enter') {
+            this.setProps({
+              searchValue: value,
+            });
+
+            this.children.ChatList.componentDidUpdate(
+              chatItems,
+              chatItems.filter((item) => item.name.includes(value))
+            );
+          }
+        },
+      }),
       ChatList: new ChatList({
         items: chatItems,
+        searchValue: '',
         onChatSelect: (id) => {
           const activeChatDialog = id
             ? chatDialogs.find((dialog) => dialog.id === id)
@@ -35,6 +56,14 @@ export default class Chat extends Block {
   }
 
   public render(): string {
+    const { searchValue } = this.props;
+
+    const { ChatList } = this.children;
+
+    ChatList.setProps({
+      items: chatItems.filter((item) => item.name.includes(searchValue)),
+    });
+
     return `
       <div class='chat-left'>
 				<div class='chat-left__top'>
@@ -44,7 +73,7 @@ export default class Chat extends Block {
 					</div>
 				</div>
 				<div class='chat-left__search'>
-					<input type='search' name='search' autocomplete='off' placeholder='Поиск'/>
+					{{{ SearchChatsInput }}}
 				</div>
 				<div class='chat-left__content'>
 					{{{ ChatList }}}
@@ -59,9 +88,6 @@ export default class Chat extends Block {
 					</div>
 				{{/if}}
 			</div>
-			{{#if showModal}}
-				{{{ ChatModal }}}
-			{{/if}}
     `;
   }
 }

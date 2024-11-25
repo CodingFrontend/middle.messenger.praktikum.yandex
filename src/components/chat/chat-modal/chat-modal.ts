@@ -4,6 +4,7 @@ import { Modal, Input } from '@/src/components';
 interface IModalProps {
   modalTitle: string;
   modalButtonLabelOk: string;
+  onCloseModal: () => void;
 }
 
 class DialogBody extends Block {
@@ -28,9 +29,10 @@ export default class ChatModal extends Block {
       ...props,
       classList: 'chat-modal',
       Modal: new Modal({
-        modalTitle: props.modalTitle,
+        title: props.modalTitle,
         labelOk: props.modalButtonLabelOk,
         Body: new DialogBody(),
+        onCloseModal: () => props.onCloseModal(),
       }),
     });
   }

@@ -1,0 +1,14 @@
+.search-chats-input {
+  all: unset;
+
+  flex-grow: 1;
+  padding: 10px 20px;
+
+  background-color: var(--secondary-background-color);
+
+  border-radius: 5px;
+}
+
+.search-chats-input::placeholder {
+  color: var(--secondary-text-color);
+}

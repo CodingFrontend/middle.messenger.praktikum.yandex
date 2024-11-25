@@ -5,6 +5,7 @@ import {
   ChatMessageGroup,
   IconButton,
   SendMessageInput,
+  ChatModal,
 } from '@/src/components';
 import type { IChatWidgetItem } from '@/src/components/chat/chat-widget';
 import type { IChatMessageGroup } from '@/src/components/chat/chat-message-group';
@@ -14,6 +15,8 @@ import { validateField } from '@/src/utils/validate';
 export interface IChatDialog {
   // chatDialog: any;
   activeChatId: string;
+  showModalAddUser: false;
+  showModalDeleteUser: false;
   // userName: string;
   // image: string;
   // chatWidgetItems: IChatWidgetItem[];
@@ -31,7 +34,10 @@ export default class ChatDialog extends Block {
         image: props.image,
         size: 'small',
       }),
-      ChatWidget: new ChatWidget({ items: chatWidgetItems }),
+      ChatWidget: new ChatWidget({
+        items: chatWidgetItems,
+        onCloseModal: () => this.setProps({ showChatWidget: false }),
+      }),
       ChatMessageGroup: new ChatMessageGroup({ groups: props.groups }),
       ChatWidgetButton: new IconButton({
         faIcon: 'fa-solid fa-ellipsis-vertical',
@@ -54,17 +60,14 @@ export default class ChatDialog extends Block {
         faIcon: 'fa-solid fa-arrow-right',
         type: 'primary',
         onClick: () => {
-          const value = (e.target as HTMLInputElement).value;
-          let error = validateField('message', value);
+          setTimeout(() => {
+            const value = this.props.messageText;
+            let error = validateField('message', value);
 
-          if (error) return;
+            if (error) return;
 
-          // this.setProps({
-          //   form: {
-          //     ...this.props.form,
-          //     email: value,
-          //   },
-          // });
+            console.log(value);
+          }, 0);
         },
       }),
     });
@@ -94,7 +97,7 @@ export default class ChatDialog extends Block {
 			</div>
 			<div class="chat-dialog-bottom">
 				<div class="chat-dialog-bottom__field">
-				{{{ SendMessageInput }}}
+					{{{ SendMessageInput }}}
 				</div>
 				<div class="chat-dialog-bottom__send-button">
 					{{{ SendMessageButton }}}

@@ -1,6 +1,7 @@
 export { Button } from './button';
 export { IconButton } from './icon-button';
 export { LinkButton } from './link-button';
+export { IconTextButton } from './icon-text-button';
 export { FormWrapper } from './form-wrapper';
 export { Avatar } from './avatar';
 export { Input } from './form/input';
@@ -14,6 +15,8 @@ export { ChatMessages } from './chat/chat-messages';
 export { ChatMessageGroup } from './chat/chat-message-group';
 export { ChatMessageGroupItem } from './chat/chat-message-group-item';
 export { SendMessageInput } from './chat/send-message-input';
+export { SearchChatsInput } from './chat/search-chats-input';
+
 export { Modal } from './modal';
 export { ChatModal } from './chat/chat-modal';
 export { GoBack } from './go-back';

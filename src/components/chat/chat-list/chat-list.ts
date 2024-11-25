@@ -15,7 +15,8 @@ export default class ChatList extends Block {
       ...props,
       activeChatId: null,
       classList: 'chat-list',
-      items: props.items.map(
+      el: props.items,
+      chatItems: props.items.map(
         (chatItem: IChatItem) =>
           new ChatItem({
             ...chatItem,
@@ -27,21 +28,27 @@ export default class ChatList extends Block {
       ),
     });
   }
+
+  public componentDidUpdate() {
+    const { items } = this.props;
+
+    this.children.chatItems = items.map(
+      (chatItem: IChatItem) =>
+        new ChatItem({
+          ...chatItem,
+          onClick: () => {
+            this.setProps({ activeChatId: chatItem.id });
+            this.props.onChatSelect(chatItem.id);
+          },
+        })
+    );
+
+    return true;
+  }
+
   public render(): string {
-    const { activeChatId } = this.props;
-    const { items } = this.children;
-
-    items.forEach((item: IChatItem) => {
-      item.setProps({ active: false });
-
-      if (item.props.id === activeChatId) {
-        item.setProps({ active: true });
-        return;
-      }
-    });
-
     return `
-      {{#each items}}
+      {{#each chatItems}}
 				{{{ this }}}
 			{{/each}}
     `;

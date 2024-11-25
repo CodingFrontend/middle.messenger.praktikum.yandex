@@ -1,9 +1,10 @@
 import Block from '@/src/core/block';
-import { LinkButton } from '@/src/components';
+import { IconTextButton, ChatModal } from '@/src/components';
 
 export interface IChatWidgetItem {
   faIcon: string;
   text: string;
+  action: string;
 }
 
 interface IChatWidgetProps {
@@ -15,26 +16,57 @@ export default class ChatWidget extends Block {
     super('ul', {
       ...props,
       classList: 'chat-widget',
-      items: props.items.map(
-        (props: IChatWidgetItem) =>
-          new LinkButton({
-            label: props.text,
-            iconLeft: props.faIcon,
-            onClick: (e: Event) => {
-              e.preventDefault();
-              console.log(props.text);
+      showModalAdd: false,
+      action: '',
+      widgetItems: props.items.map(
+        (item: IChatWidgetItem) =>
+          new IconTextButton({
+            label: item.text,
+            iconLeft: item.faIcon,
+            onClick: () => {
+              if (item.action === 'add') {
+                this.setProps({
+                  showModalAdd: true,
+                });
+              } else if (item.action === 'delete') {
+                this.setProps({
+                  showModalDelete: true,
+                });
+              }
             },
           })
       ),
+      ChatModalAdd: new ChatModal({
+        modalTitle: 'Добавить пользователя',
+        modalButtonLabelOk: 'Добавить',
+        onCloseModal: () => {
+          this.setProps({ showModalAdd: false });
+          this.props.onCloseModal();
+        },
+      }),
+      ChatModalDelete: new ChatModal({
+        modalTitle: 'Удалить пользователя',
+        modalButtonLabelOk: 'Удалить',
+        onCloseModal: () => {
+          this.setProps({ showModalDelete: false });
+          this.props.onCloseModal();
+        },
+      }),
     });
   }
   public render(): string {
     return `
-      {{#each items}}
+      {{#each widgetItems}}
 				<li>
 					{{{ this }}}
 				</li>
 			{{/each}}
+			{{#if showModalAdd}}
+				{{{ ChatModalAdd }}}
+			{{/if}}
+			{{#if showModalDelete}}
+				{{{ ChatModalDelete }}}
+			{{/if}}
     `;
   }
 }

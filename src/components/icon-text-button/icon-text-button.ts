@@ -10,9 +10,9 @@ export interface ILinkButtonProps {
 
 export default class LinkButton extends Block {
   constructor(props: ILinkButtonProps) {
-    super('a', {
+    super('div', {
       ...props,
-      classList: `link-button link-button--${props.type}`,
+      classList: `icon-text-button icon-text-button--${props.type}`,
       attrs: {
         href: props.link,
       },
@@ -24,13 +24,13 @@ export default class LinkButton extends Block {
   public render(): string {
     return `
       {{#if iconLeft}}
-				<span class='link-button__icon'>
+				<span class='icon-text-button__icon'>
 					<i class='{{iconLeft}}'></i>
 				</span>
 			{{/if}}
-			<span class='link-button__label'>{{label}}</span>
+			<span class='icon-text-button__label'>{{label}}</span>
 			{{#if iconRight}}
-				<span class='link-button__icon'>
+				<span class='icon-text-button__icon'>
 					<i class='{{iconRight}}'></i>
 				</span>
 			{{/if}}

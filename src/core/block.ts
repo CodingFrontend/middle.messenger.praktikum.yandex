@@ -102,8 +102,17 @@ export default class Block {
           value.hasOwnProperty('children') &&
           Object.keys(value.children).length
         ) {
-          console.log(value, 888, Object.values(value.children));
-          // this._getChildrenAndProps(Object.values(value.children));
+          // if (Array.isArray(Object.values(value.children))) {
+          //   console.log('TRUE', Object.values(value.children));
+          //   Object.values(value.children).forEach((obj) => {
+          //     console.log(111, obj);
+          //     if (obj instanceof Block) {
+          //       children[key] = value;
+          //     } else {
+          //       props[key] = value;
+          //     }
+          //   });
+          // }
         }
         {
           children[key] = value;
@@ -112,6 +121,8 @@ export default class Block {
         props[key] = value;
       }
     });
+
+    console.log('children', children);
 
     return { children, props };
   }
@@ -131,6 +142,7 @@ export default class Block {
     if (!response) {
       return;
     }
+    // console.log('updated', oldProps, newProps);
     this._render();
   }
 
@@ -176,6 +188,7 @@ export default class Block {
   }
 
   _compile() {
+    console.log(this._element, 'children', this.children);
     const propsAndStubs = { ...this.props };
     Object.entries(this.children).forEach(([key, child]) => {
       if (Array.isArray(child)) {
@@ -191,6 +204,7 @@ export default class Block {
     fragment.innerHTML = template(propsAndStubs);
     Object.values(this.children).forEach((child) => {
       if (Array.isArray(child)) {
+        console.log(child);
         child.forEach((component) => {
           const stub = fragment.content.querySelector(
             `[data-id="${component._id}"]`
@@ -201,7 +215,6 @@ export default class Block {
       } else {
         const stub = fragment.content.querySelector(`[data-id="${child._id}"]`);
 
-        // console.log(this._element, stub, child.getContent());
         stub?.replaceWith(child.getContent());
       }
     });
@@ -239,8 +252,10 @@ export default class Block {
         return typeof value === 'function' ? value.bind(target) : value;
       },
       set(target, prop, value) {
+        // console.log('proxy', target, prop, value);
         const oldTarget = { ...target };
         target[prop] = value;
+        console.log('proxy', oldTarget, target);
 
         emitBind(Block.EVENTS.FLOW_CDU, oldTarget, target);
         return true;
