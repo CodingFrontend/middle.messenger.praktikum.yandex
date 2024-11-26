@@ -1,8 +1,8 @@
-import Block from '@/src/core/block';
-import { ChatMessagesItem } from '@/src/components';
-import type { IChatMessagesItem } from '@/src/components/chat/chat-messages-item';
+import Block from '@/core/block';
+import { ChatMessagesItem } from '@/components';
+import type { IChatMessagesItem } from '@/components/chat/chat-messages-item/chat-messages-item';
 
-interface IChatMessages {
+export interface IChatMessages {
   messages: IChatMessagesItem[];
 }
 

@@ -1,27 +1,23 @@
-import Block from '@/src/core/block';
+import Block from '@/core/block';
 import {
   Avatar,
   ChatWidget,
   ChatMessageGroup,
   IconButton,
   SendMessageInput,
-} from '@/src/components';
-import { chatWidgetItems } from '@/src/mockData/chatDataMock';
-import { validateField } from '@/src/utils/validate';
+} from '@/components';
+import { chatWidgetItems } from '@/mockData/chatDataMock';
+import { validateField } from '@/utils/validate';
+import type { IChatMessageGroup } from '@/components/chat/chat-message-group/chat-message-group';
 
 export interface IChatDialog {
-  // chatDialog: any;
-  activeChatId: string;
-  showModalAddUser: false;
-  showModalDeleteUser: false;
-  // userName: string;
-  // image: string;
-  // chatWidgetItems: IChatWidgetItem[];
-  // messages: IChatMessageGroup[];
+  name: string;
+  image?: string;
+  groups: IChatMessageGroup[];
 }
 
 export default class ChatDialog extends Block {
-  constructor(props: any) {
+  constructor(props: IChatDialog) {
     super('div', {
       ...props,
       showChatWidget: false,
@@ -58,7 +54,7 @@ export default class ChatDialog extends Block {
         type: 'primary',
         onClick: () => {
           setTimeout(() => {
-            const value = this.props.messageText;
+            const value = this.props.messageText as string;
             let error = validateField('message', value);
 
             if (error) return;

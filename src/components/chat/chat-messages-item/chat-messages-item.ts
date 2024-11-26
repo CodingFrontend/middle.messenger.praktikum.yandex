@@ -1,6 +1,6 @@
-import Block from '@/src/core/block';
+import Block from '@/core/block';
 
-interface IChatMessagesItem {
+export interface IChatMessagesItem {
   type: string;
   content: string;
   value: string;

@@ -1,7 +1,7 @@
-import Block from '@/src/core/block';
-import { Avatar } from '@/src/components';
+import Block from '@/core/block';
+import { Avatar } from '@/components';
 
-interface IChatItem {
+export interface IChatItem {
   id: string;
   name: string;
   date: string;
@@ -9,7 +9,7 @@ interface IChatItem {
   count: number;
   image: string;
   isMessageUpcoming: boolean;
-  active: boolean;
+  active?: boolean;
   onClick?: (e: Event) => void;
 }
 

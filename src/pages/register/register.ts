@@ -1,7 +1,27 @@
-import Block from '@/src/core/block';
-import { AuthLayout } from '@/src/layouts/auth';
-import { Input, Button, LinkButton } from '@/src/components';
-import { validateField } from '@/src/utils/validate';
+import Block from '@/core/block';
+import { AuthLayout } from '@/layouts/auth';
+import { Input, Button, LinkButton } from '@/components';
+import { validateField } from '@/utils/validate';
+
+interface IForm {
+  email: string;
+  login: string;
+  first_name: string;
+  second_name: string;
+  phone: string;
+  password: string;
+  password_repeat: string;
+}
+
+interface IErrors {
+  email: string;
+  login: string;
+  first_name: string;
+  second_name: string;
+  phone: string;
+  password: string;
+  password_repeat: string;
+}
 
 class RegisterContent extends Block {
   constructor() {
@@ -39,7 +59,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             errors: {
-              ...this.props.errors,
+              ...(this.props.errors as IErrors),
               email: error,
             },
           });
@@ -48,7 +68,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             form: {
-              ...this.props.form,
+              ...(this.props.form as IForm),
               email: value,
             },
           });
@@ -68,7 +88,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             errors: {
-              ...this.props.errors,
+              ...(this.props.errors as IErrors),
               login: error,
             },
           });
@@ -77,7 +97,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             loginForm: {
-              ...this.props.loginForm,
+              ...(this.props.form as IForm),
               login: value,
             },
           });
@@ -97,7 +117,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             errors: {
-              ...this.props.errors,
+              ...(this.props.errors as IErrors),
               first_name: error,
             },
           });
@@ -106,7 +126,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             form: {
-              ...this.props.form,
+              ...(this.props.form as IForm),
               first_name: value,
             },
           });
@@ -126,7 +146,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             errors: {
-              ...this.props.errors,
+              ...(this.props.errors as IErrors),
               second_name: error,
             },
           });
@@ -135,7 +155,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             form: {
-              ...this.props.form,
+              ...(this.props.form as IForm),
               second_name: value,
             },
           });
@@ -155,7 +175,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             errors: {
-              ...this.props.errors,
+              ...(this.props.errors as IErrors),
               phone: error,
             },
           });
@@ -164,7 +184,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             form: {
-              ...this.props.form,
+              ...(this.props.form as IForm),
               phone: value,
             },
           });
@@ -184,7 +204,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             errors: {
-              ...this.props.errors,
+              ...(this.props.errors as IErrors),
               password: error,
             },
           });
@@ -193,7 +213,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             form: {
-              ...this.props.form,
+              ...(this.props.form as IForm),
               password: value,
             },
           });
@@ -207,7 +227,8 @@ class RegisterContent extends Block {
           const value = (e.target as HTMLInputElement).value;
           let error = '';
 
-          if (this.props.form.password !== value) error = 'Пароли не совпадают';
+          if ((this.props.form as IForm).password !== value)
+            error = 'Пароли не совпадают';
 
           this.children.InputPasswordRepeat.setProps({
             error,
@@ -215,7 +236,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             errors: {
-              ...this.props.errors,
+              ...(this.props.errors as IErrors),
               password_repeat: error,
             },
           });
@@ -224,7 +245,7 @@ class RegisterContent extends Block {
 
           this.setProps({
             form: {
-              ...this.props.form,
+              ...(this.props.form as IForm),
               password_repeat: value,
             },
           });
@@ -238,11 +259,11 @@ class RegisterContent extends Block {
         },
         onClick: () => {
           setTimeout(() => {
-            for (let key in this.props.errors) {
+            for (let key in this.props.errors as IErrors) {
               if (this.props.errors[key]) return;
             }
 
-            console.log(this.props.form);
+            console.log(this.props.form as IForm);
           }, 0);
         },
       }),

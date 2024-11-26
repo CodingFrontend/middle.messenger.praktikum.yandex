@@ -1,10 +1,12 @@
-import Block from '@/src/core/block';
-import { Modal, Input } from '@/src/components';
+import Block from '@/core/block';
+import { Modal, Input } from '@/components';
 
 interface IModalProps {
   modalTitle: string;
   modalButtonLabelOk: string;
   onCloseModal: () => void;
+  onConfirm: () => void;
+  onCancel: () => void;
 }
 
 class DialogBody extends Block {
@@ -33,6 +35,8 @@ export default class ChatModal extends Block {
         labelOk: props.modalButtonLabelOk,
         Body: new DialogBody(),
         onCloseModal: () => props.onCloseModal(),
+        onConfirm: () => props.onConfirm(),
+        onCancel: () => props.onCancel(),
       }),
     });
   }

@@ -1,6 +1,6 @@
-import Block from '@/src/core/block';
+import Block from '@/core/block';
 
-import { validateField } from '@/src/utils/validate';
+import { validateField } from '@/utils/validate';
 
 import {
   GoBack,
@@ -9,21 +9,44 @@ import {
   LinkButton,
   Button,
   ChangeAvatarModal,
-} from '@/src/components';
+} from '@/components';
 
 import mockData from './mockData';
 
-interface IProfileContentProps {
-  isGeneralInfo: boolean;
-  isEditInfo: boolean;
-  isEditPassword: boolean;
+interface IEditInfoForm {
   email: string;
   login: string;
   first_name: string;
   second_name: string;
   display_name: string;
   phone: string;
-  showChangeAvatarModal: boolean;
+}
+
+interface IEditInfoFormErrors {
+  email: string;
+  login: string;
+  first_name: string;
+  second_name: string;
+  display_name: string;
+  phone: string;
+}
+
+interface IEditPasswordForm {
+  old_password: string;
+  new_password: string;
+  new_password_repeat: string;
+}
+
+interface IEditPasswordFormErrors {
+  old_password: string;
+  new_password: string;
+  new_password_repeat: string;
+}
+
+interface IProfileContentProps extends IEditInfoForm {
+  isGeneralInfo: boolean;
+  isEditInfo: boolean;
+  isEditPassword: boolean;
   fileUploaded: boolean;
   emptyError: string;
   fileName: string;
@@ -154,7 +177,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editInfoFormErrors: {
-              ...this.props.editInfoFormErrors,
+              ...(this.props.editInfoFormErrors as IEditInfoFormErrors),
               email: error,
             },
           });
@@ -163,7 +186,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editInfoForm: {
-              ...this.props.editInfoForm,
+              ...(this.props.editInfoForm as IEditInfoForm),
               email: value,
             },
           });
@@ -184,7 +207,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editInfoFormErrors: {
-              ...this.props.editInfoFormErrors,
+              ...(this.props.editInfoFormErrors as IEditInfoFormErrors),
               login: error,
             },
           });
@@ -193,7 +216,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editInfoForm: {
-              ...this.props.editInfoForm,
+              ...(this.props.editInfoForm as IEditInfoForm),
               login: value,
             },
           });
@@ -214,7 +237,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editInfoFormErrors: {
-              ...this.props.editInfoFormErrors,
+              ...(this.props.editInfoFormErrors as IEditInfoFormErrors),
               first_name: error,
             },
           });
@@ -223,7 +246,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editInfoForm: {
-              ...this.props.editInfoForm,
+              ...(this.props.editInfoForm as IEditInfoForm),
               first_name: value,
             },
           });
@@ -244,7 +267,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editInfoFormErrors: {
-              ...this.props.editInfoFormErrors,
+              ...(this.props.editInfoFormErrors as IEditInfoFormErrors),
               second_name: error,
             },
           });
@@ -253,7 +276,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editInfoForm: {
-              ...this.props.editInfoForm,
+              ...(this.props.editInfoForm as IEditInfoForm),
               second_name: value,
             },
           });
@@ -280,7 +303,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editInfoFormErrors: {
-              ...this.props.editInfoFormErrors,
+              ...(this.props.editInfoFormErrors as IEditInfoFormErrors),
               phone: error,
             },
           });
@@ -289,7 +312,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editInfoForm: {
-              ...this.props.editInfoForm,
+              ...(this.props.editInfoForm as IEditInfoForm),
               phone: value,
             },
           });
@@ -312,7 +335,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editPasswordFormErrors: {
-              ...this.props.editPasswordFormErrors,
+              ...(this.props.editPasswordFormErrors as IEditPasswordFormErrors),
               old_password: error,
             },
           });
@@ -321,7 +344,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editPasswordForm: {
-              ...this.props.editPasswordForm,
+              ...(this.props.editPasswordForm as IEditPasswordForm),
               old_password: value,
             },
           });
@@ -342,7 +365,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editPasswordFormErrors: {
-              ...this.props.editPasswordFormErrors,
+              ...(this.props.editPasswordFormErrors as IEditPasswordFormErrors),
               new_password: error,
             },
           });
@@ -351,7 +374,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editPasswordForm: {
-              ...this.props.editPasswordForm,
+              ...(this.props.editPasswordForm as IEditPasswordForm),
               new_password: value,
             },
           });
@@ -366,7 +389,11 @@ class ProfileContent extends Block {
           const value = (e.target as HTMLInputElement).value;
           let error = '';
 
-          if (this.props.editPasswordForm.new_password !== value)
+          if (
+            this.props.editPasswordForm &&
+            (this.props.editPasswordForm as IEditPasswordForm).new_password !==
+              value
+          )
             error = 'Пароли не совпадают';
 
           this.children.InputNewPasswordRepeat.setProps({
@@ -374,8 +401,8 @@ class ProfileContent extends Block {
           });
 
           this.setProps({
-            editPasswordForm: {
-              ...this.props.editPasswordForm,
+            editPasswordFormErrors: {
+              ...(this.props.editPasswordForm as IEditPasswordFormErrors),
               new_password_repeat: error,
             },
           });
@@ -384,7 +411,7 @@ class ProfileContent extends Block {
 
           this.setProps({
             editPasswordForm: {
-              ...this.props.editPasswordForm,
+              ...(this.props.editPasswordForm as IEditPasswordForm),
               new_password_repeat: value,
             },
           });
@@ -418,7 +445,8 @@ class ProfileContent extends Block {
         },
         onClick: () => {
           setTimeout(() => {
-            for (let key in this.props.editInfoFormErrors) {
+            for (let key in this.props
+              .editInfoFormErrors as IEditInfoFormErrors) {
               if (this.props.editInfoFormErrors[key]) return;
             }
 
@@ -431,7 +459,8 @@ class ProfileContent extends Block {
         type: 'primary',
         onClick: () => {
           setTimeout(() => {
-            for (let key in this.props.editPasswordFormErrors) {
+            for (let key in this.props
+              .editPasswordFormErrors as IEditPasswordFormErrors) {
               if (this.props.editPasswordFormErrors[key]) return;
             }
 

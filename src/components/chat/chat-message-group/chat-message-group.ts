@@ -1,9 +1,11 @@
-import Block from '@/src/core/block';
-import { ChatMessageGroupItem } from '@/src/components';
+import Block from '@/core/block';
+import { ChatMessageGroupItem } from '@/components';
+import type { IChatMessageGroupItem } from '@/components/chat/chat-message-group-item/chat-message-group-item';
+
 export interface IChatMessageGroup {
   id: string;
   date: string;
-  groups: any;
+  groups: IChatMessageGroupItem[];
 }
 
 export default class ChatMessageGroup extends Block {

@@ -1,14 +1,15 @@
-import Block from '@/src/core/block';
-import { IconTextButton, ChatModal } from '@/src/components';
+import Block from '@/core/block';
+import { IconTextButton, ChatModal } from '@/components';
 
 export interface IChatWidgetItem {
-  faIcon: string;
+  faIcon?: string;
   text: string;
   action: string;
 }
 
 interface IChatWidgetProps {
   items: IChatWidgetItem[];
+  onCloseModal: () => void;
 }
 
 export default class ChatWidget extends Block {
@@ -43,6 +44,8 @@ export default class ChatWidget extends Block {
           this.setProps({ showModalAdd: false });
           this.props.onCloseModal();
         },
+        onConfirm: () => {},
+        onCancel: () => {},
       }),
       ChatModalDelete: new ChatModal({
         modalTitle: 'Удалить пользователя',
@@ -51,6 +54,8 @@ export default class ChatWidget extends Block {
           this.setProps({ showModalDelete: false });
           this.props.onCloseModal();
         },
+        onConfirm: () => {},
+        onCancel: () => {},
       }),
     });
   }

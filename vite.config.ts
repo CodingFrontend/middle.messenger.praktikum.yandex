@@ -8,7 +8,7 @@ export default defineConfig({
     outDir: resolve(__dirname, 'dist'),
   },
   resolve: {
-    alias: [{ find: '@', replacement: resolve(__dirname, '') }],
+    alias: [{ find: '@', replacement: resolve(__dirname, './src') }],
   },
   plugins: [
     handlebars({

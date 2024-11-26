@@ -1,11 +1,11 @@
-import Block from '@/src/core/block';
+import Block from '@/core/block';
 
 interface InputFieldProps {
   name: string;
   type: string;
-  error: string;
-  onChange: (e: Event) => void;
-  onBlur: (e: Event) => void;
+  error?: string;
+  onChange?: (e: Event) => void;
+  onBlur?: (e: Event) => void;
 }
 
 export default class InputField extends Block {

@@ -1,12 +1,16 @@
-import Block from '@/src/core/block';
-import { IconButton, Button } from '@/src/components';
+import Block from '@/core/block';
+import { IconButton, Button } from '@/components';
 
 interface IModalProps {
   titleError?: boolean;
   title?: string;
-  labelOk?: boolean;
+  labelOk?: string;
   labelCancel?: string;
   error?: string;
+  Body?: Block;
+  onCloseModal: () => void;
+  onConfirm?: () => void;
+  onCancel?: () => void;
 }
 
 export default class Modal extends Block {
@@ -20,14 +24,14 @@ export default class Modal extends Block {
         onClick: () => props.onCloseModal(),
       }),
       ButtonOk: new Button({
-        label: props.labelOk,
+        label: props.labelOk || '',
         type: 'primary',
-        onClick: () => props.onConfirm(),
+        onClick: () => props.onConfirm?.(),
       }),
       ButtonCancel: new Button({
-        label: props.labelCancel,
+        label: props.labelCancel || '',
         type: 'link',
-        onClick: () => props.onCancel(),
+        onClick: () => props.onCancel?.(),
       }),
     });
   }

@@ -1,8 +1,9 @@
-import Block from '@/src/core/block';
-import { PageTitle } from '@/src/components';
+import Block from '@/core/block';
+import { PageTitle } from '@/components';
 
 interface IAuthLayoutProps {
   title: string;
+  Content?: Block;
 }
 
 export default class AuthLayout extends Block {

@@ -1,10 +1,17 @@
-import Block from '@/src/core/block';
-import { Modal, LinkButton } from '@/src/components';
+import Block from '@/core/block';
+import { Modal, LinkButton } from '@/components';
 
 interface ChangeAvatarModalProps {
-  fileName: string;
-  uploadError: boolean;
-  emptyError: string;
+  fileName?: string;
+  uploadError?: string;
+  emptyError?: string;
+  onCloseModal: () => void;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+}
+
+interface IModalBodyUploadProps {
+  onSelectFile: () => void;
 }
 
 class ModalBody extends Block {
@@ -22,7 +29,7 @@ class ModalBody extends Block {
 }
 
 class ModalBodyUpload extends Block {
-  constructor() {
+  constructor(props: IModalBodyUploadProps) {
     super('div', {
       classList: 'avatar-modal-body',
       LinkButton: new LinkButton({
@@ -46,37 +53,41 @@ export default class ChangeAvatarModal extends Block {
   constructor(props: ChangeAvatarModalProps) {
     super('div', {
       ...props,
-      // Todo: Отрефакторить
       Modal: new Modal({
         title: 'Файл загружен',
         labelOk: 'Поменять',
         error: props.emptyError,
         Body: new ModalBody(),
         onCloseModal: () => props.onCloseModal(),
-        onConfirm: () => props.onConfirm(),
-        onCancel: () => props.onCancel(),
+        onConfirm: () => props.onConfirm?.(),
+        onCancel: () => props.onCancel?.(),
       }),
       ModalError: new Modal({
         title: 'Ошибка, попробуйте еще раз',
         labelOk: 'Поменять',
         error: props.emptyError,
-        Body: new ModalBodyUpload(),
+        Body: new ModalBodyUpload({
+          onSelectFile: () => {},
+        }),
         onCloseModal: () => props.onCloseModal(),
-        onCancel: () => props.onCancel(),
+        onConfirm: () => props.onConfirm?.(),
+        onCancel: () => props.onCancel?.(),
       }),
       ModalUpload: new Modal({
         title: 'Загрузите файл',
         labelOk: 'Поменять',
         error: props.emptyError,
-        Body: new ModalBodyUpload(),
+        Body: new ModalBodyUpload({
+          onSelectFile: () => {},
+        }),
         onCloseModal: () => props.onCloseModal(),
-        onCancel: () => props.onCancel(),
+        onCancel: () => props.onCancel?.(),
+        onConfirm: () => props.onConfirm?.(),
       }),
     });
   }
 
   public render(): string {
-    // Todo: Отрефакторить
     return `
 		{{#if fileName}}
 			{{{ Modal }}}

@@ -1,12 +1,11 @@
-import Block from '@/src/core/block';
-import { ChatItem } from '@/src/components';
-import type { IChatItem } from '@/src/components/chat/chat-item.ts';
+import Block from '@/core/block';
+import { ChatItem } from '@/components';
+import type { IChatItem } from '@/components/chat/chat-item/chat-item';
 
 interface IChatListProps {
-  text: string;
-  faIcon: string;
   items: IChatItem[];
   onClick?: (e: Event) => void;
+  onChatSelect?: (id: string) => void;
 }
 
 export default class ChatList extends Block {
@@ -22,7 +21,7 @@ export default class ChatList extends Block {
             ...chatItem,
             onClick: () => {
               this.setProps({ activeChatId: chatItem.id });
-              props.onChatSelect(chatItem.id);
+              if (props.onChatSelect) props.onChatSelect(chatItem.id);
             },
           })
       ),

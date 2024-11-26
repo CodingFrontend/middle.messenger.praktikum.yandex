@@ -1,7 +1,17 @@
-import Block from '@/src/core/block';
-import { AuthLayout } from '@/src/layouts/auth';
-import { Input, Button, LinkButton } from '@/src/components';
-import { validateField } from '@/src/utils/validate';
+import Block from '@/core/block';
+import { AuthLayout } from '@/layouts/auth';
+import { Input, Button, LinkButton } from '@/components';
+import { validateField } from '@/utils/validate';
+
+interface ILoginForm {
+  login: '';
+  password: '';
+}
+
+interface IErrors {
+  login: '';
+  password: '';
+}
 
 class AuthContent extends Block {
   constructor() {
@@ -29,7 +39,7 @@ class AuthContent extends Block {
 
           this.setProps({
             errors: {
-              ...this.props.errors,
+              ...(this.props.errors as IErrors),
               login: error,
             },
           });
@@ -38,7 +48,7 @@ class AuthContent extends Block {
 
           this.setProps({
             loginForm: {
-              ...this.props.loginForm,
+              ...(this.props.loginForm as ILoginForm),
               login: value,
             },
           });
@@ -58,7 +68,7 @@ class AuthContent extends Block {
 
           this.setProps({
             errors: {
-              ...this.props.errors,
+              ...(this.props.errors as IErrors),
               password: error,
             },
           });
@@ -67,7 +77,7 @@ class AuthContent extends Block {
 
           this.setProps({
             loginForm: {
-              ...this.props.loginForm,
+              ...(this.props.loginForm as ILoginForm),
               password: value,
             },
           });
@@ -81,7 +91,7 @@ class AuthContent extends Block {
         },
         onClick: () => {
           setTimeout(() => {
-            for (let key in this.props.errors) {
+            for (let key in this.props.errors as IErrors) {
               if (this.props.errors[key]) return;
             }
 

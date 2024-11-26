@@ -3,7 +3,7 @@ import * as Components from './components';
 import * as Pages from './pages';
 import * as Layouts from './layouts';
 
-import { render } from '@/src/core/renderDom';
+import { render } from '@/core/renderDom';
 
 const pages = {
   login: [Pages.LoginPage],

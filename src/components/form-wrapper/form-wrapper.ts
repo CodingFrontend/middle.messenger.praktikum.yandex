@@ -1,4 +1,4 @@
-import Block from '@/src/core/block';
+import Block from '@/core/block';
 
 type FormWrapperProps = {
   title: string;

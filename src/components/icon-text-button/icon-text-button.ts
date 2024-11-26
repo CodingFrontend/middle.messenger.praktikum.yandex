@@ -1,7 +1,7 @@
-import Block from '@/src/core/block';
+import Block from '@/core/block';
 
-export interface ILinkButtonProps {
-  link: string;
+export interface IIconTextButtonProps {
+  label: string;
   type?: string;
   iconLeft?: string;
   iconRight?: string;
@@ -9,13 +9,10 @@ export interface ILinkButtonProps {
 }
 
 export default class LinkButton extends Block {
-  constructor(props: ILinkButtonProps) {
+  constructor(props: IIconTextButtonProps) {
     super('div', {
       ...props,
       classList: `icon-text-button icon-text-button--${props.type}`,
-      attrs: {
-        href: props.link,
-      },
       events: {
         mousedown: props.onClick,
       },

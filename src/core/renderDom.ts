@@ -1,10 +1,10 @@
 import Block from './block';
 
 export function render(query: string, block: Block) {
-  const root: HTMLElement = document.querySelector(query);
+  const root: HTMLElement | null = document.querySelector(query);
   root!.innerHTML = '';
 
-  root.appendChild(block.getContent());
+  root && root.appendChild(block.getContent() as HTMLElement);
 
   block.dispatchComponentDidMount();
 

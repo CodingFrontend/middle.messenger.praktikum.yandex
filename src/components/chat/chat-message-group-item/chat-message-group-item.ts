@@ -1,13 +1,15 @@
-import Block from '@/src/core/block';
-import { ChatMessages } from '@/src/components';
-export interface IChatMessageGroup {
+import Block from '@/core/block';
+import { ChatMessages } from '@/components';
+import type { IChatMessages } from '@/components/chat/chat-messages/chat-messages';
+
+export interface IChatMessageGroupItem {
   id: string;
   date: string;
-  groups: any;
+  messages: IChatMessages[];
 }
 
 export default class ChatMessageGroup extends Block {
-  constructor(props: IChatMessageGroup) {
+  constructor(props: IChatMessageGroupItem) {
     super('div', {
       ...props,
       classList: 'chat-message-group',

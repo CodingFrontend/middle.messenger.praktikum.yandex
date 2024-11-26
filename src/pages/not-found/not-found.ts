@@ -1,5 +1,5 @@
-import Block from '@/src/core/block';
-import { LinkButton } from '@/src/components';
+import Block from '@/core/block';
+import { LinkButton } from '@/components';
 
 export default class RegisterPage extends Block {
   constructor() {

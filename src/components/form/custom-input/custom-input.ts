@@ -1,4 +1,4 @@
-import Block from '@/src/core/block';
+import Block from '@/core/block';
 import CustomInputField from './custom-input-field';
 
 interface InputProps {
@@ -6,8 +6,8 @@ interface InputProps {
   name: string;
   type: string;
   value: string;
-  disabled: boolean;
-  error: string;
+  disabled?: boolean;
+  error?: string;
   onChange?: (e: Event) => void;
 }
 

@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import Handlebars from 'handlebars';
 
 type TTageName = string;
-type TChildren = Record<string, Block | Block[]>;
+type TChildren = Record<string, Block>;
 type TEvents = Record<string, EventListenerOrEventListenerObject>;
 
 interface IMeta {
@@ -13,11 +13,20 @@ interface IMeta {
 interface IProps<V = unknown> {
   [key: string]: V;
 }
-interface IBlock {
-  componentDidUpdate: (oldProps: IProps, newProps: IProps) => void;
-}
+// export interface Block {
+//   componentDidUpdate?: (oldProps: IProps, newProps: IProps) => void;
+//   init?: () => void;
+//   componentDidMount?: (oldProps: IProps) => void;
+//   dispatchComponentDidMount?: () => void;
+//   forceUpdate?: () => void;
+//   setProps?: (nextProps: IProps) => void;
+//   render?: () => void;
+//   getContent?: () => string | Node;
+//   show?: () => void;
+//   hide?: () => void;
+// }
 
-export default class Block implements IBlock {
+export default class Block {
   protected eventBus: Function;
   protected children: TChildren;
   protected props: IProps;
@@ -135,16 +144,16 @@ export default class Block implements IBlock {
     return true;
   }
 
-  public forceUpdate(oldProps: IProps, newProps: IProps) {
+  public forceUpdate() {
     this._render();
   }
 
-  public setProps = (nexIProps: IProps) => {
-    if (!nexIProps) {
+  public setProps = (nextProps: IProps) => {
+    if (!nextProps) {
       return;
     }
 
-    Object.assign(this.props, nexIProps);
+    Object.assign(this.props, nextProps);
   };
 
   public setChild = (child: TChildren) => {

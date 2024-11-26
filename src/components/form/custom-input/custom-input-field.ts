@@ -1,12 +1,12 @@
-import Block from '@/src/core/block';
+import Block from '@/core/block';
 
 interface InputFieldProps {
   name: string;
   type: string;
   value: string;
-  disabled: boolean;
-  error: string;
-  onChange: (e: Event) => void;
+  disabled?: boolean;
+  error?: string;
+  onChange?: (e: Event) => void;
 }
 
 export default class CustomInputField extends Block {

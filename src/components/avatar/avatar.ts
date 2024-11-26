@@ -1,8 +1,9 @@
-import Block from '@/src/core/block';
+import Block from '@/core/block';
 
 type AvatarProps = {
   size?: string;
   image?: string;
+  Slot?: Block;
 };
 
 export default class Avatar extends Block {

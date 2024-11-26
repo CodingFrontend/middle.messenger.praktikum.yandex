@@ -1,8 +1,9 @@
-import Block from '@/src/core/block';
+import Block from '@/core/block';
 
 interface ButtonProps {
   label: string;
   type?: string;
+  attrs?: Record<string, string>;
   onClick?: (e: Event) => void;
 }
 

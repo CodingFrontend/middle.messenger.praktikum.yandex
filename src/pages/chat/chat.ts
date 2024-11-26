@@ -1,10 +1,10 @@
-import Block from '@/src/core/block';
+import Block from '@/core/block';
 import {
   LinkButton,
   ChatList,
   ChatDialog,
   SearchChatsInput,
-} from '@/src/components';
+} from '@/components';
 import { chatItems, chatDialogs } from '../../mockData/chatDataMock';
 
 export default class Chat extends Block {
@@ -25,19 +25,23 @@ export default class Chat extends Block {
               searchValue: value,
             });
 
-            this.children.ChatList.componentDidUpdate(
-              chatItems,
-              chatItems.filter((item) => item.name.includes(value))
-            );
+            const oldProps = { items: chatItems };
+            const newProps = {
+              items: chatItems.filter((item) => item.name.includes(value)),
+            };
+
+            this.children.ChatList.componentDidUpdate(oldProps, newProps);
           }
         },
       }),
       ChatList: new ChatList({
         items: chatItems,
-        onChatSelect: (id) => {
+        onChatSelect: (id: string) => {
           const activeChatDialog = id
             ? chatDialogs.find((dialog) => dialog.id === id)
-            : {};
+            : null;
+
+          if (!activeChatDialog) return;
           setTimeout(() => {
             this.setProps({
               activeChatId: id,
@@ -60,7 +64,9 @@ export default class Chat extends Block {
     const { ChatList } = this.children;
 
     ChatList.setProps({
-      items: chatItems.filter((item) => item.name.includes(searchValue)),
+      items: chatItems.filter((item) =>
+        item.name.includes(searchValue as string)
+      ),
     });
 
     return `

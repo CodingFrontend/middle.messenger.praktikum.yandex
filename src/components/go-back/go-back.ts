@@ -1,16 +1,9 @@
-import Block from '@/src/core/block';
-import { IconButton } from '@/src/components';
+import Block from '@/core/block';
+import { IconButton } from '@/components';
 
-type ProfileLayoutProps = {
-  title: string;
-  labelOk: string;
-  labelCancel: string;
-};
-
-export default class ProfileLayout extends Block {
-  constructor(props: ProfileLayoutProps) {
+export default class GoBack extends Block {
+  constructor() {
     super('div', {
-      ...props,
       classList: 'go-back',
       IconButton: new IconButton({
         faIcon: 'fa-solid fa-arrow-left',
