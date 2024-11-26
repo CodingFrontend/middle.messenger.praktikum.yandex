@@ -1,11 +1,11 @@
 import Block from '@/src/core/block';
 
 interface InputFieldProps {
-  name: string;
-  onKeydown: (e: Event) => void;
+  name?: string;
+  onKeydown: (e: KeyboardEvent) => void;
 }
 
-export default class CustomInputField extends Block {
+export default class SearchChatsInput extends Block {
   constructor(props: InputFieldProps) {
     super('input', {
       ...props,

@@ -5,10 +5,7 @@ import {
   ChatMessageGroup,
   IconButton,
   SendMessageInput,
-  ChatModal,
 } from '@/src/components';
-import type { IChatWidgetItem } from '@/src/components/chat/chat-widget';
-import type { IChatMessageGroup } from '@/src/components/chat/chat-message-group';
 import { chatWidgetItems } from '@/src/mockData/chatDataMock';
 import { validateField } from '@/src/utils/validate';
 

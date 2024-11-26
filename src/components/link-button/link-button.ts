@@ -1,7 +1,8 @@
 import Block from '@/src/core/block';
 
 export interface ILinkButtonProps {
-  link: string;
+  label: string;
+  link?: string;
   type?: string;
   iconLeft?: string;
   iconRight?: string;

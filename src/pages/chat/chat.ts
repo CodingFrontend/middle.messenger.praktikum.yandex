@@ -34,7 +34,6 @@ export default class Chat extends Block {
       }),
       ChatList: new ChatList({
         items: chatItems,
-        searchValue: '',
         onChatSelect: (id) => {
           const activeChatDialog = id
             ? chatDialogs.find((dialog) => dialog.id === id)
