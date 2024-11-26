@@ -8,7 +8,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-      // "@/src/components*": ["src/components/*"]
     },
 
     /* bundler mode */

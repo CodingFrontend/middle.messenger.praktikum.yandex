@@ -11,6 +11,7 @@ import { validateField } from '@/utils/validate';
 import type { IChatMessageGroup } from '@/components/chat/chat-message-group/chat-message-group';
 
 export interface IChatDialog {
+  id: string;
   name: string;
   image?: string;
   groups: IChatMessageGroup[];
@@ -24,7 +25,7 @@ export default class ChatDialog extends Block {
       classList: 'chat-dialog',
       messageText: '',
       Avatar: new Avatar({
-        image: props.image,
+        image: props.image || '',
         size: 'small',
       }),
       ChatWidget: new ChatWidget({
@@ -83,11 +84,9 @@ export default class ChatDialog extends Block {
 					{{/if}}
 				</div>
 			</div>
-			<div class="chat-dialog-content">
-				{{#if groups}}
-					{{{ ChatMessageGroup }}}
-				{{/if}}
-			</div>
+			{{#if groups}}
+				{{{ ChatMessageGroup }}}
+			{{/if}}
 			<div class="chat-dialog-bottom">
 				<div class="chat-dialog-bottom__field">
 					{{{ SendMessageInput }}}

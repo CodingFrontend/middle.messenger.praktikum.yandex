@@ -22,7 +22,7 @@
 
 .icon-text-button__label {
   font-size: var(--text-sm);
-  text-wrap: nowrap;
+	text-wrap: nowrap;
 }
 
 .icon-text-button--secondary {

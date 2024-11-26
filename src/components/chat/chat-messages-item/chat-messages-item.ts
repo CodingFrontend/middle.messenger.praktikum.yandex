@@ -1,10 +1,10 @@
 import Block from '@/core/block';
 
 export interface IChatMessagesItem {
-  type: string;
-  content: string;
+  type: 'upcoming' | 'incoming';
+  content: 'text';
   value: string;
-  read: boolean;
+  read?: boolean;
   date: string;
 }
 

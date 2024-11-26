@@ -6,6 +6,7 @@ import {
   SearchChatsInput,
 } from '@/components';
 import { chatItems, chatDialogs } from '../../mockData/chatDataMock';
+import type { IChatDialog } from '@/components/chat/chat-dialog/chat-dialog';
 
 export default class Chat extends Block {
   constructor() {
@@ -48,7 +49,7 @@ export default class Chat extends Block {
             });
             this.setChild({
               ChatDialog: new ChatDialog({
-                ...activeChatDialog,
+                ...(activeChatDialog as IChatDialog),
               }),
             });
             this.forceUpdate();

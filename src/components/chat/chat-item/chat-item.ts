@@ -6,9 +6,9 @@ export interface IChatItem {
   name: string;
   date: string;
   message: string;
-  count: number;
-  image: string;
-  isMessageUpcoming: boolean;
+  count?: number;
+  image?: string;
+  isMessageUpcoming?: boolean;
   active?: boolean;
   onClick?: (e: Event) => void;
 }
