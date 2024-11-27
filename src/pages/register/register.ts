@@ -259,7 +259,7 @@ class RegisterContent extends Block {
         },
         onClick: () => {
           setTimeout(() => {
-            for (let key in this.props.errors as IErrors) {
+            for (const key in this.props.errors as IErrors) {
               if (this.props.errors[key]) return;
             }
 

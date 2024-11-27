@@ -445,7 +445,7 @@ class ProfileContent extends Block {
         },
         onClick: () => {
           setTimeout(() => {
-            for (let key in this.props
+            for (const key in this.props
               .editInfoFormErrors as IEditInfoFormErrors) {
               if (this.props.editInfoFormErrors[key]) return;
             }
@@ -462,7 +462,7 @@ class ProfileContent extends Block {
         },
         onClick: () => {
           setTimeout(() => {
-            for (let key in this.props
+            for (const key in this.props
               .editPasswordFormErrors as IEditPasswordFormErrors) {
               if (this.props.editPasswordFormErrors[key]) return;
             }

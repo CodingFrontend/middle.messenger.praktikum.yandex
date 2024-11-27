@@ -55,7 +55,7 @@ export default class ChatWidget extends Block {
               this.children.ChatModalAdd.children.Modal.children.Body.props
                 .errors;
 
-            for (let key in errors as IErrors) {
+            for (const key in errors as IErrors) {
               if (errors[key]) return;
             }
             console.log(form);
@@ -80,7 +80,7 @@ export default class ChatWidget extends Block {
               this.children.ChatModalDelete.children.Modal.children.Body.props
                 .errors;
 
-            for (let key in errors as IErrors) {
+            for (const key in errors as IErrors) {
               if (errors[key]) return;
             }
             console.log(form);
