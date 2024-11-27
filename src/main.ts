@@ -110,15 +110,15 @@ Object.entries(Layouts).forEach(([name, template]) => {
 
 Handlebars.registerHelper('ifCond', function (v1, v2, options) {
   if (v1 === v2) {
-    //@ts-ignore
+    //@ts-expect-error
     return options.fn(this);
   }
-  //@ts-ignore
+  //@ts-expect-error
   return options.inverse(this);
 });
 
 function navigate(page: string) {
-  //@ts-ignore
+  //@ts-expect-error
   const [source, context] = pages[page];
   if (typeof source === 'function') {
     render('#app', new source());
@@ -134,7 +134,7 @@ function navigate(page: string) {
 document.addEventListener('DOMContentLoaded', () => navigate('profile'));
 
 document.addEventListener('click', (e) => {
-  //@ts-ignore
+  //@ts-expect-error
   const page = e.target.getAttribute('page');
   if (page) {
     navigate(page);
