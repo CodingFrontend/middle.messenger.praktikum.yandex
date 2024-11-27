@@ -110,15 +110,18 @@ Object.entries(Layouts).forEach(([name, template]) => {
 
 Handlebars.registerHelper('ifCond', function (v1, v2, options) {
   if (v1 === v2) {
-    //@ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return options.fn(this);
   }
-  //@ts-expect-error
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return options.inverse(this);
 });
 
 function navigate(page: string) {
-  //@ts-expect-error
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const [source, context] = pages[page];
   if (typeof source === 'function') {
     render('#app', new source());
@@ -134,7 +137,8 @@ function navigate(page: string) {
 document.addEventListener('DOMContentLoaded', () => navigate('profile'));
 
 document.addEventListener('click', (e) => {
-  //@ts-expect-error
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const page = e.target.getAttribute('page');
   if (page) {
     navigate(page);
