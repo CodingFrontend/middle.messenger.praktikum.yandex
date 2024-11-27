@@ -40,7 +40,6 @@ export default class Modal extends Block {
   }
 
   public render(): string {
-    console.log(this.props);
     return `
       <div class="modal-dialog">
 				<div class="modal-dialog__close-button">

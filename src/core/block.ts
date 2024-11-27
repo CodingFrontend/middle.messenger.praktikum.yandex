@@ -2,15 +2,18 @@ import EventBus from './eventBus';
 import { nanoid } from 'nanoid';
 import Handlebars from 'handlebars';
 
+interface BlockConsturctor extends Block {
+  new (name: string): { props: IProps };
+}
 type TTageName = string;
-type TChildren = Record<string, Block>;
+type TChildren = Record<string, BlockConsturctor>;
 type TEvents = Record<string, EventListenerOrEventListenerObject>;
 
 interface IMeta {
   tagName?: TTageName;
   props?: IProps;
 }
-interface IProps<V = unknown> {
+interface IProps<V = TChildren | string | boolean | any> {
   [key: string]: V;
 }
 
@@ -88,7 +91,7 @@ export default class Block {
       if (Array.isArray(value)) {
         value.forEach((obj) => {
           if (obj instanceof Block) {
-            children[key] = value;
+            children[key] = value as unknown as BlockConsturctor;
           } else {
             props[key] = value;
           }
@@ -99,7 +102,7 @@ export default class Block {
 
       if (value instanceof Block) {
         {
-          children[key] = value;
+          children[key] = value as BlockConsturctor;
         }
       } else {
         props[key] = value;
@@ -145,7 +148,7 @@ export default class Block {
     Object.assign(this.props, nextProps);
   };
 
-  public setChild = (child: TChildren) => {
+  public setChild = (child: unknown) => {
     Object.assign(this.children, child);
   };
 

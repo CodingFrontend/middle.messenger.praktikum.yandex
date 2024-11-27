@@ -27,6 +27,7 @@ export default class ChatItem extends Block {
     });
   }
   public render(): string {
+    console.log('item', this.props);
     return `
 			<div class="chat-item {{#if active}}chat-item--active{{/if}}">
 				<div class='chat-item__wrapper'>

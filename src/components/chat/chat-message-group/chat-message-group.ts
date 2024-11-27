@@ -3,7 +3,9 @@ import { ChatMessageGroupItem } from '@/components';
 import type { IChatMessageGroupItem } from '@/components/chat/chat-message-group-item/chat-message-group-item';
 
 export interface IChatMessageGroup {
-  groups: IChatMessageGroupItem[];
+  date?: string;
+  messages?: any;
+  groups?: IChatMessageGroupItem[];
 }
 
 export default class ChatMessageGroup extends Block {
@@ -11,12 +13,13 @@ export default class ChatMessageGroup extends Block {
     super('div', {
       ...props,
       classList: 'chat-dialog-content',
-      groupsList: props.groups.map(
+      groupsList: props.groups?.map(
         (group) => new ChatMessageGroupItem({ ...group })
       ),
     });
   }
   public render(): string {
+    console.log('chat-message-group', this.props.groups);
     return `
     {{#each groupsList}}
 			{{{ this }}}

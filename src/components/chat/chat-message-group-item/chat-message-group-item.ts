@@ -3,8 +3,8 @@ import { ChatMessagesItem } from '@/components';
 import type { IChatMessagesItem } from '@/components/chat/chat-messages-item/chat-messages-item';
 
 export interface IChatMessageGroupItem {
-  date: string;
-  messages: IChatMessagesItem[];
+  date?: string;
+  messages?: IChatMessagesItem[];
 }
 
 export default class ChatMessageGroupItem extends Block {
@@ -12,7 +12,7 @@ export default class ChatMessageGroupItem extends Block {
     super('div', {
       ...props,
       classList: 'chat-message-group',
-      messages: props.messages.map(
+      messages: props.messages?.map(
         (message) => new ChatMessagesItem({ ...message })
       ),
     });

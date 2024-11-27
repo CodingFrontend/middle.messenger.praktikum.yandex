@@ -5,7 +5,8 @@ enum METHODS {
   DELETE = 'DELETE',
 }
 type TUrl = string;
-type TData = Record<string, unknown> | Document | XMLHttpRequestBodyInit | null;
+// Тип данных неизвестен
+type TData = Record<string, any>;
 interface IOptions {
   headers?: Record<string, string>;
   method: METHODS;
@@ -29,10 +30,9 @@ export default class HTTPTransport {
     }
 
     return Object.keys(data as XMLHttpRequestBodyInit)
-      .map(function (key) {
-        return (
-          encodeURIComponent(key) + '=' + encodeURIComponent(data && data[key])
-        );
+      .map((key) => {
+        if (typeof key === 'string')
+          encodeURIComponent(key) + '=' + encodeURIComponent(data && data[key]);
       })
       .join('&');
   }

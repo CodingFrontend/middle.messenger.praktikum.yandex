@@ -6,7 +6,6 @@ import {
   SearchChatsInput,
 } from '@/components';
 import { chatItems, chatDialogs } from '../../mockData/chatDataMock';
-import type { IChatDialog } from '@/components/chat/chat-dialog/chat-dialog';
 
 export default class Chat extends Block {
   constructor() {
@@ -41,7 +40,7 @@ export default class Chat extends Block {
           const activeChatDialog = id
             ? chatDialogs.find((dialog) => dialog.id === id)
             : null;
-
+          console.log(activeChatDialog);
           if (!activeChatDialog) return;
           setTimeout(() => {
             this.setProps({
@@ -49,7 +48,9 @@ export default class Chat extends Block {
             });
             this.setChild({
               ChatDialog: new ChatDialog({
-                ...(activeChatDialog as IChatDialog),
+                id: activeChatDialog.id,
+                name: activeChatDialog.name,
+                groups: activeChatDialog.groups,
               }),
             });
             this.forceUpdate();
