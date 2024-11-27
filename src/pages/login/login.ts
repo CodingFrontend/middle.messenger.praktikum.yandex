@@ -31,7 +31,7 @@ class AuthContent extends Block {
         type: 'text',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = validateField('login', value);
+          const error = validateField('login', value);
 
           this.children.InputLogin.setProps({
             error,
@@ -60,7 +60,7 @@ class AuthContent extends Block {
         type: 'password',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = validateField('password', value);
+          const error = validateField('password', value);
 
           this.children.InputPassword.setProps({
             error,

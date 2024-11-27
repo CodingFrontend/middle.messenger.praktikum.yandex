@@ -51,7 +51,7 @@ class RegisterContent extends Block {
         type: 'email',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = validateField('email', value);
+          const error = validateField('email', value);
 
           this.children.InputEmail.setProps({
             error,
@@ -80,7 +80,7 @@ class RegisterContent extends Block {
         type: 'text',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = validateField('login', value);
+          const error = validateField('login', value);
 
           this.children.InputLogin.setProps({
             error,
@@ -109,7 +109,7 @@ class RegisterContent extends Block {
         type: 'text',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = validateField('first_name', value);
+          const error = validateField('first_name', value);
 
           this.children.InputName.setProps({
             error,
@@ -138,7 +138,7 @@ class RegisterContent extends Block {
         type: 'text',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = validateField('second_name', value);
+          const error = validateField('second_name', value);
 
           this.children.InputLastName.setProps({
             error,
@@ -167,7 +167,7 @@ class RegisterContent extends Block {
         type: 'phone',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = validateField('phone', value);
+          const error = validateField('phone', value);
 
           this.children.InputPhone.setProps({
             error,
@@ -196,7 +196,7 @@ class RegisterContent extends Block {
         type: 'password',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = validateField('password', value);
+          const error = validateField('password', value);
 
           this.children.InputPassword.setProps({
             error,

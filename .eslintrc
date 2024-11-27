@@ -9,8 +9,6 @@
     "no-console": "off",
     "no-unsafe-optional-chaining": "off",
     "no-debugger": "warn",
-    "max-len": [2, 100],
-    "@typescript-eslint/no-unused-vars": 2,
-    "@typescript-eslint/ban-ts-comment": "error"
+    "@typescript-eslint/no-unused-vars": 2
   }
 }

@@ -56,7 +56,7 @@ export default class ChatDialog extends Block {
         onClick: () => {
           setTimeout(() => {
             const value = this.props.messageText as string;
-            let error = validateField('message', value);
+            const error = validateField('message', value);
 
             if (error) return;
 

@@ -34,7 +34,7 @@ class DialogBody extends Block {
         type: 'text',
         onChange: (e: Event) => {
           const value = (e.target as HTMLInputElement).value;
-          let error = validateField('login', value);
+          const error = validateField('login', value);
 
           this.children.Input.setProps({
             error,
