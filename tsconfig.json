@@ -9,15 +9,11 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-
-    /* bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-
-    /* Linting */
     "strict": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
