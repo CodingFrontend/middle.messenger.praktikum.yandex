@@ -1,17 +1,12 @@
 .icon-button {
   all: unset;
-
   width: 28px;
   height: 28px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 50%;
-
   cursor: pointer;
-
   transition: background 0.3s ease;
 }
 

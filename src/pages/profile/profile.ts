@@ -441,7 +441,7 @@ class ProfileContent extends Block {
         label: 'Сохранить',
         type: 'primary',
         attrs: {
-          type: 'submit',
+          type: 'button',
         },
         onClick: () => {
           setTimeout(() => {
@@ -457,6 +457,9 @@ class ProfileContent extends Block {
       ButtonConfirmEditPassword: new Button({
         label: 'Сохранить',
         type: 'primary',
+        attrs: {
+          type: 'button',
+        },
         onClick: () => {
           setTimeout(() => {
             for (let key in this.props
@@ -493,7 +496,8 @@ class ProfileContent extends Block {
 
 				
 			{{#if isEditInfo}}
-				<div class="profile-edit-info">
+			<form class="profile-edit-info">
+				<div class="profile-edit-info__content">
 					<div class="profile-row">
 						{{{ InputEmailEdit }}}
 					</div>
@@ -516,8 +520,10 @@ class ProfileContent extends Block {
 				<div class="profile-edit-info__confirm-button">
 					{{{ ButtonConfirmEditInfo }}}
 				</div>
+			</form>
 			{{else if isEditPassword}}
-				<div class="profile-edit-password">
+			<form class="profile-edit-password">
+				<div class="profile-edit-password__content">
 					<div class="profile-row">
 						{{{ InputOldPassword }}}
 					</div>
@@ -531,6 +537,7 @@ class ProfileContent extends Block {
 				<div class="profile-edit-info__confirm-button">
 					{{{ ButtonConfirmEditPassword }}}
 				</div>
+			</form>
 			{{ else }}
 			 <div class="profile-info">
 					<div class="profile-row">

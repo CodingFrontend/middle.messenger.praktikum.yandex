@@ -1,9 +1,7 @@
 .icon-text-button {
   all: unset;
-
   display: flex;
   gap: 15px;
-
   cursor: pointer;
 }
 

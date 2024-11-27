@@ -18,32 +18,25 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
-
   padding: 11px;
-
   border-radius: 7px;
 }
 
 .chat-messages-item--incoming .chat-messages-item-text {
   background-color: var(--light-background-color);
-
   border-top-left-radius: 0;
 }
 
 .chat-messages-item--upcoming .chat-messages-item-text {
   background-color: var(--gray-400);
-
   border-bottom-right-radius: 0;
 }
 
 .chat-messages-item-text__info {
   align-self: end;
-
   display: flex;
   gap: 3px;
-
   margin-left: 15px;
-
   font-size: var(--text-xs);
 }
 

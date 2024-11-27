@@ -16,9 +16,6 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-    // "noEmitOnError": true,
-    // "esModuleInterop": true,
-    // "resolveJsonModule": true,
 
     /* Linting */
     "strict": true,
@@ -26,10 +23,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    // "noUncheckedSideEffectImports": true,
-    "sourceMap": true
-    // "strictNullChecks": true,
-    // "noImplicitReturns": true
+    "sourceMap": true,
+    "strictNullChecks": true
   },
   "include": ["./src/**/*"]
 }

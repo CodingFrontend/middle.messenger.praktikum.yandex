@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "check-types": "tsc --noEmit",
     "eslint": "eslint",
-    "lint": "npm run eslint && npm run check-types"
+    "stylelint": "stylelint \"src/**/*.css\" --fix",
+    "lint": "npm run eslint && npm run stylelint && npm run check-types"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
@@ -34,6 +35,8 @@
     "font-awesome": "^4.7.0",
     "handlebars": "^4.7.8",
     "nanoid": "^5.0.8",
+    "stylelint-config-standard": "^36.0.1",
+    "stylelint-selector-bem-pattern": "^4.0.1",
     "vite-plugin-handlebars": "^2.0.0"
   },
   "engines": {

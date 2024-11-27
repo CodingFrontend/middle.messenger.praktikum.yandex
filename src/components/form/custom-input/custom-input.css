@@ -9,10 +9,8 @@
 
 .custom-input input {
   all: unset;
-
   text-align: right;
   font-weight: 500;
-
   color: var(--secondary-text-color);
 }
 

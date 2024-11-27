@@ -1,7 +1,6 @@
 .profile-edit-info {
   display: flex;
   flex-direction: column;
-
   width: 100%;
 }
 
@@ -26,6 +25,5 @@
   flex-direction: column;
   align-items: center;
   gap: 15px;
-
   margin-bottom: 85px;
 }

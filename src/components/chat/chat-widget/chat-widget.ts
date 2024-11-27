@@ -26,7 +26,6 @@ export default class ChatWidget extends Block {
             label: item.text,
             iconLeft: item.faIcon,
             onClick: () => {
-              console.log(888888, item.action);
               if (item.action === 'add') {
                 this.setProps({
                   showModalAdd: true,

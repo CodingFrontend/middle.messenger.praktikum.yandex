@@ -1,40 +1,31 @@
 .chat-dialog {
   display: flex;
   flex-direction: column;
-
   height: 100%;
-
-  padding: 0 20px 0px 20px;
+  padding: 0 20px;
 }
 
 .chat-dialog-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   padding: 10px 0;
-
   border-bottom: 1px solid var(--border-color);
 }
 
 .chat-dialog-content {
   flex-grow: 1;
-
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-
-  padding: 48px 0 30px 0;
+  padding: 48px 0 30px;
 }
 
 .chat-dialog-bottom {
   display: flex;
   align-items: center;
-
   gap: 10px;
-
   padding: 11px 0;
-
   border-top: 1px solid var(--border-color);
 }
 
@@ -44,9 +35,7 @@
 
 .chat-dialog-top__actions-button {
   width: 10px;
-
   margin-inline-end: 3px;
-
   cursor: pointer;
 }
 
@@ -58,14 +47,12 @@
 
 .chat-dialog-bottom__field {
   display: flex;
-
   flex-grow: 1;
 }
 
 .chat-dialog-top__user {
   display: flex;
   align-items: center;
-
   gap: 10px;
 }
 
