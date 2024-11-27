@@ -23,6 +23,9 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-import-resolver-typescript": "^3.6.3",
+    "stylelint-config-standard": "^36.0.1",
+    "stylelint-selector-bem-pattern": "^4.0.1",
     "globals": "^15.12.0",
     "handlebars": "4.7.8",
     "stylelint": "^16.10.0",
@@ -32,12 +35,9 @@
     "@types/node": "^20.14.10"
   },
   "dependencies": {
-    "eslint-import-resolver-typescript": "^3.6.3",
     "font-awesome": "^4.7.0",
     "handlebars": "^4.7.8",
     "nanoid": "^5.0.8",
-    "stylelint-config-standard": "^36.0.1",
-    "stylelint-selector-bem-pattern": "^4.0.1",
     "vite-plugin-handlebars": "^2.0.0"
   },
   "engines": {
