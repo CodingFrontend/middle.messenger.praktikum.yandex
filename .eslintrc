@@ -10,6 +10,6 @@
     "no-unsafe-optional-chaining": "off",
     "no-debugger": "warn",
     "@typescript-eslint/no-unused-vars": 2,
-    "@typescript-eslint/ban-ts-ignore": "off"
+    "@typescript-eslint/ban-ts-comment": "off"
   }
 }
