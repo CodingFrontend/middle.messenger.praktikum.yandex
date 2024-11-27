@@ -88,7 +88,7 @@ export default class Block {
       if (Array.isArray(value)) {
         value.forEach((obj) => {
           if (obj instanceof Block) {
-            // children[key] = value;
+            children[key] = value;
           } else {
             props[key] = value;
           }

@@ -29,18 +29,18 @@ export default class ChatList extends Block {
   }
 
   public componentDidUpdate() {
-    // const { items } = this.props;
+    const { items } = this.props;
 
-    // this.children.chatItems = items.map(
-    //   (chatItem: IChatItem) =>
-    //     new ChatItem({
-    //       ...chatItem,
-    //       onClick: () => {
-    //         this.setProps({ activeChatId: chatItem.id });
-    //         // this.props.onChatSelect(chatItem.id);
-    //       },
-    //     })
-    // );
+    this.children.chatItems = items.map(
+      (chatItem: IChatItem) =>
+        new ChatItem({
+          ...chatItem,
+          onClick: () => {
+            this.setProps({ activeChatId: chatItem.id });
+            this.props.onChatSelect(chatItem.id);
+          },
+        })
+    );
 
     return true;
   }

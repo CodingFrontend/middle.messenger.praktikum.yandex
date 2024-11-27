@@ -445,10 +445,10 @@ class ProfileContent extends Block {
         },
         onClick: () => {
           setTimeout(() => {
-            // for (let key in this.props
-            //   .editInfoFormErrors as IEditInfoFormErrors) {
-            //   if (this.props.editInfoFormErrors[key]) return;
-            // }
+            for (let key in this.props
+              .editInfoFormErrors as IEditInfoFormErrors) {
+              if (this.props.editInfoFormErrors[key]) return;
+            }
 
             console.log(this.props.editInfoForm);
           }, 0);
@@ -462,10 +462,10 @@ class ProfileContent extends Block {
         },
         onClick: () => {
           setTimeout(() => {
-            // for (let key in this.props
-            //   .editPasswordFormErrors as IEditPasswordFormErrors) {
-            //   // if (this.props.editPasswordFormErrors[key]) return;
-            // }
+            for (let key in this.props
+              .editPasswordFormErrors as IEditPasswordFormErrors) {
+              if (this.props.editPasswordFormErrors[key]) return;
+            }
 
             console.log(this.props.editPasswordForm);
           }, 0);

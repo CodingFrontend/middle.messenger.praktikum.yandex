@@ -91,9 +91,9 @@ class AuthContent extends Block {
         },
         onClick: () => {
           setTimeout(() => {
-            // for (let key in this.props.errors as IErrors) {
-            //   if (this.props.errors[key]) return;
-            // }
+            for (let key in this.props.errors as IErrors) {
+              if (this.props.errors[key]) return;
+            }
 
             console.log(this.props.loginForm);
           }, 0);
