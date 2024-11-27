@@ -1,6 +1,6 @@
 import Block from '@/core/block';
 import { IconTextButton, ChatModal } from '@/components';
-import type { IErrors } from '@/components/chat/chat-modal/chat-modal';
+// import type { IErrors } from '@/components/chat/chat-modal/chat-modal';
 
 export interface IChatWidgetItem {
   faIcon?: string;
@@ -51,13 +51,13 @@ export default class ChatWidget extends Block {
             const form =
               this.children.ChatModalAdd.children.Modal.children.Body.props
                 .form;
-            const errors =
-              this.children.ChatModalAdd.children.Modal.children.Body.props
-                .errors;
+            // const errors =
+            //   this.children.ChatModalAdd.children.Modal.children.Body.props
+            //     .errors;
 
-            for (let key in errors as IErrors) {
-              if (errors[key]) return;
-            }
+            // for (let key in errors as IErrors) {
+            //   // if (errors[key]) return;
+            // }
             console.log(form);
             props.onCloseModal();
           }, 0);
@@ -76,13 +76,14 @@ export default class ChatWidget extends Block {
             const form =
               this.children.ChatModalDelete.children.Modal.children.Body.props
                 .form;
-            const errors =
-              this.children.ChatModalDelete.children.Modal.children.Body.props
-                .errors;
+            // const errors =
+            //   this.children.ChatModalDelete.children.Modal.children.Body.props
+            //     .errors;
 
-            for (let key in errors as IErrors) {
-              if (errors[key]) return;
-            }
+            // for (let key in errors as IErrors) {
+            //   if (errors[key]) return;
+            // }
+            console.log(form);
             props.onCloseModal();
           }, 0);
         },

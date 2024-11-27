@@ -88,7 +88,7 @@ export default class Block {
       if (Array.isArray(value)) {
         value.forEach((obj) => {
           if (obj instanceof Block) {
-            children[key] = value;
+            // children[key] = value;
           } else {
             props[key] = value;
           }
@@ -113,7 +113,7 @@ export default class Block {
     this.componentDidMount();
   }
 
-  public componentDidMount(oldProps?: IProps) {}
+  public componentDidMount() {}
 
   public dispatchComponentDidMount() {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
@@ -129,6 +129,7 @@ export default class Block {
   }
 
   public componentDidUpdate(oldProps: IProps, newProps: IProps) {
+    console.log(oldProps, newProps);
     return true;
   }
 
@@ -175,7 +176,6 @@ export default class Block {
   }
 
   private _compile(): DocumentFragment {
-    console.log(this._element, 'children', this.children);
     const propsAndStubs = { ...this.props };
     Object.entries(this.children).forEach(([key, child]) => {
       if (Array.isArray(child)) {
@@ -197,7 +197,6 @@ export default class Block {
               `[data-id="${component._id}"]`
             );
 
-            console.log('stub', stub);
             stub?.replaceWith(component.getContent());
           }
         });
@@ -246,7 +245,6 @@ export default class Block {
       set(target, prop, value) {
         const oldTarget = { ...target };
         target[prop] = value;
-        console.log('proxy', oldTarget, target);
 
         emitBind(Block.EVENTS.FLOW_CDU, oldTarget, target);
         return true;

@@ -1,5 +1,5 @@
 import Block from '@/core/block';
-import { PageTitle, FormWrapper } from '@/components';
+import { PageTitle } from '@/components';
 
 interface IAuthLayoutProps {
   title: string;

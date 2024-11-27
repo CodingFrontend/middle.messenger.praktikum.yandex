@@ -17,10 +17,10 @@ interface IRequest extends IOptions {
 }
 
 export default class HTTPTransport {
-  private _options: IOptions;
+  public options: IOptions;
 
   constructor(options: IOptions) {
-    this._options = options;
+    this.options = options;
   }
 
   private _queryStringify(data: TData) {
@@ -28,13 +28,13 @@ export default class HTTPTransport {
       throw new Error('Data must be object');
     }
 
-    return Object.keys(data as XMLHttpRequestBodyInit)
-      .map(function (key) {
-        return (
-          encodeURIComponent(key) + '=' + encodeURIComponent(data && data[key])
-        );
-      })
-      .join('&');
+    // return Object.keys(data as XMLHttpRequestBodyInit)
+    //   .map(function (key) {
+    //     return (
+    //       encodeURIComponent(key) + '=' + encodeURIComponent(data && data[key])
+    //     );
+    //   })
+    //   .join('&');
   }
 
   private _request = (props: IRequest): Promise<XMLHttpRequest> => {

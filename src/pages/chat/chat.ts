@@ -2,11 +2,11 @@ import Block from '@/core/block';
 import {
   LinkButton,
   ChatList,
-  ChatDialog,
+  // ChatDialog,
   SearchChatsInput,
 } from '@/components';
 import { chatItems, chatDialogs } from '../../mockData/chatDataMock';
-import type { IChatDialog } from '@/components/chat/chat-dialog/chat-dialog';
+// import type { IChatDialog } from '@/components/chat/chat-dialog/chat-dialog';
 
 export default class Chat extends Block {
   constructor() {
@@ -47,11 +47,11 @@ export default class Chat extends Block {
             this.setProps({
               activeChatId: id,
             });
-            this.setChild({
-              ChatDialog: new ChatDialog({
-                ...(activeChatDialog as IChatDialog),
-              }),
-            });
+            // this.setChild({
+            //   ChatDialog: new ChatDialog({
+            //     ...(activeChatDialog as IChatDialog),
+            //   }),
+            // });
             this.forceUpdate();
           }, 0);
         },

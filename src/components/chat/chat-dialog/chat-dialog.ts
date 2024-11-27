@@ -2,7 +2,7 @@ import Block from '@/core/block';
 import {
   Avatar,
   ChatWidget,
-  ChatMessageGroup,
+  // ChatMessageGroup,
   IconButton,
   SendMessageInput,
 } from '@/components';
@@ -32,7 +32,7 @@ export default class ChatDialog extends Block {
         items: chatWidgetItems,
         onCloseModal: () => this.setProps({ showChatWidget: false }),
       }),
-      ChatMessageGroup: new ChatMessageGroup({ groups: props.groups }),
+      // ChatMessageGroup: new ChatMessageGroup({ groups: props.groups }),
       ChatWidgetButton: new IconButton({
         faIcon: 'fa-solid fa-ellipsis-vertical',
         type: 'secondary',
