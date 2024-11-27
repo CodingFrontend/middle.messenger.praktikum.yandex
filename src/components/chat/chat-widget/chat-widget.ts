@@ -1,5 +1,6 @@
 import Block from '@/core/block';
 import { IconTextButton, ChatModal } from '@/components';
+import type { IErrors } from '@/components/chat/chat-modal/chat-modal';
 
 export interface IChatWidgetItem {
   faIcon?: string;
@@ -25,11 +26,12 @@ export default class ChatWidget extends Block {
             label: item.text,
             iconLeft: item.faIcon,
             onClick: () => {
+              console.log(888888, item.action);
               if (item.action === 'add') {
                 this.setProps({
                   showModalAdd: true,
                 });
-              } else if (item.action === 'delete') {
+              } else if (item.action === 'remove') {
                 this.setProps({
                   showModalDelete: true,
                 });
@@ -42,20 +44,49 @@ export default class ChatWidget extends Block {
         modalButtonLabelOk: 'Добавить',
         onCloseModal: () => {
           this.setProps({ showModalAdd: false });
-          this.props.onCloseModal();
+          props.onCloseModal();
         },
-        onConfirm: () => {},
-        onCancel: () => {},
+        onConfirm: () => {
+          setTimeout(() => {
+            // ToDo отрефакторить
+            const form =
+              this.children.ChatModalAdd.children.Modal.children.Body.props
+                .form;
+            const errors =
+              this.children.ChatModalAdd.children.Modal.children.Body.props
+                .errors;
+
+            for (let key in errors as IErrors) {
+              if (errors[key]) return;
+            }
+            console.log(form);
+            props.onCloseModal();
+          }, 0);
+        },
       }),
       ChatModalDelete: new ChatModal({
         modalTitle: 'Удалить пользователя',
         modalButtonLabelOk: 'Удалить',
         onCloseModal: () => {
           this.setProps({ showModalDelete: false });
-          this.props.onCloseModal();
+          props.onCloseModal();
         },
-        onConfirm: () => {},
-        onCancel: () => {},
+        onConfirm: () => {
+          setTimeout(() => {
+            // ToDo отрефакторить
+            const form =
+              this.children.ChatModalDelete.children.Modal.children.Body.props
+                .form;
+            const errors =
+              this.children.ChatModalDelete.children.Modal.children.Body.props
+                .errors;
+
+            for (let key in errors as IErrors) {
+              if (errors[key]) return;
+            }
+            props.onCloseModal();
+          }, 0);
+        },
       }),
     });
   }

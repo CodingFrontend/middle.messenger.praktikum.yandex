@@ -13,23 +13,11 @@ interface IMeta {
 interface IProps<V = unknown> {
   [key: string]: V;
 }
-// export interface Block {
-//   componentDidUpdate?: (oldProps: IProps, newProps: IProps) => void;
-//   init?: () => void;
-//   componentDidMount?: (oldProps: IProps) => void;
-//   dispatchComponentDidMount?: () => void;
-//   forceUpdate?: () => void;
-//   setProps?: (nextProps: IProps) => void;
-//   render?: () => void;
-//   getContent?: () => string | Node;
-//   show?: () => void;
-//   hide?: () => void;
-// }
 
 export default class Block {
-  protected eventBus: Function;
-  protected children: TChildren;
-  protected props: IProps;
+  public eventBus: Function;
+  public children: TChildren;
+  public props: IProps;
 
   static EVENTS = {
     INIT: 'init',

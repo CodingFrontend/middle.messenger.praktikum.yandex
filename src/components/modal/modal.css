@@ -42,7 +42,7 @@
   color: var(--main-text-color);
 }
 
-.modal-dialog__body {
+.modal-dialog__form {
   width: 100%;
 }
 

@@ -26,6 +26,9 @@ export default class Modal extends Block {
       ButtonOk: new Button({
         label: props.labelOk || '',
         type: 'primary',
+        attrs: {
+          type: 'button',
+        },
         onClick: () => props.onConfirm?.(),
       }),
       ButtonCancel: new Button({
@@ -44,18 +47,20 @@ export default class Modal extends Block {
 					{{{ IconButton }}}
 				</div>
 				<h2 {{#if titleError}}class="modal-dialog__title modal-dialog__title--error"{{/if}} class="modal-dialog__title">{{title}}</h2>
-				<div class="modal-dialog__body">
-					{{{ Body }}}
-				</div>
-				<div class="modal-dialog__footer">
-					{{{ ButtonOk }}}
-					{{#if labelCancel}}
-						{{{ ButtonCancel }}}
-					{{/if}}
-					{{#if error}}
-						<p class="modal-dialog__error">{{error}}</p>
-					{{/if}}
-				</div>
+				<form class="modal-dialog__form">
+					<div class="modal-dialog__body">
+						{{{ Body }}}
+					</div>
+					<div class="modal-dialog__footer">
+						{{{ ButtonOk }}}
+						{{#if labelCancel}}
+							{{{ ButtonCancel }}}
+						{{/if}}
+						{{#if error}}
+							<p class="modal-dialog__error">{{error}}</p>
+						{{/if}}
+					</div>
+				</form>
 			</div>
     `;
   }
