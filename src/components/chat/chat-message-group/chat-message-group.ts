@@ -19,7 +19,6 @@ export default class ChatMessageGroup extends Block {
     });
   }
   public render(): string {
-    console.log('chat-message-group', this.props.groups);
     return `
     {{#each groupsList}}
 			{{{ this }}}

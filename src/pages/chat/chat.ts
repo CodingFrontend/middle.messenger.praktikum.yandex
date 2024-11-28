@@ -40,7 +40,6 @@ export default class Chat extends Block {
           const activeChatDialog = id
             ? chatDialogs.find((dialog) => dialog.id === id)
             : null;
-          console.log(activeChatDialog);
           if (!activeChatDialog) return;
           setTimeout(() => {
             this.setProps({
