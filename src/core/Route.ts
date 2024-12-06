@@ -17,6 +17,7 @@ class Route implements RouteInterface {
 
 	leave() {
 		if (this._block) {
+			this._block.dispatchComponentDidUnmount();
 			// this._block.hide();
 		}
 	}

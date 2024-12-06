@@ -6,6 +6,8 @@ import * as Layouts from "./layouts";
 import { render } from "@/core/renderDom";
 import Router from "@/core/Router";
 
+import { ROUTES } from "@/constants";
+
 Object.entries(Layouts).forEach(([name, template]) => {
 	if (typeof template === "function") {
 		return;
@@ -123,8 +125,9 @@ Handlebars.registerHelper("ifCond", function (v1, v2, options) {
 window.router = new Router("#app");
 
 window.router
-	.use("/login", Pages.LoginPage)
-	.use("/register", Pages.RegisterPage)
-	.use("/chat", Pages.ChatPage)
-	.use("/profile", Pages.ProfilePage)
+	.use(ROUTES.login, Pages.LoginPage)
+	.use(ROUTES.register, Pages.RegisterPage)
+	.use(ROUTES.chat, Pages.ChatPage)
+	.use(ROUTES.profile, Pages.ProfilePage)
+	.use("*", Pages.NavigationPage)
 	.start();

@@ -1,76 +1,81 @@
-import Block from '@/core/block';
+import Block from "@/core/block";
 import {
-  LinkButton,
-  ChatList,
-  ChatDialog,
-  SearchChatsInput,
-} from '@/components';
-import { chatItems, chatDialogs } from '../../mockData/chatDataMock';
+	LinkButton,
+	ChatList,
+	ChatDialog,
+	SearchChatsInput,
+} from "@/components";
+import { chatItems, chatDialogs } from "../../mockData/chatDataMock";
 
-export default class Chat extends Block {
-  constructor() {
-    super('main', {
-      activeChatId: '',
-      classList: 'page chat-page',
-      searchValue: '',
-      LinkButton: new LinkButton({
-        label: 'Профиль',
-        type: 'secondary',
-      }),
-      SearchChatsInput: new SearchChatsInput({
-        onKeydown: (e: KeyboardEvent) => {
-          const value = (e.target as HTMLInputElement).value;
-          if (e.code === 'Enter') {
-            this.setProps({
-              searchValue: value,
-            });
+import { ROUTES } from "@/constants";
+import { withRouter } from "@/utils/withRouter";
 
-            const oldProps = { items: chatItems };
-            const newProps = {
-              items: chatItems.filter((item) => item.name.includes(value)),
-            };
+class Chat extends Block {
+	constructor(props) {
+		super("main", {
+			...props,
+			activeChatId: "",
+			classList: "page chat-page",
+			searchValue: "",
+			LinkButton: new LinkButton({
+				label: "Профиль",
+				type: "secondary",
+				onClick: () => props.router.go(ROUTES.profile),
+			}),
+			SearchChatsInput: new SearchChatsInput({
+				onKeydown: (e: KeyboardEvent) => {
+					const value = (e.target as HTMLInputElement).value;
+					if (e.code === "Enter") {
+						this.setProps({
+							searchValue: value,
+						});
 
-            this.children.ChatList.componentDidUpdate(oldProps, newProps);
-          }
-        },
-      }),
-      ChatList: new ChatList({
-        items: chatItems,
-        onChatSelect: (id: string) => {
-          const activeChatDialog = id
-            ? chatDialogs.find((dialog) => dialog.id === id)
-            : null;
-          if (!activeChatDialog) return;
-          setTimeout(() => {
-            this.setProps({
-              activeChatId: id,
-            });
-            this.setChild({
-              ChatDialog: new ChatDialog({
-                id: activeChatDialog.id,
-                name: activeChatDialog.name,
-                groups: activeChatDialog.groups,
-              }),
-            });
-            this.forceUpdate();
-          }, 0);
-        },
-      }),
-    });
-  }
+						const oldProps = { items: chatItems };
+						const newProps = {
+							items: chatItems.filter((item) => item.name.includes(value)),
+						};
 
-  public render(): string {
-    const { searchValue } = this.props;
+						this.children.ChatList.componentDidUpdate(oldProps, newProps);
+					}
+				},
+			}),
+			ChatList: new ChatList({
+				items: chatItems,
+				onChatSelect: (id: string) => {
+					const activeChatDialog = id
+						? chatDialogs.find((dialog) => dialog.id === id)
+						: null;
+					if (!activeChatDialog) return;
+					setTimeout(() => {
+						this.setProps({
+							activeChatId: id,
+						});
+						this.setChild({
+							ChatDialog: new ChatDialog({
+								id: activeChatDialog.id,
+								name: activeChatDialog.name,
+								groups: activeChatDialog.groups,
+							}),
+						});
+						this.forceUpdate();
+					}, 0);
+				},
+			}),
+		});
+	}
 
-    const { ChatList } = this.children;
+	public render(): string {
+		const { searchValue } = this.props;
 
-    ChatList.setProps({
-      items: chatItems.filter((item) =>
-        item.name.includes(searchValue as string)
-      ),
-    });
+		const { ChatList } = this.children;
 
-    return `
+		ChatList.setProps({
+			items: chatItems.filter((item) =>
+				item.name.includes(searchValue as string)
+			),
+		});
+
+		return `
       <div class='chat-left'>
 				<div class='chat-left__top'>
 					<div class="chat-left__profile-link">
@@ -95,5 +100,7 @@ export default class Chat extends Block {
 				{{/if}}
 			</div>
     `;
-  }
+	}
 }
+
+export default withRouter(Chat);
