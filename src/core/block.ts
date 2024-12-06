@@ -28,7 +28,7 @@ export default class Block {
     FLOW_CDU: 'flow:component-did-update',
     FLOW_RENDER: 'flow:render',
   };
-
+                                                                 
   private _element: unknown = null;
   private _meta: IMeta | null = null;
   protected _id: string = nanoid(6);
