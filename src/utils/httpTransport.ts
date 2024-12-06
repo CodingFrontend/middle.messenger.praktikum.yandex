@@ -11,7 +11,6 @@ interface IOptions {
 	method: METHODS;
 	data?: TData;
 }
-
 interface IRequest extends IOptions {
 	url: string;
 	timeout?: number | 5000;
