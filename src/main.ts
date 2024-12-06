@@ -3,6 +3,8 @@ import * as Components from './components';
 import * as Pages from './pages';
 import * as Layouts from './layouts';
 
+import { render } from '@/core/renderDom';
+
 const pages = {
   login: [Pages.LoginPage],
   register: [Pages.RegisterPage],
@@ -36,7 +38,7 @@ const pages = {
       messages: [
         {
           date: '19 июня',
-          items: [
+          messages: [
             {
               type: 'incoming',
               content: 'text',
@@ -69,6 +71,9 @@ const pages = {
   profile: [
     Pages.ProfilePage,
     {
+      isGeneralInfo: true,
+      isEditInfo: false,
+      isEditPassword: false,
       email: 'email@yandex.ru',
       login: 'admin',
       first_name: 'Вадим',
@@ -80,22 +85,6 @@ const pages = {
       emptyError: '',
       fileName: '',
       uploadError: true,
-    },
-  ],
-  profileEditInfo: [
-    Pages.ProfileEditInfoPage,
-    {
-      email: 'email@yandex.ru',
-      login: 'admin',
-      first_name: 'Вадим',
-      last_name: 'Иванов',
-      display_name: 'Вадим',
-      phone: '+7 (909) 967 30 30',
-    },
-  ],
-  profileEditPassword: [
-    Pages.ProfileEditPasswordPage,
-    {
       password: 'admin',
     },
   ],
@@ -104,25 +93,41 @@ const pages = {
 };
 
 Object.entries(Components).forEach(([name, template]) => {
+  if (typeof template === 'function') {
+    return;
+  }
+
   Handlebars.registerPartial(name, template);
 });
 
 Object.entries(Layouts).forEach(([name, template]) => {
+  if (typeof template === 'function') {
+    return;
+  }
+
   Handlebars.registerPartial(name, template);
 });
 
 Handlebars.registerHelper('ifCond', function (v1, v2, options) {
   if (v1 === v2) {
-    //@ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return options.fn(this);
   }
-  //@ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return options.inverse(this);
 });
 
 function navigate(page: string) {
-  //@ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const [source, context] = pages[page];
+  if (typeof source === 'function') {
+    render('#app', new source());
+    return;
+  }
+
   const container = document.getElementById('app')!;
 
   const temlpatingFunction = Handlebars.compile(source);
@@ -132,7 +137,8 @@ function navigate(page: string) {
 document.addEventListener('DOMContentLoaded', () => navigate('nav'));
 
 document.addEventListener('click', (e) => {
-  //@ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const page = e.target.getAttribute('page');
   if (page) {
     navigate(page);

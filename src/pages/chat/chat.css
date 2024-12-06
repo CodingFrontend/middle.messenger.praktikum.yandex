@@ -4,8 +4,7 @@
 
 .chat-left {
   flex: 0 0 310px;
-
-  padding: 21px 0px;
+  padding: 21px 0;
 }
 
 .chat-left__top {
@@ -18,28 +17,15 @@
   display: inline-flex;
   width: 4px;
   height: 4px;
-
   border: 1px solid var(--secondary-text-color);
   border-left-color: transparent;
   border-bottom-color: transparent;
-
   transform: rotate(45deg);
 }
 
 .chat-left__search {
   display: flex;
-  padding: 23px 10px 14px 10px;
-}
-
-.chat-left__search input {
-  all: unset;
-
-  flex-grow: 1;
-  padding: 10px 20px;
-
-  background-color: var(--secondary-background-color);
-
-  border-radius: 5px;
+  padding: 23px 10px 14px;
 }
 
 .chat-left__search input::placeholder {
@@ -54,13 +40,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   height: 100%;
 }
 
 .chat-content-empty p {
   color: var(--secondary-text-color);
-
   font-size: var(--text-sm);
 }
 

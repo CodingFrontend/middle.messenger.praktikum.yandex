@@ -2,12 +2,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 64px;
-
   padding: 18px;
-
   background-color: var(--gray-500);
-
   border-right: 1px solid var(--gray-100);
 }

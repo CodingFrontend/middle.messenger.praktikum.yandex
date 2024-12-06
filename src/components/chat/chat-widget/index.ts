@@ -1,2 +1,2 @@
 import './chat-widget.css';
-export { default as ChatWidget } from './chat-widget.hbs?raw';
+export { default as ChatWidget } from './chat-widget.ts';

@@ -1,8 +1,7 @@
 <div class="modal">
 	<div class="modal-dialog">
-		{{!-- Добавить кнопку в виде иконки --}}
 		<div class="modal-dialog__close-button">
-			<i class="fa-solid fa-x"></i>
+			{{> IconButton faIcon="fa-solid fa-x" type="secondary"}}
 		</div>
 		<h2 {{#if titleError}}class="modal-dialog__title modal-dialog__title--error"{{/if}} class="modal-dialog__title">{{title}}</h2>
 		<div class="modal-dialog__body">

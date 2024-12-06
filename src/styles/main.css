@@ -1,19 +1,15 @@
-@import '_variables';
+@import url('_variables');
 
 body {
   overflow: auto;
-
   margin: 0;
-
   font-size: var(--text-md);
   color: var(--main-text-color);
-
   background-color: var(--main-background-color);
 }
 
 #app {
   min-height: 100vh;
-
   display: flex;
   flex-direction: column;
 }

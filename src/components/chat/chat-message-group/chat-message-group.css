@@ -6,19 +6,7 @@
 .chat-message-group__date {
   display: flex;
   justify-content: center;
-
   margin-bottom: 30px;
-
   color: var(--secondary-text-color);
-
   font-size: var(--text-sm);
-}
-
-.chat-message-group__items {
-  display: flex;
-  flex-direction: column;
-}
-
-.chat-message-group__items .chat-message--upcoming {
-  align-self: end;
 }
