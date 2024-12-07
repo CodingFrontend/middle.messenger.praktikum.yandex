@@ -4,6 +4,8 @@ import { Input, Button, LinkButton } from "@/components";
 import { validateField } from "@/utils/validate";
 import { ROUTES } from "@/constants";
 import { withRouter } from "@/utils/withRouter";
+import * as authServices from "@/services/auth";
+import { connect } from "@/utils/connect";
 
 interface ILoginForm {
 	login: "";
@@ -98,7 +100,7 @@ class AuthContent extends Block {
 							if (this.props.errors[key]) return;
 						}
 
-						console.log(this.props.loginForm);
+						authServices.login(this.props.loginForm);
 					}, 0);
 				},
 			}),
@@ -116,6 +118,9 @@ class AuthContent extends Block {
 		return `
 			{{{ InputLogin }}}
 			{{{ InputPassword }}}
+			{{#if loginError}}
+				<p>{{ loginError }}</p>
+			{{/if}}
 			<div class="auth-form__buttons">
 				{{{ ButtonOk }}}
 				{{{ ButtonCancel }}}
@@ -124,7 +129,7 @@ class AuthContent extends Block {
 	}
 }
 
-class LoginPage extends Block {
+class LoginBlock extends Block {
 	constructor(props) {
 		super("main", {
 			...props,
@@ -138,9 +143,17 @@ class LoginPage extends Block {
 
 	public render(): string {
 		return `
+      {{#if isLoading}}
+				<h1>spinner</h1>
+      {{/if}}
       {{{ AuthLayout }}}
     `;
 	}
 }
+
+const LoginPage = connect(({ isLoading, loginError }) => ({
+	isLoading,
+	loginError,
+}))(LoginBlock);
 
 export default withRouter(LoginPage);

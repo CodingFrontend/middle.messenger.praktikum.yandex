@@ -64,18 +64,33 @@ export default class HTTPTransport {
 			);
 
 			xhr.onload = function () {
-				resolve(xhr as TResponse);
+				if (xhr.status >= 200 && xhr.status < 300) {
+					resolve(xhr.response);
+				} else {
+					const { error, reason } = JSON.parse(xhr.response);
+					reject({
+						error,
+						reason,
+					});
+				}
 			};
 
 			xhr.onabort = reject;
-			xhr.onerror = reject;
+			xhr.onerror = function () {
+				reject({
+					status: xhr.status,
+					statusText: xhr.statusText,
+				});
+			};
 			xhr.ontimeout = reject;
 			if (timeout) xhr.timeout = timeout;
 
 			if (method === METHODS.GET || !data) {
 				xhr.send();
 			} else {
-				xhr.send(data as XMLHttpRequestBodyInit);
+				console.log(data);
+				xhr.send(JSON.stringify(data));
+				console.log({ ...data });
 			}
 		});
 	}

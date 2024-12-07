@@ -5,6 +5,7 @@ import * as Layouts from "./layouts";
 
 import { render } from "@/core/renderDom";
 import Router from "@/core/Router";
+import { Store, StoreEvents } from "@/core/Store";
 
 import { ROUTES } from "@/constants";
 
@@ -122,8 +123,18 @@ Handlebars.registerHelper("ifCond", function (v1, v2, options) {
 	return options.inverse(this);
 });
 
-window.router = new Router("#app");
+window.store = new Store({
+	isLoading: false,
+	user: null,
+	loginError: null,
+});
 
+store.on(StoreEvents.Updated, (prevState, newState) => {
+	console.log("prevState", prevState);
+	console.log("newState", newState);
+});
+
+window.router = new Router("#app");
 window.router
 	.use(ROUTES.login, Pages.LoginPage)
 	.use(ROUTES.register, Pages.RegisterPage)
