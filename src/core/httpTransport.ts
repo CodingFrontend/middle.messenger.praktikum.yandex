@@ -10,19 +10,20 @@ interface IOptions {
 	headers?: Record<string, string>;
 	method: METHODS;
 	data?: TData;
-}
-
-interface IRequest extends IOptions {
-	url: string;
 	timeout?: number | 5000;
 }
-type HTTPMethod = (url: string, options?: IRequest) => Promise<unknown>;
+type TOptionsWithoutMethod = Omit<IOptions, "method">;
+type HTTPMethod = <TResponse>(
+	url: string,
+	options?: TOptionsWithoutMethod
+) => Promise<TResponse>;
+type TApiUrl = string;
 
 export default class HTTPTransport {
-	public options: IOptions;
+	private apiUrl: TApiUrl = "";
 
-	constructor(options: IOptions) {
-		this.options = options;
+	constructor(apiPath: string) {
+		this.apiUrl = `https://ya-praktikum.tech/api/v2/${apiPath}`;
 	}
 
 	private _queryStringify(data: TData) {
@@ -38,8 +39,11 @@ export default class HTTPTransport {
 			.join("&");
 	}
 
-	private _request = (props: IRequest): Promise<XMLHttpRequest> => {
-		const { headers = {}, method, data, url, timeout } = props;
+	private _request<TResponse>(
+		url: string,
+		options: IOptions
+	): Promise<TResponse> {
+		const { headers = {}, method, data, timeout } = options;
 
 		return new Promise((resolve, reject) => {
 			if (!method) {
@@ -47,7 +51,7 @@ export default class HTTPTransport {
 				return;
 			}
 
-			const xhr: XMLHttpRequest = new XMLHttpRequest();
+			const xhr = new XMLHttpRequest();
 			const urlString =
 				method === "GET" && !!data
 					? `${url}${this._queryStringify(data)}`
@@ -60,7 +64,7 @@ export default class HTTPTransport {
 			);
 
 			xhr.onload = function () {
-				resolve(xhr);
+				resolve(xhr as TResponse);
 			};
 
 			xhr.onabort = reject;
@@ -74,41 +78,41 @@ export default class HTTPTransport {
 				xhr.send(data as XMLHttpRequestBodyInit);
 			}
 		});
-	};
+	}
 
-	public get: HTTPMethod = (url, options) => {
+	public get: HTTPMethod = (url, options = {}) => {
 		const requestProps = {
 			...options,
-			url,
 			method: METHODS.GET,
 		};
-		return this._request(requestProps);
+		const requestUrl = `${this.apiUrl}${url}`;
+		return this._request(requestUrl, requestProps);
 	};
 
-	public post: HTTPMethod = (url, props) => {
+	public post: HTTPMethod = (url, options = {}) => {
 		const requestProps = {
-			...props,
-			url,
+			...options,
 			method: METHODS.POST,
 		};
-		return this._request(requestProps);
+		const requestUrl = `${this.apiUrl}${url}`;
+		return this._request(requestUrl, requestProps);
 	};
 
-	public put: HTTPMethod = (url, props) => {
+	public put: HTTPMethod = (url, options = {}) => {
 		const requestProps = {
-			...props,
-			url,
+			...options,
 			method: METHODS.PUT,
 		};
-		return this._request(requestProps);
+		const requestUrl = `${this.apiUrl}${url}`;
+		return this._request(requestUrl, requestProps);
 	};
 
-	public delete: HTTPMethod = (url, props) => {
+	public delete: HTTPMethod = (url, options = {}) => {
 		const requestProps = {
-			...props,
-			url,
+			...options,
 			method: METHODS.PUT,
 		};
-		return this._request(requestProps);
+		const requestUrl = `${this.apiUrl}${url}`;
+		return this._request(requestUrl, requestProps);
 	};
 }

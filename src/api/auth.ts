@@ -1,4 +1,4 @@
-import { HTTPTransport } from "@/core/httpTransport";
+import HTTPTransport from "@/core/httpTransport.ts";
 import {
 	APIError,
 	CreateUser,
@@ -15,14 +15,14 @@ export default class AuthApi {
 	}
 
 	async login(data: LoginRequestData): Promise<void | APIError> {
-		return authApi.post("/signin", { data });
+		return authApi.post<void | APIError>("/signin", { data });
 	}
 
 	async me(): Promise<UserDTO | APIError> {
-		return authApi.get("/user");
+		return authApi.get<UserDTO | APIError>("/user");
 	}
 
 	async logout(): Promise<void | APIError> {
-		return authApi.post("/logout");
+		return authApi.post<void | APIError>("/logout");
 	}
 }
