@@ -6,6 +6,7 @@ import * as Layouts from "./layouts";
 import { render } from "@/core/renderDom";
 import Router from "@/core/Router";
 import { Store, StoreEvents } from "@/core/Store";
+import * as authServices from "@/services/auth";
 
 import { ROUTES } from "@/constants";
 
@@ -134,11 +135,15 @@ store.on(StoreEvents.Updated, (prevState, newState) => {
 	console.log("newState", newState);
 });
 
-window.router = new Router("#app");
-window.router
-	.use(ROUTES.login, Pages.LoginPage)
-	.use(ROUTES.register, Pages.RegisterPage)
-	.use(ROUTES.chat, Pages.ChatPage)
-	.use(ROUTES.profile, Pages.ProfilePage)
-	.use("*", Pages.NavigationPage)
-	.start();
+(async () => {
+	await authServices.checkLoginUser();
+
+	window.router = new Router("#app");
+	window.router
+		.use(ROUTES.login, Pages.LoginPage)
+		.use(ROUTES.register, Pages.RegisterPage)
+		.use(ROUTES.chat, Pages.ChatPage)
+		.use(ROUTES.profile, Pages.ProfilePage)
+		.use("*", Pages.NavigationPage)
+		.start();
+})();

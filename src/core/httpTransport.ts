@@ -23,7 +23,7 @@ export default class HTTPTransport {
 	private apiUrl: TApiUrl = "";
 
 	constructor(apiPath: string) {
-		this.apiUrl = `https://ya-praktikum.tech/api/v2/${apiPath}`;
+		this.apiUrl = `https://ya-praktikum.tech/api/v2${apiPath}`;
 	}
 
 	private _queryStringify(data: TData) {

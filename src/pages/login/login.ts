@@ -136,7 +136,7 @@ class LoginBlock extends Block {
 			classList: "page auth-page",
 			AuthLayout: new AuthLayout({
 				title: "Логин",
-				Content: new AuthContent({ ...props }),
+				Content: new AuthContentBlock({ ...props }),
 			}),
 		});
 	}
@@ -151,9 +151,19 @@ class LoginBlock extends Block {
 	}
 }
 
-const LoginPage = connect(({ isLoading, loginError }) => ({
-	isLoading,
+// const mapStateToProps = (state) => {
+// 	return {
+// 		isLoading: state.isLoading,
+// 		loadingError: state.loadingError,
+// 	};
+// };
+
+const AuthContentBlock = connect(({ loginError }) => ({
 	loginError,
+}))(AuthContent);
+
+const LoginPage = connect(({ isLoading }) => ({
+	isLoading,
 }))(LoginBlock);
 
 export default withRouter(LoginPage);

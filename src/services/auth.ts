@@ -9,9 +9,11 @@ export const login = async (model) => {
 		await authApi.login(model);
 		window.router.go(ROUTES.chat);
 	} catch (error) {
+		console.log("error", error);
 		window.store.set({ loginError: error.reason });
 	} finally {
 		window.store.set({ isLoading: false });
+		console.log(1111, window.store.getState());
 	}
 };
 
@@ -22,7 +24,7 @@ export const checkLoginUser = async () => {
 		window.router.go(ROUTES.chat);
 		window.store.set({ user });
 	} catch (error) {
-		window.store.set({ loginError: error.reason });
+		// window.store.set({ loginError: error.reason });
 	} finally {
 		window.store.set({ isLoading: false });
 	}

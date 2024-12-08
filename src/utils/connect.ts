@@ -23,14 +23,15 @@ export function connect(mapStateToProps) {
 
 					// не забываем сохранить новое состояние
 					state = newState;
+					console.log("777newState", newState);
 				};
 
 				// подписываемся на событие
 				store.on(StoreEvents.Updated, this.onChangeStoreCallback);
 			}
 
-			componentWillUnmount() {
-				super.componentWillUnmount();
+			dispatchComponentDidUnmount() {
+				super.dispatchComponentDidUnmount();
 				window.store.off(StoreEvents.Updated, this.onChangeStoreCallback);
 			}
 		};
