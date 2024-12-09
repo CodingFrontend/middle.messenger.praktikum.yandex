@@ -3,26 +3,22 @@ import { AuthLayout } from "@/layouts/auth";
 import { Input, Button, LinkButton } from "@/components";
 import { validateField } from "@/utils/validate";
 import { withRouter } from "@/utils/withRouter";
+import { checkPasswordRepeat } from "@/utils/rules";
+import * as authServices from "@/services/auth";
+import { connect } from "@/utils/connect";
 
 import { ROUTES } from "@/constants";
 
-interface IForm {
+interface IFormData {
 	email: string;
 	login: string;
 	first_name: string;
 	second_name: string;
 	phone: string;
 	password: string;
-	password_repeat: string;
 }
 
-interface IErrors {
-	email: string;
-	login: string;
-	first_name: string;
-	second_name: string;
-	phone: string;
-	password: string;
+interface IForm extends IFormData {
 	password_repeat: string;
 }
 
@@ -31,15 +27,6 @@ class RegisterContent extends Block {
 		super("div", {
 			...props,
 			form: {
-				email: "",
-				login: "",
-				first_name: "",
-				second_name: "",
-				phone: "",
-				password: "",
-				password_repeat: "",
-			},
-			errors: {
 				email: "",
 				login: "",
 				first_name: "",
@@ -59,13 +46,6 @@ class RegisterContent extends Block {
 
 					this.children.InputEmail.setProps({
 						error,
-					});
-
-					this.setProps({
-						errors: {
-							...(this.props.errors as IErrors),
-							email: error,
-						},
 					});
 
 					if (error) return;
@@ -90,13 +70,6 @@ class RegisterContent extends Block {
 						error,
 					});
 
-					this.setProps({
-						errors: {
-							...(this.props.errors as IErrors),
-							login: error,
-						},
-					});
-
 					if (error) return;
 
 					this.setProps({
@@ -117,13 +90,6 @@ class RegisterContent extends Block {
 
 					this.children.InputName.setProps({
 						error,
-					});
-
-					this.setProps({
-						errors: {
-							...(this.props.errors as IErrors),
-							first_name: error,
-						},
 					});
 
 					if (error) return;
@@ -148,13 +114,6 @@ class RegisterContent extends Block {
 						error,
 					});
 
-					this.setProps({
-						errors: {
-							...(this.props.errors as IErrors),
-							second_name: error,
-						},
-					});
-
 					if (error) return;
 
 					this.setProps({
@@ -175,13 +134,6 @@ class RegisterContent extends Block {
 
 					this.children.InputPhone.setProps({
 						error,
-					});
-
-					this.setProps({
-						errors: {
-							...(this.props.errors as IErrors),
-							phone: error,
-						},
 					});
 
 					if (error) return;
@@ -206,13 +158,6 @@ class RegisterContent extends Block {
 						error,
 					});
 
-					this.setProps({
-						errors: {
-							...(this.props.errors as IErrors),
-							password: error,
-						},
-					});
-
 					if (error) return;
 
 					this.setProps({
@@ -226,23 +171,16 @@ class RegisterContent extends Block {
 			InputPasswordRepeat: new Input({
 				label: "Пароль (еще раз)",
 				name: "password_repeat",
-				type: "password_repeat",
+				type: "password",
 				onChange: (e: Event) => {
 					const value = (e.target as HTMLInputElement).value;
+					const password = this.children.InputPassword.value();
 					let error = "";
 
-					if ((this.props.form as IForm).password !== value)
-						error = "Пароли не совпадают";
+					error = checkPasswordRepeat(password, value);
 
 					this.children.InputPasswordRepeat.setProps({
 						error,
-					});
-
-					this.setProps({
-						errors: {
-							...(this.props.errors as IErrors),
-							password_repeat: error,
-						},
 					});
 
 					if (error) return;
@@ -258,17 +196,93 @@ class RegisterContent extends Block {
 			ButtonOk: new Button({
 				label: "Зарегистрироваться",
 				type: "primary",
+				isLoading: props.isLoading,
 				attrs: {
 					type: "button",
 				},
 				onClick: () => {
-					setTimeout(() => {
-						for (const key in this.props.errors as IErrors) {
-							if (this.props.errors[key]) return;
-						}
+					const login = this.children.InputLogin.value();
+					const password = this.children.InputPassword.value();
+					const password_repeat = this.children.InputPasswordRepeat.value();
+					const email = this.children.InputEmail.value();
+					const first_name = this.children.InputName.value();
+					const second_name = this.children.InputLastName.value();
+					const phone = this.children.InputPhone.value();
 
-						console.log(this.props.form as IForm);
-					}, 0);
+					const errorLogin = validateField("login", login);
+					const errorPassword = validateField("password", password);
+					const errorPasswordRepeat = checkPasswordRepeat(
+						password,
+						password_repeat
+					);
+					const errorEmail = validateField("email", email);
+					const errorFirstName = validateField("first_name", first_name);
+					const errorSecondName = validateField("second_name", second_name);
+					const errorPhone = validateField("phone", phone);
+
+					if (errorLogin) {
+						this.children.InputPassword.setProps({
+							error: errorLogin,
+						});
+					}
+
+					if (errorPassword) {
+						this.children.InputPassword.setProps({
+							error: errorPassword,
+						});
+					}
+
+					if (errorPasswordRepeat) {
+						this.children.InputPasswordRepeat.setProps({
+							error: errorPasswordRepeat,
+						});
+					}
+
+					if (errorEmail) {
+						this.children.InputEmail.setProps({
+							error: errorEmail,
+						});
+					}
+
+					if (errorFirstName) {
+						this.children.InputName.setProps({
+							error: errorFirstName,
+						});
+					}
+
+					if (errorSecondName) {
+						this.children.InputLastName.setProps({
+							error: errorSecondName,
+						});
+					}
+
+					if (errorPhone) {
+						this.children.InputPhone.setProps({
+							error: errorPhone,
+						});
+					}
+
+					if (
+						errorLogin ||
+						errorPassword ||
+						errorPasswordRepeat ||
+						errorEmail ||
+						errorFirstName ||
+						errorSecondName ||
+						errorPhone
+					)
+						return;
+
+					const data: IFormData = {
+						login: this.children.InputLogin.value(),
+						password: this.children.InputPassword.value(),
+						email: this.children.InputEmail.value(),
+						first_name: this.children.InputName.value(),
+						second_name: this.children.InputLastName.value(),
+						phone: this.children.InputPhone.value(),
+					};
+
+					authServices.register(data);
 				},
 			}),
 			ButtonCancel: new LinkButton({
@@ -288,6 +302,9 @@ class RegisterContent extends Block {
 			{{{ InputPhone }}}
 			{{{ InputPassword }}}
 			{{{ InputPasswordRepeat }}}
+			{{#if registerError}}
+				<p class="error">{{ registerError }}</p>
+			{{/if}}
 			 <div class="auth-form__buttons">
 				{{{ ButtonOk }}}
 				{{{ ButtonCancel }}}
@@ -303,7 +320,7 @@ class RegisterPage extends Block {
 			classList: "page auth-page",
 			AuthLayout: new AuthLayout({
 				title: "Регистрация",
-				Content: new RegisterContent({ ...props }),
+				Content: new RegisterContentBlock({ ...props }),
 			}),
 		});
 	}
@@ -314,5 +331,10 @@ class RegisterPage extends Block {
     `;
 	}
 }
+
+const RegisterContentBlock = connect(({ isLoading, registerError }) => ({
+	isLoading,
+	registerError,
+}))(RegisterContent);
 
 export default withRouter(RegisterPage);

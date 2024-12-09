@@ -124,18 +124,9 @@ Handlebars.registerHelper("ifCond", function (v1, v2, options) {
 	return options.inverse(this);
 });
 
-window.store = new Store({
-	isLoading: false,
-	user: null,
-	loginError: null,
-});
+window.store = new Store({});
 
-store.on(StoreEvents.Updated, (prevState, newState) => {
-	console.log("prevState", prevState);
-	console.log("newState", newState);
-});
-
-(async () => {
+const initRouter = async () => {
 	await authServices.checkLoginUser();
 
 	window.router = new Router("#app");
@@ -146,4 +137,6 @@ store.on(StoreEvents.Updated, (prevState, newState) => {
 		.use(ROUTES.profile, Pages.ProfilePage)
 		.use("*", Pages.NavigationPage)
 		.start();
-})();
+};
+
+initRouter();

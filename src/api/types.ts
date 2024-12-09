@@ -43,3 +43,12 @@ export type ChatDTO = {
 	unread_count: number;
 	last_message: LastMessage | null;
 };
+
+export type RegisterRequestData = {
+	first_name: string;
+	second_name: string;
+	login: string;
+	email: string;
+	password: string;
+	phone: string;
+};

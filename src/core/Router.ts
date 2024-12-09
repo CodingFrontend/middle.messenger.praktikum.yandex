@@ -1,4 +1,5 @@
 import Route from "./Route";
+import { ROUTES } from "@/constants";
 
 export interface RouteInterface {
 	render: () => void;
@@ -29,6 +30,12 @@ class Router {
 	}
 
 	start() {
+		const { user } = window.store.state;
+
+		if (!user) {
+			this.go(ROUTES.login);
+		}
+
 		window.onpopstate = ((event) => {
 			this._onRoute(event.currentTarget.location.pathname);
 		}).bind(this);

@@ -5,6 +5,7 @@ import {
 	LoginRequestData,
 	SignUpResponse,
 	UserDTO,
+	RegisterRequestData,
 } from "./types";
 
 const authApi = new HTTPTransport("/auth");
@@ -24,5 +25,9 @@ export default class AuthApi {
 
 	async logout(): Promise<void | APIError> {
 		return authApi.post<void | APIError>("/logout");
+	}
+
+	async register(data: RegisterRequestData): Promise<void | APIError> {
+		return authApi.post<void | APIError>("/signup", { data });
 	}
 }

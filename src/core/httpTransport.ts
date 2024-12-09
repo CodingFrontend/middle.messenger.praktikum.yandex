@@ -43,7 +43,16 @@ export default class HTTPTransport {
 		url: string,
 		options: IOptions
 	): Promise<TResponse> {
-		const { headers = {}, method, data, timeout } = options;
+		const {
+			headers = {
+				"Content-Type": "application/json",
+				"X-Requested-With": "XMLHttpRequest",
+				"Access-Control-Allow-Origin": "*",
+			},
+			method,
+			data,
+			timeout,
+		} = options;
 
 		return new Promise((resolve, reject) => {
 			if (!method) {
@@ -52,13 +61,13 @@ export default class HTTPTransport {
 			}
 
 			const xhr = new XMLHttpRequest();
+			xhr.withCredentials = true;
 			const urlString =
 				method === "GET" && !!data
 					? `${url}${this._queryStringify(data)}`
 					: url;
 
-			xhr.open(method, urlString);
-
+			xhr.open(method, urlString, true);
 			Object.keys(headers).forEach((key) =>
 				xhr.setRequestHeader(key, headers[key])
 			);
@@ -88,9 +97,7 @@ export default class HTTPTransport {
 			if (method === METHODS.GET || !data) {
 				xhr.send();
 			} else {
-				console.log(data);
 				xhr.send(JSON.stringify(data));
-				console.log({ ...data });
 			}
 		});
 	}

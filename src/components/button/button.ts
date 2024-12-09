@@ -4,6 +4,7 @@ interface ButtonProps {
 	label: string;
 	type?: string;
 	attrs?: Record<string, string>;
+	isLoading?: boolean;
 	onClick?: (e: Event) => void;
 }
 
@@ -19,7 +20,14 @@ export default class Button extends Block {
 	}
 	public render(): string {
 		return `
-      {{ label }}
+      {{#if isLoading}}
+				<div class="loader">
+					<i class="fa-solid fa-spinner"/>
+				</div>
+      {{else}}
+				 {{ label }}
+      {{/if}}
+     
     `;
 	}
 }

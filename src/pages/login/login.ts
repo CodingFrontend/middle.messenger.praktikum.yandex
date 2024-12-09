@@ -12,20 +12,11 @@ interface ILoginForm {
 	password: "";
 }
 
-interface IErrors {
-	login: "";
-	password: "";
-}
-
 class AuthContent extends Block {
 	constructor(props) {
 		super("div", {
 			...props,
 			loginForm: {
-				login: "",
-				password: "",
-			},
-			errors: {
 				login: "",
 				password: "",
 			},
@@ -40,13 +31,6 @@ class AuthContent extends Block {
 
 					this.children.InputLogin.setProps({
 						error,
-					});
-
-					this.setProps({
-						errors: {
-							...(this.props.errors as IErrors),
-							login: error,
-						},
 					});
 
 					if (error) return;
@@ -71,13 +55,6 @@ class AuthContent extends Block {
 						error,
 					});
 
-					this.setProps({
-						errors: {
-							...(this.props.errors as IErrors),
-							password: error,
-						},
-					});
-
 					if (error) return;
 
 					this.setProps({
@@ -91,17 +68,36 @@ class AuthContent extends Block {
 			ButtonOk: new Button({
 				label: "Авторизоваться",
 				type: "primary",
+				isLoading: props.isLoading,
 				attrs: {
 					type: "button",
 				},
 				onClick: () => {
-					setTimeout(() => {
-						for (const key in this.props.errors as IErrors) {
-							if (this.props.errors[key]) return;
-						}
+					const login = this.children.InputLogin.value();
+					const password = this.children.InputPassword.value();
+					const errorLogin = validateField("login", login);
+					const errorPassword = validateField("password", password);
 
-						authServices.login(this.props.loginForm);
-					}, 0);
+					if (errorLogin) {
+						this.children.InputLogin.setProps({
+							error: errorLogin,
+						});
+					}
+
+					if (errorPassword) {
+						this.children.InputPassword.setProps({
+							error: errorPassword,
+						});
+					}
+
+					if (errorLogin || errorPassword) return;
+
+					const data: ILoginForm = {
+						login: this.children.InputLogin.value(),
+						password: this.children.InputPassword.value(),
+					};
+
+					authServices.login(data);
 				},
 			}),
 			ButtonCancel: new LinkButton({
@@ -119,7 +115,7 @@ class AuthContent extends Block {
 			{{{ InputLogin }}}
 			{{{ InputPassword }}}
 			{{#if loginError}}
-				<p>{{ loginError }}</p>
+				<p class="error">{{ loginError }}</p>
 			{{/if}}
 			<div class="auth-form__buttons">
 				{{{ ButtonOk }}}
@@ -129,7 +125,7 @@ class AuthContent extends Block {
 	}
 }
 
-class LoginBlock extends Block {
+class LoginPage extends Block {
 	constructor(props) {
 		super("main", {
 			...props,
@@ -143,9 +139,6 @@ class LoginBlock extends Block {
 
 	public render(): string {
 		return `
-      {{#if isLoading}}
-				<h1>spinner</h1>
-      {{/if}}
       {{{ AuthLayout }}}
     `;
 	}
@@ -158,12 +151,9 @@ class LoginBlock extends Block {
 // 	};
 // };
 
-const AuthContentBlock = connect(({ loginError }) => ({
+const AuthContentBlock = connect(({ isLoading, loginError }) => ({
+	isLoading,
 	loginError,
 }))(AuthContent);
-
-const LoginPage = connect(({ isLoading }) => ({
-	isLoading,
-}))(LoginBlock);
 
 export default withRouter(LoginPage);

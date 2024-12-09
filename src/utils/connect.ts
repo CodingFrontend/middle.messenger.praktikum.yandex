@@ -23,7 +23,6 @@ export function connect(mapStateToProps) {
 
 					// не забываем сохранить новое состояние
 					state = newState;
-					console.log("777newState", newState);
 				};
 
 				// подписываемся на событие
