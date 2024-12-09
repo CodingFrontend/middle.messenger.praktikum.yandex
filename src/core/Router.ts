@@ -32,7 +32,7 @@ class Router {
 	start() {
 		const { user } = window.store.state;
 
-		if (!user) {
+		if (!user && this._currentRoute !== ROUTES.register) {
 			this.go(ROUTES.login);
 		}
 

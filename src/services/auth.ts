@@ -20,7 +20,6 @@ export const checkLoginUser = async () => {
 	window.store.set({ isLoading: true });
 	try {
 		const user = await authApi.me();
-		// window.router.go(ROUTES.chat);
 		window.store.set({ user });
 	} catch (error) {
 		// window.store.set({ loginError: error.reason });
