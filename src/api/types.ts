@@ -70,3 +70,47 @@ export type UserPasswordRequestData = {
 	oldPassword: "string";
 	newPassword: "string";
 };
+
+export type ChatListRequestData = {
+	offset: "string";
+	limit: "string";
+	title: "string";
+};
+
+export type ChatListResponse = {
+	id: "string";
+	title: "string";
+	avatar: "string";
+	unread_count: "string";
+	created_by: "string";
+	last_message: {
+		user: {
+			first_name: "string";
+			second_name: "string";
+			avatar: "string";
+			email: "string";
+			login: "string";
+			phone: "string";
+		};
+		time: "string";
+		content: "string";
+	};
+};
+
+export type CreateChatRequestData = {
+	title: "string";
+};
+
+export type DeleteChatRequest = {
+	chatId: number;
+};
+
+export type DeleteChatResponse = {
+	userId: number;
+	result: {
+		id: number;
+		title: string;
+		avatar: string;
+		created_by: number;
+	};
+};
