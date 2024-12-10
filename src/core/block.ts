@@ -158,6 +158,17 @@ export default class Block {
 		Object.assign(this.props, nextProps);
 	};
 
+	public setAttrs = (
+		attrName: string,
+		attrValue?: string | boolean | number
+	) => {
+		(this._element as HTMLElement)?.setAttribute(attrName, attrValue);
+	};
+
+	public removeAttrs = (attrName: string) => {
+		(this._element as HTMLElement)?.removeAttribute(attrName);
+	};
+
 	public setChild = (child: unknown) => {
 		Object.assign(this.children, child);
 	};

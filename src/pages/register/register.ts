@@ -175,9 +175,8 @@ class RegisterContent extends Block {
 				onChange: (e: Event) => {
 					const value = (e.target as HTMLInputElement).value;
 					const password = this.children.InputPassword.value();
-					let error = "";
 
-					error = checkPasswordRepeat(password, value);
+					const error = checkPasswordRepeat(password, value);
 
 					this.children.InputPasswordRepeat.setProps({
 						error,
@@ -274,12 +273,12 @@ class RegisterContent extends Block {
 						return;
 
 					const data: IFormData = {
-						login: this.children.InputLogin.value(),
-						password: this.children.InputPassword.value(),
-						email: this.children.InputEmail.value(),
-						first_name: this.children.InputName.value(),
-						second_name: this.children.InputLastName.value(),
-						phone: this.children.InputPhone.value(),
+						login,
+						password,
+						email,
+						first_name,
+						second_name,
+						phone,
 					};
 
 					authServices.register(data);

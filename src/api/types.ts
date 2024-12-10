@@ -52,3 +52,21 @@ export type RegisterRequestData = {
 	password: string;
 	phone: string;
 };
+
+export type UserRequestData = {
+	first_name: string;
+	second_name: string;
+	display_name: string;
+	login: string;
+	email: string;
+	phone: string;
+};
+
+export type UserAvatarRequestData = {
+	avatar: File;
+};
+
+export type UserPasswordRequestData = {
+	oldPassword: "string";
+	newPassword: "string";
+};

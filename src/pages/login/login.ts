@@ -93,8 +93,8 @@ class AuthContent extends Block {
 					if (errorLogin || errorPassword) return;
 
 					const data: ILoginForm = {
-						login: this.children.InputLogin.value(),
-						password: this.children.InputPassword.value(),
+						login,
+						password,
 					};
 
 					authServices.login(data);

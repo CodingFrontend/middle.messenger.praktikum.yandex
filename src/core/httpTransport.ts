@@ -74,7 +74,8 @@ export default class HTTPTransport {
 
 			xhr.onload = function () {
 				if (xhr.status >= 200 && xhr.status < 300) {
-					resolve(xhr.response);
+					const response = data ? xhr.response : JSON.parse(xhr.response);
+					resolve(response);
 				} else {
 					const { error, reason } = JSON.parse(xhr.response);
 					reject({

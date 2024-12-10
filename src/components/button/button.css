@@ -1,17 +1,20 @@
 .button {
-  border: unset;
-  text-align: center;
-  cursor: pointer;
+	border: unset;
+	text-align: center;
+	cursor: pointer;
 }
 
 .button--primary {
-  padding: 12px 70px;
-  color: var(--contrast-color);
-  background-color: var(--primary-color);
-  border-radius: 8px;
-  transition: all 0.3s ease;
+	padding: 12px 70px;
+	border-radius: 8px;
 }
 
-.button--primary:hover {
-  background-color: var(--primary-color-hover);
+.button--primary:hover(:not(:disabled)) {
+	background-color: var(--primary-color-hover);
+}
+
+.button--primary:not(:disabled) {
+	color: var(--contrast-color);
+	background-color: var(--primary-color);
+	transition: all 0.3s ease;
 }
