@@ -5,10 +5,12 @@ import {
 	ChatMessageGroup,
 	IconButton,
 	SendMessageInput,
+	Loader,
 } from "@/components";
 import { chatWidgetItems } from "@/mockData/chatDataMock";
 import { validateField } from "@/utils/validate";
 import type { IChatMessageGroup } from "@/components/chat/chat-message-group/chat-message-group";
+import { connect } from "@/utils/connect";
 
 export interface IChatDialog {
 	id: string;
@@ -17,13 +19,14 @@ export interface IChatDialog {
 	groups: IChatMessageGroup[];
 }
 
-export default class ChatDialog extends Block {
+class ChatDialog extends Block {
 	constructor(props: IChatDialog) {
 		super("div", {
 			...props,
 			showChatWidget: false,
 			classList: "chat-dialog",
 			messageText: "",
+			Loader: new Loader(),
 			Avatar: new Avatar({
 				image: props.image || "",
 				size: "small",
@@ -66,35 +69,63 @@ export default class ChatDialog extends Block {
 			}),
 		});
 	}
+
+	public componentDidUpdate(
+		oldProps: IProps<any>,
+		newProps: IProps<any>
+	): boolean {
+		if (oldProps.chatDialogData !== newProps.chatDialogData) {
+			const { chatDialogData } = newProps;
+
+			this.setProps({ chatDialogData });
+			return true;
+		}
+		return true;
+	}
+
 	public render(): string {
 		return `
-      <div class='chat-dialog-top'>
-				<div class='chat-dialog-top__user'>
-					{{{ Avatar }}}
-					<div class='chat-dialog-top__user-name'>{{name}}</div>
-				</div>
-				<div class="chat-dialog-top__actions">
-					<div class='chat-dialog-top__actions-button'>
-						{{{ ChatWidgetButton }}}
+			{{#if chatDialogData}}
+				<div class='chat-dialog-top'>
+					<div class='chat-dialog-top__user'>
+						{{{ Avatar }}}
+						<div class='chat-dialog-top__user-name'>{{chatDialogData.title}}</div>
 					</div>
-					{{#if showChatWidget}}
-						<div class="chat-dialog-top__actions-widget">
-							{{{ ChatWidget }}}
+					<div class="chat-dialog-top__actions">
+						<div class='chat-dialog-top__actions-button'>
+							{{{ ChatWidgetButton }}}
 						</div>
+						{{#if showChatWidget}}
+							<div class="chat-dialog-top__actions-widget">
+								{{{ ChatWidget }}}
+							</div>
+						{{/if}}
+					</div>
+				</div>
+				<div class='chat-dialog-body'>
+					{{#if groups}}
+						{{{ ChatMessageGroup }}}
 					{{/if}}
 				</div>
-			</div>
-			{{#if groups}}
-				{{{ ChatMessageGroup }}}
-			{{/if}}
-			<div class="chat-dialog-bottom">
-				<div class="chat-dialog-bottom__field">
-					{{{ SendMessageInput }}}
+				<div class="chat-dialog-bottom">
+					<div class="chat-dialog-bottom__field">
+						{{{ SendMessageInput }}}
+					</div>
+					<div class="chat-dialog-bottom__send-button">
+						{{{ SendMessageButton }}}
+					</div>
 				</div>
-				<div class="chat-dialog-bottom__send-button">
-					{{{ SendMessageButton }}}
-				</div>
+			{{ else }}
+			<div class="chat-content-empty">
+				<p>Выберите чат чтобы отправить сообщение</p>
 			</div>
+      {{/if}}
     `;
 	}
 }
+
+const ChatPage = connect(({ chatDialogData }) => ({
+	chatDialogData,
+}))(ChatDialog);
+
+export default ChatPage;

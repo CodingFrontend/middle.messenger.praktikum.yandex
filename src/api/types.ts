@@ -21,10 +21,6 @@ export type CreateUser = Omit<UserDTO, "avatar" | "display_name" | "id"> & {
 	password: string;
 };
 
-export type CreateChat = {
-	title: string;
-};
-
 export type LoginRequestData = {
 	login: string;
 	password: string;
@@ -67,38 +63,42 @@ export type UserAvatarRequestData = {
 };
 
 export type UserPasswordRequestData = {
-	oldPassword: "string";
-	newPassword: "string";
+	oldPassword: string;
+	newPassword: string;
 };
 
 export type ChatListRequestData = {
-	offset: "string";
-	limit: "string";
-	title: "string";
+	offset: string;
+	limit: string;
+	title: string;
 };
 
 export type ChatListResponse = {
-	id: "string";
-	title: "string";
-	avatar: "string";
-	unread_count: "string";
-	created_by: "string";
+	id: string;
+	title: string;
+	avatar: string;
+	unread_count: string;
+	created_by: string;
 	last_message: {
 		user: {
-			first_name: "string";
-			second_name: "string";
-			avatar: "string";
-			email: "string";
-			login: "string";
-			phone: "string";
+			first_name: string;
+			second_name: string;
+			avatar: string;
+			email: string;
+			login: string;
+			phone: string;
 		};
-		time: "string";
-		content: "string";
+		time: string;
+		content: string;
 	};
 };
 
 export type CreateChatRequestData = {
-	title: "string";
+	title: string;
+};
+
+export type CreateChatResponse = {
+	id: number;
 };
 
 export type DeleteChatRequest = {

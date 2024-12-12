@@ -2,7 +2,7 @@ import Block from "@/core/block";
 
 type AvatarProps = {
 	size?: string;
-	image?: string;
+	image: string | null;
 	Slot?: Block;
 };
 

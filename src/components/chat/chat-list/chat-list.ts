@@ -1,55 +1,56 @@
-import Block from '@/core/block';
-import { ChatItem } from '@/components';
-import type { IChatItem } from '@/components/chat/chat-item/chat-item';
+import Block from "@/core/block";
+import { ChatItem } from "@/components";
+import type { IChatItem } from "@/components/chat/chat-item/chat-item";
 
 interface IChatListProps {
-  items: IChatItem[];
-  onClick?: (e: Event) => void;
-  onChatSelect?: (id: string) => void;
+	items: IChatItem[];
 }
 
 export default class ChatList extends Block {
-  constructor(props: IChatListProps) {
-    super('ul', {
-      ...props,
-      activeChatId: null,
-      classList: 'chat-list',
-      el: props.items,
-      chatItems: props.items.map(
-        (chatItem: IChatItem) =>
-          new ChatItem({
-            ...chatItem,
-            onClick: () => {
-              this.setProps({ activeChatId: chatItem.id });
-              if (props.onChatSelect) props.onChatSelect(chatItem.id);
-            },
-          })
-      ),
-    });
-  }
+	constructor(props: IChatListProps) {
+		super("ul", {
+			...props,
+			activeChatId: null,
+			classList: "chat-list",
+			el: props.items,
+			chatItems: props.items.map(
+				(chatItem: IChatItem) =>
+					new ChatItem({
+						...chatItem,
+						onClick: (id) => {
+							this.setProps({ activeChatId: id });
+						},
+					})
+			),
+		});
+	}
 
-  public componentDidUpdate() {
-    const { items } = this.props;
+	public componentDidUpdate(
+		oldProps: IProps<any>,
+		newProps: IProps<any>
+	): boolean {
+		if (
+			newProps.activeChatId &&
+			oldProps.activeChatId !== newProps.activeChatId
+		) {
+			const { activeChatId } = newProps;
+			const { chatItems } = this.children;
 
-    this.children.chatItems = items.map(
-      (chatItem: IChatItem) =>
-        new ChatItem({
-          ...chatItem,
-          onClick: () => {
-            this.setProps({ activeChatId: chatItem.id });
-            this.props.onChatSelect(chatItem.id);
-          },
-        })
-    );
+			chatItems.forEach((item) => {
+				item.props.id === activeChatId
+					? item.setProps({ active: true })
+					: item.setProps({ active: false });
+			});
+			return true;
+		}
+		return true;
+	}
 
-    return true;
-  }
-
-  public render(): string {
-    return `
+	public render(): string {
+		return `
       {{#each chatItems}}
 				{{{ this }}}
 			{{/each}}
     `;
-  }
+	}
 }

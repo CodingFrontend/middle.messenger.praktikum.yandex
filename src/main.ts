@@ -7,6 +7,7 @@ import { render } from "@/core/renderDom";
 import Router from "@/core/Router";
 import { Store, StoreEvents } from "@/core/Store";
 import * as authServices from "@/services/auth";
+import * as chatServices from "@/services/chat";
 
 import { ROUTES } from "@/constants";
 
@@ -128,6 +129,7 @@ window.store = new Store({});
 
 const initRouter = async () => {
 	await authServices.checkLoginUser();
+	await chatServices.getChatList({});
 
 	window.router = new Router("#app");
 	window.router

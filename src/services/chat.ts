@@ -6,8 +6,8 @@ export const getChatList = async (model) => {
 	window.store.set({ isChatListLoading: true });
 
 	try {
-		const chatList = await chatApi.getChatList(model);
-		window.store.set({ chatList });
+		const chatListItems = await chatApi.getChatList(model);
+		window.store.set({ chatListItems });
 	} catch (error) {
 		window.store.set({ chatListError: error.reason });
 	} finally {

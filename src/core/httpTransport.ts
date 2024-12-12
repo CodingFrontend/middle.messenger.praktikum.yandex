@@ -1,3 +1,5 @@
+import isJsonString from "@/utils/isJsonString";
+
 enum METHODS {
 	GET = "GET",
 	POST = "POST",
@@ -74,7 +76,9 @@ export default class HTTPTransport {
 
 			xhr.onload = function () {
 				if (xhr.status >= 200 && xhr.status < 300) {
-					const response = data ? xhr.response : JSON.parse(xhr.response);
+					const response = isJsonString(xhr.response)
+						? JSON.parse(xhr.response)
+						: xhr.response;
 					resolve(response);
 				} else {
 					const { error, reason } = JSON.parse(xhr.response);

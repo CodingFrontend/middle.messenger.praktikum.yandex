@@ -40,9 +40,9 @@ export const register = async (model) => {
 	}
 };
 
-export const getUser = () => {
-	const store = window.store;
-	const { user } = store.getState();
+// export const getUser = () => {
+// 	const store = window.store;
+// 	const { user } = store.getState();
 
-	return user;
-};
+// 	return user;
+// };

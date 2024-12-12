@@ -4,6 +4,7 @@ import {
 	ChatListRequestData,
 	ChatListResponse,
 	CreateChatRequestData,
+	CreateChatResponse,
 	DeleteChatRequest,
 	DeleteChatResponse,
 } from "./types";
@@ -17,8 +18,10 @@ export default class ChatApi {
 		return chatApi.get<ChatListResponse | APIError>("/", { data });
 	}
 
-	async createChat(data: CreateChatRequestData): Promise<void | APIError> {
-		return chatApi.post<void | APIError>("/", { data });
+	async createChat(
+		data: CreateChatRequestData
+	): Promise<CreateChatResponse | APIError> {
+		return chatApi.post<CreateChatResponse | APIError>("/", { data });
 	}
 
 	async deleteChat(
