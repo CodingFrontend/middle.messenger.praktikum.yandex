@@ -33,12 +33,14 @@ export default class HTTPTransport {
 			throw new Error("Data must be object");
 		}
 
-		return Object.keys(data as XMLHttpRequestBodyInit)
-			.map((key) => {
-				if (typeof key === "string")
-					encodeURIComponent(key) + "=" + encodeURIComponent(data && data[key]);
-			})
-			.join("&");
+		const string = Object.keys(data as XMLHttpRequestBodyInit).map((key) => {
+			if (typeof key === "string")
+				return (
+					encodeURIComponent(key) + "=" + encodeURIComponent(data && data[key])
+				);
+		});
+
+		return string;
 	}
 
 	private _request<TResponse>(
@@ -112,6 +114,7 @@ export default class HTTPTransport {
 			...options,
 			method: METHODS.GET,
 		};
+
 		const requestUrl = `${this.apiUrl}${url}`;
 		return this._request(requestUrl, requestProps);
 	};

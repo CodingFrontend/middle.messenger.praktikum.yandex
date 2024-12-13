@@ -54,8 +54,12 @@ class Chat extends Block {
 			}),
 			ChatList: new ChatList({
 				items: props.chatListItems,
+				onClick: (id: number) => {
+					this.setProps({ activeChatId: id });
+				},
 			}),
 			ChatDialog: new ChatDialog({}),
+			rawChatDialog: [...props.chatListItems],
 			Modal: new Modal({
 				title: "Создать чат",
 				labelOk: "Создать",
@@ -77,6 +81,17 @@ class Chat extends Block {
 	}
 
 	public render(): string {
+		const { activeChatId, rawChatDialog } = this.props;
+		const { ChatDialog } = this.children;
+
+		const currentChatDialog = rawChatDialog.find(
+			(item) => item.id === activeChatId
+		);
+		if (currentChatDialog) {
+			const { title, avatar, id } = currentChatDialog;
+			ChatDialog.setProps({ title, avatar, id });
+		}
+
 		return `
       {{#if isChatListLoading}}
 				{{{ Loader }}}
@@ -96,7 +111,13 @@ class Chat extends Block {
 					</div>
 				</div>
 				<div class='chat-content'>
+				{{#if activeChatId}}
 					{{{ ChatDialog }}}
+				{{ else }}
+					<div class="chat-content-empty">
+						<p>Выберите чат чтобы отправить сообщение</p>
+					</div>
+				{{/if }}
 				</div>
       {{/if}}
 			{{#if showCreateChatModal}}
@@ -113,12 +134,18 @@ const ChatPage = connect(
 		isChatListLoading,
 		chatListError,
 		chatListItems,
+		groupedMessages,
+		isChatTokenLoading,
+		chatTokenError,
 	}) => ({
 		isCreateChatLoading,
 		createChatError,
 		isChatListLoading,
 		chatListError,
 		chatListItems,
+		groupedMessages,
+		isChatTokenLoading,
+		chatTokenError,
 	})
 )(Chat);
 

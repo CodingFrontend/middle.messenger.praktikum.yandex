@@ -11,12 +11,13 @@ import { chatWidgetItems } from "@/mockData/chatDataMock";
 import { validateField } from "@/utils/validate";
 import type { IChatMessageGroup } from "@/components/chat/chat-message-group/chat-message-group";
 import { connect } from "@/utils/connect";
+import isEqual from "@/utils/isEqual";
+import * as chatServices from "@/services/chat";
 
 export interface IChatDialog {
 	id: string;
-	name: string;
-	image?: string;
-	groups: IChatMessageGroup[];
+	title: string;
+	avatar: string | null;
 }
 
 class ChatDialog extends Block {
@@ -28,14 +29,14 @@ class ChatDialog extends Block {
 			messageText: "",
 			Loader: new Loader(),
 			Avatar: new Avatar({
-				image: props.image || "",
+				image: props.avatar || "",
 				size: "small",
 			}),
 			ChatWidget: new ChatWidget({
 				items: chatWidgetItems,
 				onCloseModal: () => this.setProps({ showChatWidget: false }),
 			}),
-			ChatMessageGroup: new ChatMessageGroup({ groups: props.groups }),
+			ChatMessageGroup: new ChatMessageGroup({ groups: props.groupedMessages }),
 			ChatWidgetButton: new IconButton({
 				faIcon: "fa-solid fa-ellipsis-vertical",
 				type: "secondary",
@@ -63,33 +64,70 @@ class ChatDialog extends Block {
 
 						if (error) return;
 
-						console.log(value);
+						const socket = window.socket;
+
+						socket.send(
+							JSON.stringify({
+								content: value,
+								type: "message",
+							})
+						);
 					}, 0);
 				},
 			}),
 		});
 	}
 
-	public componentDidUpdate(
+	public async componentDidUpdate(
 		oldProps: IProps<any>,
 		newProps: IProps<any>
-	): boolean {
-		if (oldProps.chatDialogData !== newProps.chatDialogData) {
-			const { chatDialogData } = newProps;
+	): Promise<boolean> {
+		if (newProps.id && newProps.id !== oldProps.id) {
+			await chatServices.createChatWSConnection(newProps.id);
+		}
 
-			this.setProps({ chatDialogData });
+		if (
+			newProps.groupedMessages &&
+			newProps.groupedMessages !== oldProps.groupedMessages
+		) {
+			const { groupedMessages } = newProps;
+			const { ChatMessageGroup } = this.children;
+
+			ChatMessageGroup.setProps({ groups: groupedMessages });
 			return true;
 		}
-		return true;
+		// if (
+		// 	newProps.groupedMessages &&
+		// 	newProps.groupedMessages !== oldProps.groupedMessages
+		// ) {
+		// 	this.setProps({
+		// 		...newProps,
+		// 		ChatMessageGroup: new ChatMessageGroup({
+		// 			groups: newProps.groupedMessages,
+		// 		}),
+		// 	});
+		// 	return true;
+		// }
+
+		// if (oldProps.chatDialogData !== newProps.chatDialogData) {
+		// 	const { chatDialogData } = newProps;
+
+		// 	this.setProps({ chatDialogData });
+		// 	return true;
+		// }
+		return false;
 	}
 
 	public render(): string {
+		// const currentChatDialog = rawChatDialog.find(
+		// 	(item) => item.id === activeChatId
+		// );
+
 		return `
-			{{#if chatDialogData}}
 				<div class='chat-dialog-top'>
 					<div class='chat-dialog-top__user'>
 						{{{ Avatar }}}
-						<div class='chat-dialog-top__user-name'>{{chatDialogData.title}}</div>
+						<div class='chat-dialog-top__user-name'>{{title}}</div>
 					</div>
 					<div class="chat-dialog-top__actions">
 						<div class='chat-dialog-top__actions-button'>
@@ -103,7 +141,11 @@ class ChatDialog extends Block {
 					</div>
 				</div>
 				<div class='chat-dialog-body'>
-					{{#if groups}}
+					{{#if isChatTokenLoading}}
+						{{{ Loader }}}
+					{{ else if chatTokenError}}
+						<p class="error">{{ chatTokenError }}</p>
+					{{else if groupedMessages}}
 						{{{ ChatMessageGroup }}}
 					{{/if}}
 				</div>
@@ -115,17 +157,16 @@ class ChatDialog extends Block {
 						{{{ SendMessageButton }}}
 					</div>
 				</div>
-			{{ else }}
-			<div class="chat-content-empty">
-				<p>Выберите чат чтобы отправить сообщение</p>
-			</div>
-      {{/if}}
     `;
 	}
 }
 
-const ChatPage = connect(({ chatDialogData }) => ({
-	chatDialogData,
-}))(ChatDialog);
+const ChatPage = connect(
+	({ groupedMessages, isChatTokenLoading, chatTokenError }) => ({
+		groupedMessages,
+		isChatTokenLoading,
+		chatTokenError,
+	})
+)(ChatDialog);
 
 export default ChatPage;

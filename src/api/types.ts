@@ -114,3 +114,18 @@ export type DeleteChatResponse = {
 		created_by: number;
 	};
 };
+
+export type ChatTokenResponse = {
+	token: string;
+};
+
+export type WSChatOptions = {
+	user_id: number;
+	chat_id: number;
+	token_value: string;
+	count?: string;
+};
+
+export type ChatUreadMessagesResponse = {
+	unread_count: number;
+};

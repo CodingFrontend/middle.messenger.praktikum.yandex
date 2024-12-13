@@ -1,6 +1,7 @@
 import Block from "@/core/block";
 import { Avatar } from "@/components";
 import type { ChatDTO } from "@/api/types";
+import * as chatServices from "@/services/chat";
 
 interface ChatItemProps extends ChatDTO {
 	onClick?: () => void;
@@ -16,9 +17,6 @@ export default class ChatItem extends Block {
 			}),
 			events: {
 				mousedown: () => {
-					const chatDialogData = { ...props };
-					window.store.set({ chatDialogData });
-
 					props?.onClick(props.id);
 				},
 			},
@@ -26,7 +24,6 @@ export default class ChatItem extends Block {
 	}
 
 	public render(): string {
-		console.log("item", this.props);
 		return `
 			<div class="chat-item {{#if active}}chat-item--active{{/if}}">
 				<div class='chat-item__wrapper'>

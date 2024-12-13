@@ -125,7 +125,7 @@ Handlebars.registerHelper("ifCond", function (v1, v2, options) {
 	return options.inverse(this);
 });
 
-window.store = new Store({});
+window.store = new Store({ groupedMessages: [] });
 
 const initRouter = async () => {
 	await authServices.checkLoginUser();
