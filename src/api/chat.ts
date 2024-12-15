@@ -9,6 +9,7 @@ import {
 	DeleteChatResponse,
 	ChatTokenResponse,
 	ChatUreadMessagesResponse,
+	AddUsersRequestData,
 } from "./types";
 
 const chatApi = new HTTPTransport("/chats");
@@ -40,5 +41,13 @@ export default class ChatApi {
 		id: number
 	): Promise<ChatUreadMessagesResponse | APIError> {
 		return chatApi.get<ChatUreadMessagesResponse | APIError>(`/new/${id}`);
+	}
+
+	async addUsers(data: AddUsersRequestData): Promise<void | APIError> {
+		return chatApi.put<void | APIError>("/users", { data });
+	}
+
+	async deleteUsers(data: AddUsersRequestData): Promise<void | APIError> {
+		return chatApi.delete<void | APIError>("/users", { data });
 	}
 }

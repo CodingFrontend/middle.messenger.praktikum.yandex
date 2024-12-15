@@ -265,7 +265,9 @@ class ProfileContent extends Block {
 				label: "Старый пароль",
 				value: "",
 				name: "old_password",
-				type: "password",
+				attrs: {
+					type: "password",
+				},
 				onChange: (e: Event) => {
 					const value = (e.target as HTMLInputElement).value;
 

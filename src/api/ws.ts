@@ -1,5 +1,4 @@
 import type { WSChatOptions } from "./types";
-import { formatDate } from "@/utils/formatDate";
 
 const initChatConnection = (options: WSChatOptions, data?: string) => {
 	if (!options) return;
@@ -33,44 +32,12 @@ const initChatConnection = (options: WSChatOptions, data?: string) => {
 	socket.addEventListener("message", (event) => {
 		const messages = JSON.parse(event.data);
 
-		const groupMessagesByDay = (msgs) => {
-			if (!msgs) return [];
+		if (Array.isArray(messages)) {
+			window.store.set({ messages });
+		} else {
+			window.store.set({ newMessage: messages });
+		}
 
-			const result: any = [];
-			let current;
-			const { user } = window.store.getState();
-
-			msgs.forEach((message) => {
-				const date = new Date(message.time);
-				const index = result.findIndex(
-					(item) => item.date.getDate() === date.getDate()
-				);
-
-				if (index !== -1) {
-					result[index].messages.push({
-						...message,
-						state: message.user_id === user.id ? "upcoming" : "incoming",
-					});
-				} else {
-					current = {
-						date: date,
-						messages: [
-							{
-								...message,
-								state: message.user_id === user.id ? "upcoming" : "incoming",
-							},
-						],
-					};
-
-					result.push(current);
-				}
-			});
-			return result.map((item) => ({ ...item, date: formatDate(item.date) }));
-		};
-
-		const messagesGrouped = groupMessagesByDay(messages);
-
-		window.store.set({ messages: messagesGrouped });
 		console.log("Получены данные", messages);
 	});
 

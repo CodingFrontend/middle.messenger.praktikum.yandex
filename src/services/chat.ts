@@ -1,6 +1,5 @@
 import ChatApi from "@/api/chat";
 import initChatConnection from "@/api/ws";
-
 const chatApi = new ChatApi();
 
 export const getChatList = async (model) => {
@@ -75,5 +74,29 @@ export const getNewMessagesCount = async (id: number) => {
 		window.store.set({ unreadCountError: error.reason });
 	} finally {
 		window.store.set({ isUnreadCountLoading: false });
+	}
+};
+
+export const addUsers = async ({ users, chatId }) => {
+	window.store.set({ isAddUsersLoading: true });
+
+	try {
+		await chatApi.addUsers({ users, chatId });
+	} catch (error) {
+		window.store.set({ AddUsersError: error.reason });
+	} finally {
+		window.store.set({ isAddUsersLoading: false });
+	}
+};
+
+export const deleteUsers = async ({ users, chatId }) => {
+	window.store.set({ isDeleteUsersLoading: true });
+
+	try {
+		await chatApi.addUsers({ users, chatId });
+	} catch (error) {
+		window.store.set({ DeleteUsersError: error.reason });
+	} finally {
+		window.store.set({ isDeleteUsersLoading: false });
 	}
 };

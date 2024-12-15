@@ -129,3 +129,8 @@ export type WSChatOptions = {
 export type ChatUreadMessagesResponse = {
 	unread_count: number;
 };
+
+export type AddUsersRequestData = {
+	users: number[];
+	chatId: number;
+};

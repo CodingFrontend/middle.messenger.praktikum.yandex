@@ -13,6 +13,7 @@ import type { IChatMessageGroup } from "@/components/chat/chat-message-group/cha
 import { connect } from "@/utils/connect";
 import isEqual from "@/utils/isEqual";
 import * as chatServices from "@/services/chat";
+import { formatDate, getTime } from "@/utils/formatDate";
 
 export interface IChatDialog {
 	id: string;
@@ -60,7 +61,7 @@ class ChatDialog extends Block {
 				type: "primary",
 				onClick: () => {
 					setTimeout(() => {
-						const value = this.props.messageText as string;
+						const value = this.children.SendMessageInput.value();
 						const error = validateField("message", value);
 
 						if (error) return;
@@ -73,6 +74,10 @@ class ChatDialog extends Block {
 								type: "message",
 							})
 						);
+
+						this.children.SendMessageInput.setProps({
+							messageText: "",
+						});
 					}, 0);
 				},
 			}),
@@ -87,22 +92,74 @@ class ChatDialog extends Block {
 			await chatServices.createChatWSConnection(newProps.id);
 		}
 
-		if (newProps.messages && newProps.messages !== oldProps.messages) {
-			const { messages } = newProps;
+		if (
+			(newProps.messages && newProps.messages !== oldProps.messages) ||
+			(newProps.newMessage && newProps.newMessage !== oldProps.newMessage)
+		) {
+			const { messages, newMessage } = newProps;
 			const { ChatMessageGroup } = this.children;
 
-			ChatMessageGroup.setProps({ groups: messages });
+			const allMessages = [...messages];
+
+			if (newMessage) allMessages.push(newMessage);
+
+			const checkMessageState = (message) => {
+				const { user } = window.store.getState();
+
+				return message.user_id === user.id ? "upcoming" : "incoming";
+			};
+
+			const formatMessage = (message) => ({
+				...message,
+				state: checkMessageState(message),
+				time: getTime(message.time),
+			});
+
+			const groupMessagesByDay = (msgs) => {
+				if (!msgs) return [];
+
+				const result: any = [];
+				let current;
+
+				const sortedMessages = msgs.sort(
+					(item_1, item_2) => new Date(item_1.time) - new Date(item_2.time)
+				);
+
+				sortedMessages.forEach((message) => {
+					const date = new Date(message.time);
+					const index = result.findIndex(
+						(item) => item.date.getDate() === date.getDate()
+					);
+
+					if (index !== -1) {
+						result[index].messages.push(formatMessage(message));
+					} else {
+						current = {
+							date: date,
+							messages: [formatMessage(message)],
+						};
+
+						result.push(current);
+					}
+				});
+
+				return result.map((item) => ({ ...item, date: formatDate(item.date) }));
+			};
+
+			const messagesGrouped = groupMessagesByDay(allMessages);
+
+			ChatMessageGroup.setProps({ groups: messagesGrouped });
 			this.setProps({
 				isComponentLoading: false,
 			});
+
 			return true;
 		}
+
 		return false;
 	}
 
 	public render(): string {
-		// this.children.ChatMessageGroup.setProps({ groups: [] });
-
 		return `
 				<div class='chat-dialog-top'>
 					<div class='chat-dialog-top__user'>
@@ -120,7 +177,7 @@ class ChatDialog extends Block {
 						{{/if}}
 					</div>
 				</div>
-				<div class='chat-dialog-body'>
+				<div class='chat-dialog-body' id="scroll-content">
 					{{#if isChatTokenLoading}}
 						{{{ Loader }}}
 					{{ else if chatTokenError}}
@@ -142,8 +199,9 @@ class ChatDialog extends Block {
 }
 
 const ChatPage = connect(
-	({ messages, isChatTokenLoading, chatTokenError }) => ({
+	({ messages, newMessage, isChatTokenLoading, chatTokenError }) => ({
 		messages,
+		newMessage,
 		isChatTokenLoading,
 		chatTokenError,
 	})

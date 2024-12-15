@@ -9,7 +9,7 @@ interface IChatListProps {
 	onClick?: (id: number) => void;
 }
 
-class ChatListBlock extends Block {
+class ChatList extends Block {
 	constructor(props: IChatListProps) {
 		super("ul", {
 			...props,
@@ -24,6 +24,7 @@ class ChatListBlock extends Block {
 						...chatItem,
 						onClick: async (id: number) => {
 							this.setProps({ activeChatId: id });
+							window.store.set({ activeChatId: id });
 
 							props?.onClick(id);
 						},
@@ -32,28 +33,15 @@ class ChatListBlock extends Block {
 		});
 	}
 
-	public componentDidUpdate(
-		oldProps: IProps<any>,
-		newProps: IProps<any>
-	): boolean {
-		if (newProps && newProps !== oldProps) {
-			console.log(5, this.props.items);
-
-			return true;
-		}
-
-		return false;
-	}
-
 	public render() {
 		const { activeChatId } = this.props;
-		// const { chatItems } = this.children;
+		const { chatItems } = this.children;
 
-		// chatItems.forEach((item) => {
-		// 	return item.props.id === activeChatId
-		// 		? item.setProps({ active: true })
-		// 		: item.setProps({ active: false });
-		// });
+		chatItems.forEach((item) => {
+			return item.props.id === activeChatId
+				? item.setProps({ active: true })
+				: item.setProps({ active: false });
+		});
 
 		return `
       {{#each chatItems}}
@@ -62,9 +50,5 @@ class ChatListBlock extends Block {
     `;
 	}
 }
-
-const ChatList = connect(({ unreadMessages }) => ({
-	unreadMessages,
-}))(ChatListBlock);
 
 export default ChatList;

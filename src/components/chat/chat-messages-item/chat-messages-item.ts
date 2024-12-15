@@ -5,8 +5,8 @@ export interface IChatMessagesItem {
 	type: "message";
 	state: "upcoming" | "incoming";
 	content: string;
-	read?: boolean;
-	date: string;
+	is_read?: boolean;
+	time: string;
 }
 
 export default class ChatMessagesItem extends Block {
@@ -22,12 +22,12 @@ export default class ChatMessagesItem extends Block {
 					<div class='chat-messages-item-text'>
 						<div class='chat-messages-item-text__value'>{{content}}</div>
 						<div class='chat-messages-item-text__info'>
-							{{#if read}}
+							{{#if is_read}}
 								<span class='chat-messages-item-text__status'>
 									<i class='fa-solid fa-check-double'></i>
 								</span>
 							{{/if}}
-							<div class='chat-messages-item-text__date'>{{date}}</div>
+							<div class='chat-messages-item-text__date'>{{time}}</div>
 						</div>
 					</div>
 				{{/ifCond}}

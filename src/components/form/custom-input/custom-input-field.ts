@@ -17,6 +17,7 @@ export default class CustomInputField extends Block {
 				autocomplete: "off",
 				placeholder: "",
 				value: props.value,
+				type: props.type,
 			},
 			events: {
 				change: props.onChange,
