@@ -1,7 +1,6 @@
 import Block from "@/core/block";
 import { ChatMessageGroupItem } from "@/components";
 import type { IChatMessageGroupItem } from "@/components/chat/chat-message-group-item/chat-message-group-item";
-import isEqual from "@/utils/isEqual";
 
 export interface IChatMessageGroup {
 	// date?: string;
@@ -23,10 +22,9 @@ export default class ChatMessageGroup extends Block {
 	): boolean {
 		if (newProps.groups && newProps.groups !== oldProps.groups) {
 			this.setChild({
-				groupsList: newProps.groups.map((group) => {
-					console.log(group);
-					return new ChatMessageGroupItem({ ...group });
-				}),
+				groupsList: newProps.groups.map(
+					(group) => new ChatMessageGroupItem({ ...group })
+				),
 			});
 			return true;
 		}
@@ -35,8 +33,6 @@ export default class ChatMessageGroup extends Block {
 	}
 
 	public render(): string {
-		console.log("chatdialog", this.props.groups);
-
 		return `
     {{#each groupsList}}
 			{{{ this }}}

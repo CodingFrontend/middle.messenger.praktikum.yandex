@@ -39,6 +39,7 @@ export const deleteChat = async (model) => {
 };
 
 export const getChatToken = async (model) => {
+	window.store.set({ messages: [] });
 	window.store.set({ isChatTokenLoading: true });
 
 	try {

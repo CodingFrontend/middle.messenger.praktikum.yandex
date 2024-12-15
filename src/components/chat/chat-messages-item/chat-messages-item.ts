@@ -3,6 +3,7 @@ import Block from "@/core/block";
 export interface IChatMessagesItem {
 	// type: "upcoming" | "incoming";
 	type: "message";
+	state: "upcoming" | "incoming";
 	content: string;
 	read?: boolean;
 	date: string;
@@ -12,7 +13,7 @@ export default class ChatMessagesItem extends Block {
 	constructor(props: IChatMessagesItem) {
 		super("li", {
 			...props,
-			classList: `chat-messages-item chat-messages-item--${props.type}`,
+			classList: `chat-messages-item chat-messages-item--${props.state}`,
 		});
 	}
 	public render(): string {

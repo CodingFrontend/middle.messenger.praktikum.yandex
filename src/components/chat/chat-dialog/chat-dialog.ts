@@ -27,6 +27,7 @@ class ChatDialog extends Block {
 			showChatWidget: false,
 			classList: "chat-dialog",
 			messageText: "",
+			messages: [],
 			Loader: new Loader(),
 			Avatar: new Avatar({
 				image: props.avatar || "",
@@ -36,7 +37,7 @@ class ChatDialog extends Block {
 				items: chatWidgetItems,
 				onCloseModal: () => this.setProps({ showChatWidget: false }),
 			}),
-			ChatMessageGroup: new ChatMessageGroup({ groups: props.groupedMessages }),
+			ChatMessageGroup: new ChatMessageGroup({ groups: [] }),
 			ChatWidgetButton: new IconButton({
 				faIcon: "fa-solid fa-ellipsis-vertical",
 				type: "secondary",
@@ -86,42 +87,21 @@ class ChatDialog extends Block {
 			await chatServices.createChatWSConnection(newProps.id);
 		}
 
-		if (
-			newProps.groupedMessages &&
-			newProps.groupedMessages !== oldProps.groupedMessages
-		) {
-			const { groupedMessages } = newProps;
+		if (newProps.messages && newProps.messages !== oldProps.messages) {
+			const { messages } = newProps;
 			const { ChatMessageGroup } = this.children;
 
-			ChatMessageGroup.setProps({ groups: groupedMessages });
+			ChatMessageGroup.setProps({ groups: messages });
+			this.setProps({
+				isComponentLoading: false,
+			});
 			return true;
 		}
-		// if (
-		// 	newProps.groupedMessages &&
-		// 	newProps.groupedMessages !== oldProps.groupedMessages
-		// ) {
-		// 	this.setProps({
-		// 		...newProps,
-		// 		ChatMessageGroup: new ChatMessageGroup({
-		// 			groups: newProps.groupedMessages,
-		// 		}),
-		// 	});
-		// 	return true;
-		// }
-
-		// if (oldProps.chatDialogData !== newProps.chatDialogData) {
-		// 	const { chatDialogData } = newProps;
-
-		// 	this.setProps({ chatDialogData });
-		// 	return true;
-		// }
 		return false;
 	}
 
 	public render(): string {
-		// const currentChatDialog = rawChatDialog.find(
-		// 	(item) => item.id === activeChatId
-		// );
+		// this.children.ChatMessageGroup.setProps({ groups: [] });
 
 		return `
 				<div class='chat-dialog-top'>
@@ -145,7 +125,7 @@ class ChatDialog extends Block {
 						{{{ Loader }}}
 					{{ else if chatTokenError}}
 						<p class="error">{{ chatTokenError }}</p>
-					{{else if groupedMessages}}
+					{{else if messages}}
 						{{{ ChatMessageGroup }}}
 					{{/if}}
 				</div>
@@ -162,8 +142,8 @@ class ChatDialog extends Block {
 }
 
 const ChatPage = connect(
-	({ groupedMessages, isChatTokenLoading, chatTokenError }) => ({
-		groupedMessages,
+	({ messages, isChatTokenLoading, chatTokenError }) => ({
+		messages,
 		isChatTokenLoading,
 		chatTokenError,
 	})

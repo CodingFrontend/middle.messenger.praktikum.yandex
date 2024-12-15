@@ -134,7 +134,6 @@ const ChatPage = connect(
 		isChatListLoading,
 		chatListError,
 		chatListItems,
-		groupedMessages,
 		isChatTokenLoading,
 		chatTokenError,
 	}) => ({
@@ -143,7 +142,6 @@ const ChatPage = connect(
 		isChatListLoading,
 		chatListError,
 		chatListItems,
-		groupedMessages,
 		isChatTokenLoading,
 		chatTokenError,
 	})

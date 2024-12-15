@@ -11,6 +11,7 @@ const initChatConnection = (options: WSChatOptions, data?: string) => {
 
 	socket.addEventListener("open", () => {
 		console.log("Соединение установлено");
+
 		socket.send(
 			JSON.stringify({
 				content: String(count),
@@ -37,6 +38,7 @@ const initChatConnection = (options: WSChatOptions, data?: string) => {
 
 			const result: any = [];
 			let current;
+			const { user } = window.store.getState();
 
 			msgs.forEach((message) => {
 				const date = new Date(message.time);
@@ -45,11 +47,19 @@ const initChatConnection = (options: WSChatOptions, data?: string) => {
 				);
 
 				if (index !== -1) {
-					result[index].messages.push(message);
+					result[index].messages.push({
+						...message,
+						state: message.user_id === user.id ? "upcoming" : "incoming",
+					});
 				} else {
 					current = {
 						date: date,
-						messages: [message],
+						messages: [
+							{
+								...message,
+								state: message.user_id === user.id ? "upcoming" : "incoming",
+							},
+						],
 					};
 
 					result.push(current);
@@ -58,10 +68,10 @@ const initChatConnection = (options: WSChatOptions, data?: string) => {
 			return result.map((item) => ({ ...item, date: formatDate(item.date) }));
 		};
 
-		const groupedMessages = groupMessagesByDay(messages);
+		const messagesGrouped = groupMessagesByDay(messages);
 
-		window.store.set({ groupedMessages });
-		console.log("Получены данные", groupedMessages);
+		window.store.set({ messages: messagesGrouped });
+		console.log("Получены данные", messages);
 	});
 
 	socket.addEventListener("error", (event) => {
