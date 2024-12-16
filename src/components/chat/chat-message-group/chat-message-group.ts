@@ -26,6 +26,7 @@ export default class ChatMessageGroup extends Block {
 					(group) => new ChatMessageGroupItem({ ...group })
 				),
 			});
+
 			return true;
 		}
 

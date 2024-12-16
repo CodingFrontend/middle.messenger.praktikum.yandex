@@ -16,13 +16,14 @@ export default class ChatMessagesItem extends Block {
 			classList: `chat-messages-item chat-messages-item--${props.state}`,
 		});
 	}
+
 	public render(): string {
 		return `
 				{{#ifCond type 'message'}}
 					<div class='chat-messages-item-text'>
 						<div class='chat-messages-item-text__value'>{{content}}</div>
 						<div class='chat-messages-item-text__info'>
-							{{#if is_read}}
+							{{#if ${this.props.is_read && this.props.state !== "incoming"}}}
 								<span class='chat-messages-item-text__status'>
 									<i class='fa-solid fa-check-double'></i>
 								</span>

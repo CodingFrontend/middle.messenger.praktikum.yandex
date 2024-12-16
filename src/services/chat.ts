@@ -1,6 +1,6 @@
 import ChatApi from "@/api/chat";
-import initChatConnection from "@/api/ws";
 const chatApi = new ChatApi();
+import WebScoketService from "@/api/ws";
 
 export const getChatList = async (model) => {
 	window.store.set({ isChatListLoading: true });
@@ -61,7 +61,21 @@ export const createChatWSConnection = async (chatId) => {
 		token_value: chatToken,
 	};
 
-	if (user && chatId && chatToken) window.socket = initChatConnection(options);
+	let interval;
+
+	if (user && chatId && chatToken) {
+		if (window.socket && interval) {
+			window.socket.close();
+			clearInterval(interval);
+		}
+
+		const socket = new WebScoketService(options);
+		socket.connect();
+		interval = setInterval(() => {
+			socket.ping();
+		}, 10000);
+		window.socket = socket.getSocket();
+	}
 };
 
 export const getNewMessagesCount = async (id: number) => {

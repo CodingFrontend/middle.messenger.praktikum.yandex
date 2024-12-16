@@ -2,7 +2,8 @@ import Block from "@/core/block";
 
 interface InputFieldProps {
 	name: string;
-	onBlur: (e: Event) => void;
+	value?: string;
+	onBlur?: (e: Event) => void;
 }
 
 export default class CustomInputField extends Block {
@@ -12,6 +13,7 @@ export default class CustomInputField extends Block {
 			classList: "send-message-input",
 			attrs: {
 				autocomplete: "off",
+				value: props.value || "",
 				placeholder: "Сообщение",
 			},
 			events: {
@@ -22,5 +24,9 @@ export default class CustomInputField extends Block {
 
 	public value() {
 		return this.getContent().value;
+	}
+
+	public clear() {
+		this.getContent().value = "";
 	}
 }

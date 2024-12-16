@@ -9,9 +9,7 @@ import {
 } from "@/components";
 import { chatWidgetItems } from "@/mockData/chatDataMock";
 import { validateField } from "@/utils/validate";
-import type { IChatMessageGroup } from "@/components/chat/chat-message-group/chat-message-group";
 import { connect } from "@/utils/connect";
-import isEqual from "@/utils/isEqual";
 import * as chatServices from "@/services/chat";
 import { formatDate, getTime } from "@/utils/formatDate";
 
@@ -27,7 +25,6 @@ class ChatDialog extends Block {
 			...props,
 			showChatWidget: false,
 			classList: "chat-dialog",
-			messageText: "",
 			messages: [],
 			Loader: new Loader(),
 			Avatar: new Avatar({
@@ -49,36 +46,26 @@ class ChatDialog extends Block {
 			}),
 			SendMessageInput: new SendMessageInput({
 				name: "message",
-				onBlur: (e: Event) => {
-					const value = (e.target as HTMLInputElement).value;
-					this.setProps({
-						messageText: value,
-					});
-				},
 			}),
 			SendMessageButton: new IconButton({
 				faIcon: "fa-solid fa-arrow-right",
 				type: "primary",
 				onClick: () => {
-					setTimeout(() => {
-						const value = this.children.SendMessageInput.value();
-						const error = validateField("message", value);
+					const value = this.children.SendMessageInput.value();
+					const error = validateField("message", value);
 
-						if (error) return;
+					if (error) return;
 
-						const socket = window.socket;
+					const socket = window.socket;
 
-						socket.send(
-							JSON.stringify({
-								content: value,
-								type: "message",
-							})
-						);
+					socket.send(
+						JSON.stringify({
+							content: value,
+							type: "message",
+						})
+					);
 
-						this.children.SendMessageInput.setProps({
-							messageText: "",
-						});
-					}, 0);
+					this.children.SendMessageInput.clear();
 				},
 			}),
 		});
@@ -89,7 +76,29 @@ class ChatDialog extends Block {
 		newProps: IProps<any>
 	): Promise<boolean> {
 		if (newProps.id && newProps.id !== oldProps.id) {
-			await chatServices.createChatWSConnection(newProps.id);
+			const chatId = newProps.id;
+			await chatServices.getNewMessagesCount(chatId);
+			await chatServices.createChatWSConnection(chatId);
+		}
+
+		const socket = window.socket;
+
+		if (
+			socket &&
+			newProps.messages &&
+			newProps.messages !== oldProps.messages &&
+			newProps.unread_count &&
+			newProps.unread_count !== oldProps.unread_count
+		) {
+			if (newProps.messages.length !== newProps.unread_count) {
+				const lastMessage = newProps.messages[newProps.messages.length - 1];
+				socket.send(
+					JSON.stringify({
+						content: lastMessage.id,
+						type: "get old",
+					})
+				);
+			}
 		}
 
 		if (
@@ -149,9 +158,6 @@ class ChatDialog extends Block {
 			const messagesGrouped = groupMessagesByDay(allMessages);
 
 			ChatMessageGroup.setProps({ groups: messagesGrouped });
-			this.setProps({
-				isComponentLoading: false,
-			});
 
 			return true;
 		}
@@ -199,11 +205,18 @@ class ChatDialog extends Block {
 }
 
 const ChatPage = connect(
-	({ messages, newMessage, isChatTokenLoading, chatTokenError }) => ({
+	({
 		messages,
 		newMessage,
 		isChatTokenLoading,
 		chatTokenError,
+		unread_count,
+	}) => ({
+		messages,
+		newMessage,
+		isChatTokenLoading,
+		chatTokenError,
+		unread_count,
 	})
 )(ChatDialog);
 

@@ -120,7 +120,25 @@ export default class Block {
 
 	public componentDidMount() {}
 
+	public componentDidUnmount(): boolean {
+		console.log("block");
+		return true;
+	}
+
 	private _componentDidUnmount() {
+		const response = this.componentDidUnmount();
+
+		console.log(window.store.state.socket);
+
+		if (window.store.state.socket) {
+			window.store.state.socket.disconnect();
+			// return true;
+		}
+
+		if (!response) {
+			return;
+		}
+
 		this._removeEvents();
 	}
 
