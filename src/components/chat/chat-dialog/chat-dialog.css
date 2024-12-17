@@ -22,20 +22,18 @@
 }
 
 .chat-dialog-body {
-	position: absolute;
-	bottom: 60px;
-	left: 0;
-	right: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
 	flex-grow: 1;
-	overflow-y: auto;
 	max-height: calc(100vh - 115px);
 }
 
 .chat-dialog-content {
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-end;
 	padding: 48px 20px 30px 0;
+	overflow-y: auto;
+	max-height: calc(100vh - 115px);
+	box-sizing: content-box;
 }
 
 .chat-dialog-bottom {

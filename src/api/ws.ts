@@ -16,7 +16,6 @@ export default class WebScoketService {
 
 		this.socket.onopen = () => {
 			if (this.socket.readyState !== 1) return;
-			console.log("Соединение установлено");
 
 			this.socket.send(
 				JSON.stringify({
@@ -30,17 +29,30 @@ export default class WebScoketService {
 			const messages = JSON.parse(event.data);
 
 			if (Array.isArray(messages)) {
+				const state = window.store.getState();
+
+				let allMessages = state.messages;
+
 				const messagesFiltered = messages.filter(
 					(message) => message.type === "message" || messages.type === "file"
 				);
-				window.store.set({ messages: messagesFiltered });
+
+				if (
+					allMessages.some(
+						(message) =>
+							messagesFiltered.findIndex((item) => item.id === message.id) !==
+							-1
+					)
+				)
+					return;
+
+				allMessages = [...allMessages, ...messagesFiltered];
+				window.store.set({ messages: allMessages });
 			} else {
 				if (messages.type === "message" || messages.type === "file") {
 					window.store.set({ newMessage: messages });
 				}
 			}
-
-			console.log("Получены данные", messages);
 		};
 
 		this.socket.onclose = (event) => {

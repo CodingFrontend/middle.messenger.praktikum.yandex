@@ -77,16 +77,18 @@ class ChatDialog extends Block {
 	): Promise<boolean> {
 		if (newProps.id && newProps.id !== oldProps.id) {
 			const chatId = newProps.id;
-			await chatServices.getNewMessagesCount(chatId);
 			await chatServices.createChatWSConnection(chatId);
+			chatServices.getNewMessagesCount(newProps.id);
+		}
+
+		if (newProps.newMessage && newProps.newMessage !== oldProps.newMessage) {
+			chatServices.getNewMessagesCount(newProps.id);
 		}
 
 		const socket = window.socket;
 
 		if (
 			socket &&
-			newProps.messages &&
-			newProps.messages !== oldProps.messages &&
 			newProps.unread_count &&
 			newProps.unread_count !== oldProps.unread_count
 		) {
@@ -165,7 +167,54 @@ class ChatDialog extends Block {
 		return false;
 	}
 
+	public componentDidMount() {
+		setTimeout(() => {
+			const scrollContent = document.querySelector(".chat-dialog-content");
+
+			if (this.props.messages && scrollContent) {
+				const socket = window.socket;
+				const lastMessageId =
+					this.props.messages[this.props.messages.length - 1].id;
+
+				const getOldMessages = (e) => {
+					const element = e.target;
+
+					if (element.scrollTop === 0) {
+						socket.send(
+							JSON.stringify({
+								content: lastMessageId,
+								type: "get old",
+							})
+						);
+
+						window.store.set({ lastMessageId, scrolled: true });
+					}
+				};
+
+				scrollContent?.addEventListener("scroll", getOldMessages);
+
+				const getMessages = () => {
+					const { scrolled } = window.store.getState();
+
+					const isBottom =
+						Math.floor(scrollContent.scrollTop + scrollContent.clientHeight) ===
+						scrollContent.scrollHeight + 1;
+					if (!isBottom && !scrolled) {
+						scrollContent.scrollTop = scrollContent.scrollHeight;
+					}
+				};
+
+				getMessages();
+				setInterval(getMessages, 1000);
+			}
+
+			return true;
+		}, 0);
+	}
+
 	public render(): string {
+		this.dispatchComponentDidMount();
+
 		return `
 				<div class='chat-dialog-top'>
 					<div class='chat-dialog-top__user'>
@@ -183,7 +232,7 @@ class ChatDialog extends Block {
 						{{/if}}
 					</div>
 				</div>
-				<div class='chat-dialog-body' id="scroll-content">
+				<div class='chat-dialog-body' >
 					{{#if isChatTokenLoading}}
 						{{{ Loader }}}
 					{{ else if chatTokenError}}
