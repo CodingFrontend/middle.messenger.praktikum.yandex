@@ -1,12 +1,11 @@
 .avatar-modal-body {
-  display: flex;
-  justify-content: center;
-}
-
-.avatar-modal-file,
-.avatar-modal-button {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
 }
 
 .avatar-modal-file {
-  color: #8d8d8d;
+	color: #8d8d8d;
+	text-align: center;
+	margin-bottom: 10px;
 }

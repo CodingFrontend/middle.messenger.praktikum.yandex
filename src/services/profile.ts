@@ -3,11 +3,11 @@ import ProfileApi from "@/api/profile";
 
 const profileApi = new ProfileApi();
 
-export const updateInfo = async (model) => {
+export const updateInfo = async (data) => {
 	window.store.set({ isLoading: true });
 
 	try {
-		const user = await profileApi.updateInfo(model);
+		const user = await profileApi.updateInfo(data);
 		window.store.set({ user });
 		window.router.go(ROUTES.profile);
 	} catch (error) {
@@ -17,12 +17,14 @@ export const updateInfo = async (model) => {
 	}
 };
 
-export const updateAvatar = async (model) => {
+export const updateAvatar = async (file: File) => {
 	window.store.set({ isLoading: true });
 	try {
-		const user = await profileApi.updateAvatar(model);
+		const data = new FormData();
+		data.append("avatar", file);
+
+		const user = await profileApi.updateAvatar(data);
 		window.store.set({ user });
-		window.router.go(ROUTES.profile);
 	} catch (error) {
 		window.store.set({ updateAvatarError: error.reason });
 	} finally {
@@ -30,10 +32,10 @@ export const updateAvatar = async (model) => {
 	}
 };
 
-export const updatePassword = async (model) => {
+export const updatePassword = async (data) => {
 	window.store.set({ isLoading: true });
 	try {
-		await profileApi.updatePassword(model);
+		await profileApi.updatePassword(data);
 		window.router.go(ROUTES.profile);
 	} catch (error) {
 		console.log("error", error);

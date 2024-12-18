@@ -47,16 +47,16 @@ export default class HTTPTransport {
 		url: string,
 		options: IOptions
 	): Promise<TResponse> {
-		const {
-			headers = {
-				"Content-Type": "application/json",
-				"X-Requested-With": "XMLHttpRequest",
-				"Access-Control-Allow-Origin": "*",
-			},
-			method,
-			data,
-			timeout,
-		} = options;
+		const { method, data, timeout } = options;
+
+		const headers =
+			data instanceof FormData
+				? {}
+				: {
+						"Content-Type": "application/json",
+						"X-Requested-With": "XMLHttpRequest",
+						"Access-Control-Allow-Origin": "*",
+				  };
 
 		return new Promise((resolve, reject) => {
 			if (!method) {
@@ -103,6 +103,8 @@ export default class HTTPTransport {
 
 			if (method === METHODS.GET || !data) {
 				xhr.send();
+			} else if (data instanceof FormData) {
+				xhr.send(data);
 			} else {
 				xhr.send(JSON.stringify(data));
 			}
@@ -133,6 +135,7 @@ export default class HTTPTransport {
 			...options,
 			method: METHODS.PUT,
 		};
+		console.log("req", requestProps);
 		const requestUrl = `${this.apiUrl}${url}`;
 		return this._request(requestUrl, requestProps);
 	};

@@ -1,39 +1,27 @@
 import Block from "@/core/block";
 import { Modal, FileUpload } from "@/components";
+import { connect } from "@/utils/connect";
 
 interface ChangeAvatarModalProps {
 	fileName?: string;
 	uploadError?: string;
 	emptyError?: string;
 	onCloseModal: () => void;
-	onConfirm?: () => void;
+	onConfirm?: (file) => void;
 	onCancel?: () => void;
 }
 
-class ModalBody extends Block {
-	constructor() {
-		super("div", {
-			classList: "avatar-modal-body",
-		});
-	}
-
-	public render(): string {
-		return `
-			<p class="avatar-modal-file">{{fileName}}</p>
-		`;
-	}
+interface IModalBodyUploadProps {
+	onChange?: (e: Event) => void;
 }
 
 class ModalBodyUpload extends Block {
-	constructor() {
+	constructor(props: IModalBodyUploadProps) {
 		super("div", {
 			classList: "avatar-modal-body",
 			FileUpload: new FileUpload({
 				label: "Выберите файл на компьютере",
-				onChange: () => {
-					console.log(2);
-					console.log(1, this.children.FileUpload.props.fileName);
-				},
+				onChange: () => props.onChange(),
 			}),
 		});
 	}
@@ -41,7 +29,7 @@ class ModalBodyUpload extends Block {
 	public render(): string {
 		return `
 			{{#if fileName}}
-			<p class="avatar-modal-file">{{fileName}}</p>
+				<p class="avatar-modal-file">{{fileName}}</p>
 			{{/if}}
 			<div class="avatar-modal-button">
 				{{{ FileUpload }}}
@@ -50,51 +38,61 @@ class ModalBodyUpload extends Block {
 	}
 }
 
-export default class ChangeAvatarModal extends Block {
+class ChangeAvatarModalBlock extends Block {
 	constructor(props: ChangeAvatarModalProps) {
 		super("div", {
 			...props,
-			// Modal: new Modal({
-			// 	title: "Файл загружен",
-			// 	labelOk: "Поменять",
-			// 	error: props.emptyError,
-			// 	Body: new ModalBody(),
-			// 	onCloseModal: () => {
-			// 		this.children.Body.children.FileUpload.clear();
-			// 		props.onCloseModal();
-			// 	},
-			// 	onConfirm: () => {
-			// 		this.children.Body.children.FileUpload.clear();
-			// 		props.onConfirm?.();
-			// 	},
-			// 	onCancel: () => {
-			// 		this.children.Body.children.FileUpload.clear();
-			// 		props.onCancel?.();
-			// 	},
-			// }),
-			// ModalError: new Modal({
-			// 	title: "Ошибка, попробуйте еще раз",
-			// 	labelOk: "Поменять",
-			// 	error: props.emptyError,
-			// 	Body: new ModalBodyUpload({}),
-			// 	onCloseModal: () => props.onCloseModal(),
-			// 	onConfirm: () => props.onConfirm?.(),
-			// 	onCancel: () => props.onCancel?.(),
-			// }),
 			ModalUpload: new Modal({
 				title: "Загрузите файл",
 				labelOk: "Поменять",
 				error: props.emptyError,
-				Body: new ModalBodyUpload({}),
+				Body: new ModalBodyUpload({
+					onChange: () => {
+						const file =
+							this.children.ModalUpload.children.Body.children.FileUpload.value();
+						if (file) {
+							this.setProps({
+								file,
+							});
+
+							this.children.ModalUpload.setProps({
+								title: "Файл загружен",
+							});
+
+							this.children.ModalUpload.children.Body.setProps({
+								fileName: file.name,
+							});
+						}
+					},
+				}),
 				onCloseModal: () => {
-					console.log(3);
-					// this.children.Body.children.FileUpload.clear();
 					props.onCloseModal();
 				},
 				onCancel: () => props.onCancel?.(),
-				onConfirm: () => props.onConfirm?.(),
+				onConfirm: () => {
+					const file = this.props.file;
+					props.onConfirm?.(file);
+				},
 			}),
 		});
+	}
+
+	public async componentDidUpdate(
+		oldProps: IProps<any>,
+		newProps: IProps<any>
+	): Promise<boolean> {
+		console.log("newProps", newProps);
+		if (
+			newProps.updateAvatarError &&
+			newProps.updateAvatarError !== oldProps.updateAvatarError
+		) {
+			this.children.ModalUpload.setProps({
+				title: "Ошибка, попробуйте еще раз",
+			});
+			this.children.ModalUpload.children.Body.setProps({
+				fileName: "",
+			});
+		}
 	}
 
 	public render(): string {
@@ -103,3 +101,9 @@ export default class ChangeAvatarModal extends Block {
 		`;
 	}
 }
+
+const ChangeAvatarModal = connect(({ updateAvatarError }) => ({
+	updateAvatarError,
+}))(ChangeAvatarModalBlock);
+
+export default ChangeAvatarModal;

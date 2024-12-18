@@ -54,7 +54,6 @@ class AvatarEditSlot extends Block {
 	constructor(props: AvatarEditSlotProps) {
 		super("div", {
 			...props,
-			classList: "profile-page-avatar-image",
 			events: {
 				click: props.onClick,
 			},
@@ -62,6 +61,8 @@ class AvatarEditSlot extends Block {
 	}
 	render(): string {
 		return `
+			<div class="profile-page-avatar-image">
+			</div>
 			<div class="profile-page-avatar-image__hover">
 				<span>Поменять аватар</span>
 			</div>
@@ -90,14 +91,14 @@ class ProfileContent extends Block {
 			isEditPassword: false,
 			isEditInfo: false,
 			AvatarGeneralInfo: new Avatar({
-				image: props.user.image,
+				image: props.user.avatar,
 				size: "large",
 				Slot: new AvatarEditSlot({
 					onClick: () => this.setProps({ showChangeAvatarModal: true }),
 				}),
 			}),
 			Avatar: new Avatar({
-				image: props.user.image,
+				image: props.user.avatar,
 				size: "large",
 			}),
 			InputEmail: new CustomInput({
@@ -476,6 +477,13 @@ class ProfileContent extends Block {
 				fileName: "",
 				uploadError: "",
 				onCloseModal: () => this.setProps({ showChangeAvatarModal: false }),
+				onCancel: () => this.setProps({ showChangeAvatarModal: false }),
+				onConfirm: async (file) => {
+					await profileServices.updateAvatar(file);
+					if (!this.props.updateAvatarError) {
+						this.setProps({ showChangeAvatarModal: false });
+					}
+				},
 			}),
 		});
 	}

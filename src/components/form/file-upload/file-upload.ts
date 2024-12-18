@@ -14,11 +14,8 @@ export default class FileUpload extends Block {
 			classList: "file-upload",
 			FileUploadField: new FileUploadField({
 				onChange: () => {
-					const fileName = this.children.FileUploadField.getContent().files[0];
-					this.setProps({
-						fileName,
-					});
-					props.onChange;
+					console.log(777);
+					props.onChange();
 				},
 			}),
 		});
