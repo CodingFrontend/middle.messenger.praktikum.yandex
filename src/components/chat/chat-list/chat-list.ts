@@ -1,8 +1,6 @@
 import Block from "@/core/block";
 import { ChatItem } from "@/components";
 import type { IChatItem } from "@/components/chat/chat-item/chat-item";
-import { connect } from "@/utils/connect";
-import isEqual from "@/utils/isEqual";
 
 interface IChatListProps {
 	items: IChatItem[];

@@ -15,7 +15,7 @@ export { ChatMessageGroup } from "./chat/chat-message-group";
 export { ChatMessageGroupItem } from "./chat/chat-message-group-item";
 export { SendMessageInput } from "./chat/send-message-input";
 export { SearchChatsInput } from "./chat/search-chats-input";
-
+export { FileUpload } from "./form/file-upload";
 export { Modal } from "./modal";
 export { ChatModal } from "./chat/chat-modal";
 export { GoBack } from "./go-back";
