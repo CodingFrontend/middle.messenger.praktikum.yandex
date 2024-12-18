@@ -1,6 +1,6 @@
 export enum ROUTES {
 	login = "/login",
 	register = "/register",
-	chat = "/messenger",
+	messenger = "/messenger",
 	profile = "/profile",
 }

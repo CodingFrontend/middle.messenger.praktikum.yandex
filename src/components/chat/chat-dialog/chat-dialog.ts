@@ -19,7 +19,7 @@ export interface IChatDialog {
 	avatar: string | null;
 }
 
-class ChatDialog extends Block {
+class ChatDialogBlock extends Block {
 	constructor(props: IChatDialog) {
 		super("div", {
 			...props,
@@ -178,6 +178,7 @@ class ChatDialog extends Block {
 
 				const getOldMessages = (e) => {
 					const element = e.target;
+					window.store.set({ lastMessageId, chatScrolled: true });
 
 					if (element.scrollTop === 0) {
 						socket.send(
@@ -186,26 +187,26 @@ class ChatDialog extends Block {
 								type: "get old",
 							})
 						);
-
-						window.store.set({ lastMessageId, scrolled: true });
 					}
 				};
 
 				scrollContent?.addEventListener("scroll", getOldMessages);
 
 				const getMessages = () => {
-					const { scrolled } = window.store.getState();
+					const { chatScrolled } = window.store.getState();
+
+					console.log("scrolled", chatScrolled);
 
 					const isBottom =
 						Math.floor(scrollContent.scrollTop + scrollContent.clientHeight) ===
 						scrollContent.scrollHeight + 1;
-					if (!isBottom && !scrolled) {
+					if (!isBottom && !chatScrolled) {
 						scrollContent.scrollTop = scrollContent.scrollHeight;
 					}
 				};
 
 				getMessages();
-				setInterval(getMessages, 1000);
+				setInterval(getMessages, 10000);
 			}
 
 			return true;
@@ -253,7 +254,7 @@ class ChatDialog extends Block {
 	}
 }
 
-const ChatPage = connect(
+const ChatDialog = connect(
 	({
 		messages,
 		newMessage,
@@ -267,6 +268,6 @@ const ChatPage = connect(
 		chatTokenError,
 		unread_count,
 	})
-)(ChatDialog);
+)(ChatDialogBlock);
 
-export default ChatPage;
+export default ChatDialog;

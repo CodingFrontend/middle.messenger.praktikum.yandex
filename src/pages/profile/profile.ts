@@ -10,6 +10,7 @@ import {
 } from "@/components";
 import { withRouter } from "@/utils/withRouter";
 import * as profileServices from "@/services/profile";
+import * as authServices from "@/services/auth";
 import { connect } from "@/utils/connect";
 import { checkPasswordRepeat } from "@/utils/rules";
 import { UserPasswordRequestData } from "@/api/types";
@@ -86,7 +87,8 @@ class ProfileContent extends Block {
 				new_password_repeat: "",
 			},
 			classList: "profile-page-card",
-			isEditPassword: true,
+			isEditPassword: false,
+			isEditInfo: false,
 			AvatarGeneralInfo: new Avatar({
 				image: props.user.image,
 				size: "large",
@@ -107,42 +109,42 @@ class ProfileContent extends Block {
 			}),
 			InputLogin: new CustomInput({
 				label: "Логин",
-				value: props.user.login,
+				value: props.user.login || "",
 				name: "login",
 				type: "text",
 				disabled: true,
 			}),
 			InputFirstName: new CustomInput({
 				label: "Имя",
-				value: props.user.first_name,
+				value: props.user.first_name || "",
 				name: "first_name",
 				type: "text",
 				disabled: true,
 			}),
 			InputLastName: new CustomInput({
 				label: "Фамилия",
-				value: props.user.second_name,
+				value: props.user.second_name || "",
 				name: "second_name",
 				type: "text",
 				disabled: true,
 			}),
 			InputDisplayName: new CustomInput({
 				label: "Имя в чате",
-				value: props.user.display_name,
+				value: props.user.display_name || "",
 				name: "display_name",
 				type: "text",
 				disabled: true,
 			}),
 			InputPhone: new CustomInput({
 				label: "Телефон",
-				value: props.user.phone,
+				value: props.user.phone || "",
 				name: "phone",
 				type: "phone",
 				disabled: true,
 			}),
 			InputEmailEdit: new CustomInput({
 				label: "Почта",
-				value: props.user.email,
+				value: props.user.email || "",
 				name: "email",
 				type: "email",
 				onChange: (e: Event) => {
@@ -165,7 +167,7 @@ class ProfileContent extends Block {
 			}),
 			InputLoginEdit: new CustomInput({
 				label: "Логин",
-				value: props.user.login,
+				value: props.user.login || "",
 				name: "login",
 				type: "text",
 				onChange: (e: Event) => {
@@ -188,7 +190,7 @@ class ProfileContent extends Block {
 			}),
 			InputFirstNameEdit: new CustomInput({
 				label: "Имя",
-				value: props.user.first_name,
+				value: props.user.first_name || "",
 				name: "first_name",
 				type: "text",
 				onChange: (e: Event) => {
@@ -211,7 +213,7 @@ class ProfileContent extends Block {
 			}),
 			InputLastNameEdit: new CustomInput({
 				label: "Фамилия",
-				value: props.user.second_name,
+				value: props.user.second_name || "",
 				name: "second_name",
 				type: "text",
 				onChange: (e: Event) => {
@@ -234,7 +236,7 @@ class ProfileContent extends Block {
 			}),
 			InputDisplayNameEdit: new CustomInput({
 				label: "Имя в чате",
-				value: props.user.display_name,
+				value: props.user.display_name || "",
 				name: "display_name",
 				type: "text",
 			}),
@@ -346,6 +348,10 @@ class ProfileContent extends Block {
 			LinkButtonLogout: new LinkButton({
 				label: "Выйти",
 				type: "attention",
+				onClick: (e) => {
+					e.preventDefault();
+					authServices.logout();
+				},
 			}),
 			ButtonConfirmEditInfo: new Button({
 				label: "Сохранить",
@@ -586,7 +592,19 @@ class ProfilePage extends Block {
 			...props,
 			classList: "page profile-page",
 			GoBack: new GoBack({
-				onClick: () => props.router.back(),
+				onClick: () => {
+					if (this.children.ProfileContent.props.isEditPassword) {
+						this.children.ProfileContent.setProps({
+							isEditPassword: false,
+						});
+					} else if (this.children.ProfileContent.props.isEditInfo) {
+						this.children.ProfileContent.setProps({
+							isEditInfo: false,
+						});
+					} else {
+						props.router.back();
+					}
+				},
 			}),
 			ProfileContent: new ProfileContentBlock({}),
 		});

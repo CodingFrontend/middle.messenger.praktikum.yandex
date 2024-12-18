@@ -30,8 +30,15 @@ class Router {
 	}
 
 	start() {
-		const response = this.beforeEach();
-		if (!response) {
+		const { user } = window.store.state;
+
+		if (
+			!user &&
+			this._currentRoute !== ROUTES.register &&
+			this._currentRoute !== ROUTES.login
+		) {
+			this.go(ROUTES.login);
+
 			return;
 		}
 
@@ -39,17 +46,6 @@ class Router {
 			this._onRoute(event.currentTarget.location.pathname);
 		}).bind(this);
 		this._onRoute(window.location.pathname);
-	}
-
-	beforeEach() {
-		const { user } = window.store.state;
-
-		if (!user && this._currentRoute !== ROUTES.register) {
-			this.go(ROUTES.login);
-			return true;
-		}
-
-		return true;
 	}
 
 	_onRoute(pathname) {

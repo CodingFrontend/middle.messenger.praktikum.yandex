@@ -135,7 +135,7 @@ const initRouter = async () => {
 	window.router
 		.use(ROUTES.login, Pages.LoginPage)
 		.use(ROUTES.register, Pages.RegisterPage)
-		.use(ROUTES.chat, Pages.ChatPage)
+		.use(ROUTES.messenger, Pages.ChatPage)
 		.use(ROUTES.profile, Pages.ProfilePage)
 		.use("*", Pages.NavigationPage)
 		.start();
