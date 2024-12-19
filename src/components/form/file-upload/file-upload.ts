@@ -15,7 +15,7 @@ export default class FileUpload extends Block {
 			FileUploadField: new FileUploadField({
 				onChange: () => {
 					console.log(777);
-					props.onChange();
+					if (props.onChange) props.onChange();
 				},
 			}),
 		});

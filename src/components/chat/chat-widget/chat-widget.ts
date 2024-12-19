@@ -12,6 +12,7 @@ export interface IChatWidgetItem {
 
 interface IChatWidgetProps {
 	items: IChatWidgetItem[];
+	activeChatId: number;
 	onCloseModal: () => void;
 }
 
@@ -63,7 +64,7 @@ class ChatWidgetBlock extends Block {
 
 					await chatServices.addUsers({
 						users: [login],
-						chatId: this.props.activeChatId,
+						chatId: (this.props as IChatWidgetProps).activeChatId,
 					});
 
 					props.onCloseModal();
@@ -92,7 +93,7 @@ class ChatWidgetBlock extends Block {
 
 					await chatServices.deleteUsers({
 						users: [login],
-						chatId: this.props.activeChatId,
+						chatId: (this.props as IChatWidgetProps).activeChatId,
 					});
 
 					props.onCloseModal();

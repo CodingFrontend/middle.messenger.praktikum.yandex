@@ -27,7 +27,7 @@ export default class CustomInputField extends Block {
 	}
 
 	public render(): string {
-		if (this.props.disabled) {
+		if ((this.props as InputFieldProps).disabled) {
 			this.setAttrs("disabled");
 		}
 		return ``;

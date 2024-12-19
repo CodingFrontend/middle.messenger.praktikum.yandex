@@ -74,11 +74,11 @@ export type ChatListRequestData = {
 };
 
 export type ChatListResponse = {
-	id: string;
+	id: number;
 	title: string;
 	avatar: string;
-	unread_count: string;
-	created_by: string;
+	unread_count: number;
+	created_by: number;
 	last_message: {
 		user: {
 			first_name: string;

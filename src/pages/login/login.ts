@@ -8,12 +8,18 @@ import * as authServices from "@/services/auth";
 import { connect } from "@/utils/connect";
 
 interface ILoginForm {
-	login: "";
-	password: "";
+	login: string;
+	password: string;
+}
+
+interface IAuthContentProps {
+	isLoading: boolean;
+	loginError: string;
+	loginForm: ILoginForm;
 }
 
 class AuthContent extends Block {
-	constructor(props) {
+	constructor(props: IAuthContentProps) {
 		super("div", {
 			...props,
 			loginForm: {
@@ -37,7 +43,7 @@ class AuthContent extends Block {
 
 					this.setProps({
 						loginForm: {
-							...(this.props.loginForm as ILoginForm),
+							...((this.props as IAuthContentProps).loginForm as ILoginForm),
 							login: value,
 						},
 					});
@@ -59,7 +65,7 @@ class AuthContent extends Block {
 
 					this.setProps({
 						loginForm: {
-							...(this.props.loginForm as ILoginForm),
+							...((this.props as IAuthContentProps).loginForm as ILoginForm),
 							password: value,
 						},
 					});
@@ -104,7 +110,8 @@ class AuthContent extends Block {
 				label: "Нет аккаунта?",
 				type: "primary",
 				onClick: () => {
-					this.props.router.go(ROUTES.register);
+					const router = window.router;
+					router.go(ROUTES.register);
 				},
 			}),
 		});
@@ -126,7 +133,7 @@ class AuthContent extends Block {
 }
 
 class LoginPage extends Block {
-	constructor(props) {
+	constructor(props: any) {
 		super("main", {
 			...props,
 			classList: "page auth-page",

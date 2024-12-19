@@ -1,6 +1,6 @@
 import { RouteInterface } from "./Router";
 import Block from "./block";
-import type { IProps, BlockConsturctor } from "./block";
+import type { TProps, BlockConsturctor } from "./block";
 
 export type TPathName = string;
 
@@ -8,7 +8,7 @@ export interface RouteContsructorInterface extends Route {
 	new (name: string): {
 		pathname: TPathName;
 		view: BlockConsturctor;
-		props: IProps;
+		props: TProps;
 	};
 }
 
@@ -16,9 +16,9 @@ class Route implements RouteInterface {
 	private _blockClass: BlockConsturctor;
 	private _pathname: TPathName;
 	private _block: Block | null;
-	private _props: IProps;
+	private _props: TProps;
 
-	constructor(pathname: TPathName, view: BlockConsturctor, props: IProps) {
+	constructor(pathname: TPathName, view: BlockConsturctor, props: TProps) {
 		this._pathname = pathname;
 		this._blockClass = view;
 		this._block = null;

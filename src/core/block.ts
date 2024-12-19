@@ -3,11 +3,11 @@ import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
 
 export interface BlockConsturctor extends Block {
-	new (name: string): { props: TProps };
+	new (...args: any): { props: TProps };
 }
 type TTageName = string;
-type TChildren = Record<string, BlockConsturctor>;
-type TProps = Record<string, any>;
+export type TChildren = Record<string, BlockConsturctor>;
+export type TProps = Record<string, any>;
 
 interface IMeta {
 	tagName?: TTageName;
@@ -141,7 +141,7 @@ export default class Block<IProps extends TProps = {}> {
 		this.eventBus().emit(Block.EVENTS.FLOW_CDM);
 	}
 
-	private _componentDidUpdate(oldProps: IProps, newProps: IProps) {
+	private _componentDidUpdate(oldProps: TProps, newProps: TProps) {
 		const response = this.componentDidUpdate(oldProps, newProps);
 		if (!response) {
 			return;
@@ -150,9 +150,12 @@ export default class Block<IProps extends TProps = {}> {
 		this._render();
 	}
 
-	public componentDidUpdate(oldProps: IProps, newProps: IProps) {
+	public componentDidUpdate(
+		oldProps: TProps,
+		newProps: TProps
+	): Promise<boolean> {
 		console.log(oldProps, newProps);
-		return true;
+		return new Promise((resolve) => resolve(true));
 	}
 
 	public forceUpdate() {

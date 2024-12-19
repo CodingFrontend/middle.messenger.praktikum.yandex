@@ -1,10 +1,9 @@
 import Block from "@/core/block";
 import { Avatar } from "@/components";
-import type { ChatDTO } from "@/api/types";
-import * as chatServices from "@/services/chat";
+import type { ChatListResponse } from "@/api/types";
 
-interface ChatItemProps extends ChatDTO {
-	onClick?: () => void;
+export interface ChatItemProps extends ChatListResponse {
+	onClick?: (id: number) => void;
 }
 
 export default class ChatItem extends Block {
@@ -16,8 +15,8 @@ export default class ChatItem extends Block {
 				size: "medium",
 			}),
 			events: {
-				mousedown: () => {
-					props?.onClick(props.id);
+				click: () => {
+					if (props?.onClick) props.onClick(props.id);
 				},
 			},
 		});

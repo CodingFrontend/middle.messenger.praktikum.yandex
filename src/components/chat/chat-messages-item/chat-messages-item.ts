@@ -1,7 +1,6 @@
 import Block from "@/core/block";
 
 export interface IChatMessagesItem {
-	// type: "upcoming" | "incoming";
 	type: "message";
 	state: "upcoming" | "incoming";
 	content: string;
@@ -23,7 +22,10 @@ export default class ChatMessagesItem extends Block {
 					<div class='chat-messages-item-text'>
 						<div class='chat-messages-item-text__value'>{{content}}</div>
 						<div class='chat-messages-item-text__info'>
-							{{#if ${this.props.is_read && this.props.state !== "incoming"}}}
+							{{#if ${
+								(this.props as IChatMessagesItem).is_read &&
+								(this.props as IChatMessagesItem).state !== "incoming"
+							}}}
 								<span class='chat-messages-item-text__status'>
 									<i class='fa-solid fa-check-double'></i>
 								</span>

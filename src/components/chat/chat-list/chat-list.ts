@@ -1,9 +1,10 @@
 import Block from "@/core/block";
 import { ChatItem } from "@/components";
-import type { IChatItem } from "@/components/chat/chat-item/chat-item";
+import type { ChatItemProps } from "@/components/chat/chat-item/chat-item";
 
 interface IChatListProps {
-	items: IChatItem[];
+	items: ChatItemProps[];
+	activeChatId: number;
 	onClick?: (id: number) => void;
 }
 
@@ -17,14 +18,14 @@ class ChatList extends Block {
 			el: props.items,
 			rawChatItems: [...props.items],
 			chatItems: props.items.map(
-				(chatItem: IChatItem) =>
+				(chatItem: ChatItemProps) =>
 					new ChatItem({
 						...chatItem,
-						onClick: async (id: number) => {
+						onClick: (id: number) => {
 							this.setProps({ activeChatId: id });
 							window.store.set({ activeChatId: id });
 
-							props?.onClick(id);
+							if (props?.onClick) props?.onClick(id);
 						},
 					})
 			),
@@ -32,10 +33,10 @@ class ChatList extends Block {
 	}
 
 	public render() {
-		const { activeChatId } = this.props;
-		const { chatItems } = this.children;
+		const { activeChatId } = this.props as IChatListProps;
+		const { chatItems } = this.children as any;
 
-		chatItems.forEach((item) => {
+		chatItems.forEach((item: any) => {
 			return item.props.id === activeChatId
 				? item.setProps({ active: true })
 				: item.setProps({ active: false });

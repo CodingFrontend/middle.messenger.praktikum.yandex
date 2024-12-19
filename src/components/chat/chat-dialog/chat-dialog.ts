@@ -1,4 +1,4 @@
-import Block from "@/core/block";
+import Block, { TChildren } from "@/core/block";
 import {
 	Avatar,
 	ChatWidget,
@@ -56,7 +56,7 @@ class ChatDialogBlock extends Block {
 				faIcon: "fa-solid fa-arrow-right",
 				type: "primary",
 				onClick: () => {
-					const value = this.children.SendMessageInput.value();
+					const value = (this.children as TChildren).SendMessageInput.value();
 					const error = validateField("message", value);
 
 					if (error) return;
@@ -70,7 +70,7 @@ class ChatDialogBlock extends Block {
 						})
 					);
 
-					this.children.SendMessageInput.clear();
+					(this.children as TChildren).SendMessageInput.clear();
 				},
 			}),
 		});
@@ -142,10 +142,13 @@ class ChatDialogBlock extends Block {
 						Number(new Date(item_1.time)) - Number(new Date(item_2.time))
 				);
 
+				type TSortedMessage = Omit<WSResponseMessage, "time">;
+
 				sortedMessages.forEach((message) => {
 					const date = new Date(message.time);
 					const index = result.findIndex(
-						(item) => item.date.getDate() === date.getDate()
+						(item: TSortedMessage & { date: Date }) =>
+							item.date.getDate() === date.getDate()
 					);
 
 					if (index !== -1) {
@@ -160,7 +163,10 @@ class ChatDialogBlock extends Block {
 					}
 				});
 
-				return result.map((item) => ({ ...item, date: formatDate(item.date) }));
+				return result.map((item: TSortedMessage & { date: Date }) => ({
+					...item,
+					date: formatDate(item.date),
+				}));
 			};
 
 			const messagesGrouped = groupMessagesByDay(allMessages);
@@ -177,16 +183,16 @@ class ChatDialogBlock extends Block {
 		setTimeout(() => {
 			const scrollContent = document.querySelector(".chat-dialog-content");
 
-			if (this.props.messages && scrollContent) {
+			if ((this.props as IChatDialogProps).messages && scrollContent) {
 				const socket = window.socket;
-				const lastMessageId =
-					this.props.messages[this.props.messages.length - 1].id;
+				const lastMessageId = (this.props as IChatDialogProps).messages[
+					(this.props as IChatDialogProps).messages.length - 1
+				].id;
 
-				const getOldMessages = (e) => {
-					const element = e.target;
+				const getOldMessages = (e: Event) => {
+					const element = e.target as HTMLElement;
 					window.store.set({ lastMessageId, chatScrolled: true });
-
-					if (element.scrollTop === 0) {
+					if (element && element.scrollTop === 0) {
 						socket.send(
 							JSON.stringify({
 								content: lastMessageId,
@@ -200,8 +206,6 @@ class ChatDialogBlock extends Block {
 
 				const getMessages = () => {
 					const { chatScrolled } = window.store.getState();
-
-					console.log("scrolled", chatScrolled);
 
 					const isBottom =
 						Math.floor(scrollContent.scrollTop + scrollContent.clientHeight) ===

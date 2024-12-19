@@ -1,14 +1,16 @@
+import { TProps } from "@/core/block";
 import { StoreEvents } from "../core/Store";
 import isEqual from "@/utils/isEqual";
-import Block from "@/core/block";
 
 type TMapStateToProps = (state: Record<string, any>) => Record<string, any>;
 
-export function connect(mapStateToProps: TMapStateToProps) {
-	return function (Component: typeof Block) {
-		return class extends Component {
+export function connect<MapStateToProps extends TMapStateToProps>(
+	mapStateToProps: MapStateToProps
+) {
+	return function <TComponent>(Component: TComponent): any {
+		return class extends (Component as any) {
 			private onChangeStoreCallback: () => void;
-			constructor(props: any) {
+			constructor(props: TProps) {
 				const store = window.store;
 				// сохраняем начальное состояние
 				let state = mapStateToProps(store.getState());
