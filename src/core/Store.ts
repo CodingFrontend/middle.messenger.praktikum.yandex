@@ -4,8 +4,9 @@ export enum StoreEvents {
 	Updated = "Updated",
 }
 
-export class Store extends EventBus {
-	private state = {};
+export class Store extends EventBus<string> {
+	private state: Record<string, any> = {};
+	public static __instance: Store;
 
 	constructor(defaultState: any) {
 		if (Store.__instance) {

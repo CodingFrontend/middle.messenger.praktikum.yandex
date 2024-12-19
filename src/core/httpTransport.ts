@@ -8,8 +8,9 @@ enum METHODS {
 }
 // Тип данных неизвестен
 type TData = Record<string, any>;
+type THeaders = Record<string, string>;
 interface IOptions {
-	headers?: Record<string, string>;
+	headers?: THeaders;
 	method: METHODS;
 	data?: TData;
 	timeout?: number | 5000;
@@ -49,14 +50,19 @@ export default class HTTPTransport {
 	): Promise<TResponse> {
 		const { method, data, timeout } = options;
 
-		const headers =
+		const headers: THeaders =
 			data instanceof FormData
-				? {}
+			? {
+						"Content-Security-Policy":
+							"default-src 'self'; img-src *; script-src 'self'; style-src 'self'; connect-src 'self' *.netlify.app;",
+			}
 				: {
 						"Content-Type": "application/json",
 						"X-Requested-With": "XMLHttpRequest",
 						"Access-Control-Allow-Origin": "*",
-				  };
+						"Content-Security-Policy":
+							"default-src 'self'; img-src *; script-src 'self'; style-src 'self'; connect-src 'self' *.netlify.app;",
+			};
 
 		return new Promise((resolve, reject) => {
 			if (!method) {

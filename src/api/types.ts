@@ -93,6 +93,14 @@ export type ChatListResponse = {
 	};
 };
 
+export type WSResponseMessage = {
+	id: string;
+	time: string;
+	user_id: string;
+	content: string;
+	type: string;
+};
+
 export type CreateChatRequestData = {
 	title: string;
 };

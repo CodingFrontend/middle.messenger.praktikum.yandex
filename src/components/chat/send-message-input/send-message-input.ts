@@ -23,10 +23,10 @@ export default class CustomInputField extends Block {
 	}
 
 	public value() {
-		return this.getContent().value;
+		return (this.getContent() as HTMLInputElement).value;
 	}
 
 	public clear() {
-		this.getContent().value = "";
+		(this.getContent() as HTMLInputElement).value = "";
 	}
 }

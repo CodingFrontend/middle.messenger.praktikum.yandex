@@ -2,22 +2,19 @@ import EventBus from "./eventBus";
 import { nanoid } from "nanoid";
 import Handlebars from "handlebars";
 
-interface BlockConsturctor extends Block {
-	new (name: string): { props: IProps };
+export interface BlockConsturctor extends Block {
+	new (name: string): { props: TProps };
 }
 type TTageName = string;
 type TChildren = Record<string, BlockConsturctor>;
-type TEvents = Record<string, EventListenerOrEventListenerObject>;
+type TProps = Record<string, any>;
 
 interface IMeta {
 	tagName?: TTageName;
-	props?: IProps;
-}
-interface IProps<V = TChildren | string | boolean | any> {
-	[key: string]: V;
+	props?: TProps;
 }
 
-export default class Block {
+export default class Block<IProps extends TProps = {}> {
 	public eventBus: Function;
 	public children: TChildren;
 	public props: IProps;
@@ -34,11 +31,13 @@ export default class Block {
 	private _meta: IMeta | null = null;
 	protected _id: string = nanoid(6);
 
-	constructor(tagName: TTageName = "div", propsWithChildren: IProps = {}) {
+	constructor(tagName: TTageName = "div", propsWithChildren = {}) {
 		const eventBus = new EventBus();
 		this.eventBus = () => eventBus;
 
-		const { props, children } = this._getChildrenAndProps(propsWithChildren);
+		const { props, children } = this._getChildrenAndProps(
+			propsWithChildren as IProps
+		);
 		this.children = children;
 
 		this._meta = {
@@ -46,7 +45,7 @@ export default class Block {
 			props,
 		};
 
-		this.props = this._makePropsProxy(props);
+		this.props = this._makePropsProxy(props as IProps);
 
 		this._registerEvents(eventBus);
 		eventBus.emit(Block.EVENTS.INIT);
@@ -87,7 +86,7 @@ export default class Block {
 
 	private _getChildrenAndProps(propsWithChildren: IProps) {
 		const children: TChildren = {};
-		const props: IProps = {};
+		const props: TProps = {};
 
 		Object.entries(propsWithChildren).forEach(([key, value]) => {
 			if (Array.isArray(value)) {
@@ -168,11 +167,8 @@ export default class Block {
 		Object.assign(this.props, nextProps);
 	};
 
-	public setAttrs = (
-		attrName: string,
-		attrValue?: string | boolean | number
-	) => {
-		(this._element as HTMLElement)?.setAttribute(attrName, attrValue);
+	public setAttrs = (attrName: string, attrValue?: string) => {
+		(this._element as HTMLElement)?.setAttribute(attrName, attrValue as string);
 	};
 
 	public removeAttrs = (attrName: string) => {
@@ -188,7 +184,7 @@ export default class Block {
 	}
 
 	private _addEvents() {
-		const { events = {} } = this.props as IProps<TEvents>;
+		const { events = {} } = this.props;
 
 		Object.keys(events).forEach((eventName: string) => {
 			(this._element as HTMLElement)?.addEventListener(
@@ -199,7 +195,7 @@ export default class Block {
 	}
 
 	private _removeEvents() {
-		const { events = {} } = this.props as IProps<TEvents>;
+		const { events = {} } = this.props;
 
 		Object.keys(events).forEach((eventName: string) => {
 			(this._element as HTMLElement)?.removeEventListener(
@@ -210,7 +206,7 @@ export default class Block {
 	}
 
 	private _compile(): DocumentFragment {
-		const propsAndStubs = { ...this.props };
+		const propsAndStubs: TProps = { ...this.props };
 		Object.entries(this.children).forEach(([key, child]) => {
 			if (Array.isArray(child)) {
 				propsAndStubs[key] = child.map(
@@ -231,7 +227,7 @@ export default class Block {
 							`[data-id="${component._id}"]`
 						);
 
-						stub?.replaceWith(component.getContent());
+						stub?.replaceWith(component.getContent() as string);
 					}
 				});
 			} else {
@@ -239,7 +235,7 @@ export default class Block {
 					const stub = fragment.content.querySelector(
 						`[data-id="${child._id}"]`
 					);
-					stub?.replaceWith(child.getContent());
+					stub?.replaceWith(child.getContent() as string);
 				}
 			}
 		});
@@ -263,8 +259,8 @@ export default class Block {
 		return "";
 	}
 
-	public getContent(): string | Node {
-		return this._element as string | Node;
+	public getContent(): unknown {
+		return this._element;
 	}
 
 	private _makePropsProxy(props: IProps) {
@@ -300,4 +296,10 @@ export default class Block {
 	public hide() {
 		(this.getContent() as HTMLElement).style.display = "none";
 	}
+
+	public value() {
+		return "";
+	}
+
+	public clear() {}
 }

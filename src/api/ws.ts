@@ -1,4 +1,4 @@
-import type { WSChatOptions } from "./types";
+import type { WSChatOptions, WSResponseMessage } from "./types";
 
 export default class WebScoketService {
 	public socket: any;
@@ -25,7 +25,7 @@ export default class WebScoketService {
 			);
 		};
 
-		this.socket.onmessage = (event) => {
+		this.socket.onmessage = (event: MessageEvent) => {
 			const messages = JSON.parse(event.data);
 
 			if (Array.isArray(messages)) {
@@ -34,12 +34,12 @@ export default class WebScoketService {
 				let allMessages = state.messages;
 
 				const messagesFiltered = messages.filter(
-					(message) => message.type === "message" || messages.type === "file"
+					(message) => message.type === "message" || message.type === "file"
 				);
 
 				if (
 					allMessages.some(
-						(message) =>
+						(message: WSResponseMessage) =>
 							messagesFiltered.findIndex((item) => item.id === message.id) !==
 							-1
 					)
@@ -55,7 +55,7 @@ export default class WebScoketService {
 			}
 		};
 
-		this.socket.onclose = (event) => {
+		this.socket.onclose = (event: CloseEvent) => {
 			if (event.wasClean) {
 				console.log("Соединение закрыто чисто");
 			} else {
@@ -67,7 +67,7 @@ export default class WebScoketService {
 			this.socket = null;
 		};
 
-		this.socket.onerror = (event) => {
+		this.socket.onerror = (event: ErrorEvent) => {
 			console.log("Ошибка", event.message);
 		};
 	}

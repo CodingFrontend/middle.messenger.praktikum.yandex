@@ -12,15 +12,20 @@ import { validateField } from "@/utils/validate";
 import { connect } from "@/utils/connect";
 import * as chatServices from "@/services/chat";
 import { formatDate, getTime } from "@/utils/formatDate";
+import type { WSResponseMessage } from "@/api/types";
 
-export interface IChatDialog {
-	id: string;
+export interface IChatDialogProps {
+	id: number;
 	title: string;
 	avatar: string | null;
+	showChatWidget: boolean;
+	newMessage: WSResponseMessage;
+	unread_count: number;
+	messages: WSResponseMessage[] | [];
 }
 
 class ChatDialogBlock extends Block {
-	constructor(props: IChatDialog) {
+	constructor(props: IChatDialogProps) {
 		super("div", {
 			...props,
 			showChatWidget: false,
@@ -41,7 +46,7 @@ class ChatDialogBlock extends Block {
 				type: "secondary",
 				onClick: () =>
 					this.setProps({
-						showChatWidget: !this.props.showChatWidget,
+						showChatWidget: !(this.props as IChatDialogProps).showChatWidget,
 					}),
 			}),
 			SendMessageInput: new SendMessageInput({
@@ -72,8 +77,8 @@ class ChatDialogBlock extends Block {
 	}
 
 	public async componentDidUpdate(
-		oldProps: IProps<any>,
-		newProps: IProps<any>
+		oldProps: IChatDialogProps,
+		newProps: IChatDialogProps
 	): Promise<boolean> {
 		if (newProps.id && newProps.id !== oldProps.id) {
 			const chatId = newProps.id;
@@ -114,26 +119,27 @@ class ChatDialogBlock extends Block {
 
 			if (newMessage) allMessages.push(newMessage);
 
-			const checkMessageState = (message) => {
+			const checkMessageState = (message: WSResponseMessage) => {
 				const { user } = window.store.getState();
 
 				return message.user_id === user.id ? "upcoming" : "incoming";
 			};
 
-			const formatMessage = (message) => ({
+			const formatMessage = (message: WSResponseMessage) => ({
 				...message,
 				state: checkMessageState(message),
 				time: getTime(message.time),
 			});
 
-			const groupMessagesByDay = (msgs) => {
+			const groupMessagesByDay = (msgs: WSResponseMessage[]) => {
 				if (!msgs) return [];
 
 				const result: any = [];
 				let current;
 
 				const sortedMessages = msgs.sort(
-					(item_1, item_2) => new Date(item_1.time) - new Date(item_2.time)
+					(item_1: WSResponseMessage, item_2: WSResponseMessage) =>
+						Number(new Date(item_1.time)) - Number(new Date(item_2.time))
 				);
 
 				sortedMessages.forEach((message) => {
