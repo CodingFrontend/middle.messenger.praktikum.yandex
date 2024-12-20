@@ -142,3 +142,7 @@ export type AddUsersRequestData = {
 	users: number[];
 	chatId: number;
 };
+
+export type SearchUserRequestData = {
+	login: string;
+};

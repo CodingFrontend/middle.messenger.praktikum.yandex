@@ -4,6 +4,7 @@ import {
 	UserRequestData,
 	UserDTO,
 	UserPasswordRequestData,
+	SearchUserRequestData,
 } from "./types";
 
 const profileApi = new HTTPTransport("/user");
@@ -21,5 +22,11 @@ export default class ProfileApi {
 		data: UserPasswordRequestData
 	): Promise<void | APIError> {
 		return profileApi.put<void | APIError>("/profile/password", { data });
+	}
+
+	async searchByLogin(
+		data: SearchUserRequestData
+	): Promise<UserDTO[] | APIError> {
+		return profileApi.post<UserDTO[] | APIError>("/search", { data });
 	}
 }

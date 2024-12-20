@@ -2,6 +2,8 @@ import { ROUTES } from "@/constants";
 import ProfileApi from "@/api/profile";
 import {
 	APIError,
+	SearchUserRequestData,
+	UserDTO,
 	UserPasswordRequestData,
 	UserRequestData,
 } from "@/api/types";
@@ -46,9 +48,25 @@ export const updatePassword = async (data: UserPasswordRequestData) => {
 		await profileApi.updatePassword(data);
 		window.router.go(ROUTES.profile);
 	} catch (error) {
-		console.log("error", error);
 		window.store.set({ updatePasswordError: (error as APIError).reason });
 	} finally {
 		window.store.set({ isLoading: false });
+	}
+};
+
+export const searchByLogin = async (data: SearchUserRequestData) => {
+	window.store.set({ isSearchUserLoading: true });
+	try {
+		const users = await profileApi.searchByLogin(data);
+		const addUsersList = (users as UserDTO[]).map((user) => ({
+			id: user.id,
+			value: user.login,
+			text: `${user.first_name} ${user.second_name}`,
+		}));
+		window.store.set({ addUsersList });
+	} catch (error) {
+		window.store.set({ searchByLoginError: (error as APIError).reason });
+	} finally {
+		window.store.set({ isSearchUserLoading: false });
 	}
 };

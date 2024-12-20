@@ -1,12 +1,16 @@
 import Block from "@/core/block";
-import { Modal, Input } from "@/components";
+import { Modal, Search } from "@/components";
 import { connect } from "@/utils/connect";
+import { validateField } from "@/utils/validate";
+import { UserDTO } from "@/api/types";
+import * as profileServices from "@/services/profile";
 
 interface IModalProps {
 	modalTitle: string;
 	modalButtonLabelOk: string;
 	AddUsersError: string;
 	DeleteUsersError: string;
+	searchByLoginError: string;
 	onCloseModal: () => void;
 	onConfirm: () => void;
 	onCancel?: () => void;
@@ -21,12 +25,14 @@ export interface IErrors {
 }
 
 type IDialogBodyProps = {
+	searchByLoginError: string;
 	errors: {
 		login: string;
 	};
 	form: {
 		login: string;
 	};
+	addUsersList: { id: number; value: string; text: string }[] | [];
 } & {};
 
 class DialogBody extends Block {
@@ -40,40 +46,34 @@ class DialogBody extends Block {
 				login: "",
 			},
 			classList: "modal-dialog__content",
-			Input: new Input({
-				label: "Id пользователя",
+			Search: new Search({
+				label: "Логин",
 				name: "login",
-				type: "text",
-				onChange: (e: Event) => {
-					const value = (e.target as HTMLInputElement).value;
-					// const error = validateField("login", value);
+				id: "search-login",
+				error: props.searchByLoginError,
+				options: props.addUsersList || [],
+				onKeydown: async () => {
+					setTimeout(async () => {
+						const searchValue = this.children.Search.value();
 
-					// this.children.Input.setProps({
-					// 	error,
-					// });
+						await profileServices.searchByLogin({ login: searchValue });
 
-					// this.setProps({
-					// 	errors: {
-					// 		...((this.props as IDialogBodyProps).errors as IErrors),
-					// 		login: error,
-					// 	},
-					// });
+						console.log(1, searchValue);
 
-					// if (error) return;
-
-					this.setProps({
-						form: {
-							...((this.props as IDialogBodyProps).form as IForm),
-							login: value,
-						},
-					});
+						// this.setProps({
+						// 	form: {
+						// 		...((this.props as IDialogBodyProps).form as IForm),
+						// 		login: value,
+						// 	},
+						// });
+					}, 1000);
 				},
 			}),
 		});
 	}
 
 	render(): string {
-		return `{{{ Input }}}`;
+		return `{{{ Search }}}`;
 	}
 }
 
@@ -88,7 +88,7 @@ class ChatModalBlock extends Block {
 				Body: new DialogBody({} as any),
 				onCloseModal: () => {
 					window.store.set({ AddUsersError: "", DeleteUsersError: "" });
-					this.children.Modal.children.Body.children.Input.clear();
+					this.children.Modal.children.Body.children.Search.clear();
 					props.onCloseModal();
 				},
 				onConfirm: () => {
@@ -123,6 +123,18 @@ class ChatModalBlock extends Block {
 				});
 			}
 		}
+
+		if (newProps.searchByLoginError !== oldProps.searchByLoginError) {
+			this.children.Modal.children.Body.children.Search.setProps({
+				error: newProps.searchByLoginError,
+			});
+
+			if (!newProps.searchByLoginError && oldProps.searchByLoginError) {
+				this.children.Modal.children.Body.children.Search.setProps({
+					error: newProps.AddUsersError,
+				});
+			}
+		}
 		return true;
 	}
 
@@ -131,9 +143,13 @@ class ChatModalBlock extends Block {
 	}
 }
 
-const ChatModal = connect(({ AddUsersError, DeleteUsersError }) => ({
-	AddUsersError,
-	DeleteUsersError,
-}))(ChatModalBlock);
+const ChatModal = connect(
+	({ AddUsersError, DeleteUsersError, addUsersList, searchByLoginError }) => ({
+		AddUsersError,
+		DeleteUsersError,
+		addUsersList,
+		searchByLoginError,
+	})
+)(ChatModalBlock);
 
 export default ChatModal;
