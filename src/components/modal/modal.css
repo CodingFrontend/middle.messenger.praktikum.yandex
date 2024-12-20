@@ -65,9 +65,8 @@
 	font-size: var(--text-xs);
 }
 
-.modal-dialog__success {
+.modal-dialog__succes {
 	align-self: center;
 	margin-top: 14px;
 	color: green;
-	font-size: var(--text-xs);
 }

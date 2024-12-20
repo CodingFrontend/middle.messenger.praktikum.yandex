@@ -46,7 +46,7 @@ export default class Modal extends Block {
 					{{{ IconButton }}}
 				</div>
 				<h2 {{#if titleError}}class="modal-dialog__title modal-dialog__title--error"{{/if}} class="modal-dialog__title">{{title}}</h2>
-				<form class="modal-dialog__form">
+				<form class="modal-dialog__form" action="javascript:void(0);">
 					<div class="modal-dialog__body">
 						{{{ Body }}}
 					</div>

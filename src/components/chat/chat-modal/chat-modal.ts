@@ -1,6 +1,5 @@
 import Block from "@/core/block";
 import { Modal, Input } from "@/components";
-import { validateField } from "@/utils/validate";
 import { connect } from "@/utils/connect";
 
 interface IModalProps {

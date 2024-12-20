@@ -474,9 +474,9 @@ class ProfileContentBlock extends Block {
 				onCancel: () => this.setProps({ showChangeAvatarModal: false }),
 				onConfirm: async (file: File) => {
 					await profileServices.updateAvatar(file);
-					if (!(this.props as IProfileUserProps).updateAvatarError) {
-						this.setProps({ showChangeAvatarModal: false });
-					}
+					// if (!(this.props as IProfileUserProps).updateAvatarError) {
+					// 	this.setProps({ showChangeAvatarModal: false });
+					// }
 				},
 			}),
 		});
@@ -499,7 +499,7 @@ class ProfileContentBlock extends Block {
 
 				
 			{{#if isEditInfo}}
-			<form class="profile-edit-info">
+			<form class="profile-edit-info" action="javascript:void(0);">
 				<div class="profile-edit-info__content">
 					<div class="profile-row">
 						{{{ InputEmailEdit }}}
@@ -528,7 +528,7 @@ class ProfileContentBlock extends Block {
 				</div>
 			</form>
 			{{else if isEditPassword}}
-			<form class="profile-edit-password">
+			<form class="profile-edit-password" action="javascript:void(0);">
 				<div class="profile-edit-password__content">
 					<div class="profile-row">
 						{{{ InputOldPassword }}}

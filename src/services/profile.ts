@@ -23,13 +23,13 @@ export const updateInfo = async (data: UserRequestData) => {
 };
 
 export const updateAvatar = async (file: File) => {
-	window.store.set({ isLoading: true });
+	window.store.set({ isLoading: true, updateAvatarSuccess: false });
 	try {
 		const data: FormData = new FormData();
 		data.append("avatar", file);
 
 		const user = await profileApi.updateAvatar(data);
-		window.store.set({ user });
+		window.store.set({ user, updateAvatarSuccess: true });
 	} catch (error) {
 		window.store.set({ updateAvatarError: (error as APIError).reason });
 	} finally {
