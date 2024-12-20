@@ -1,0 +1,53 @@
+.chat-messages-item {
+  max-width: 402px;
+}
+
+.chat-messages-item:not(:last-child) {
+  margin-bottom: 30px;
+}
+
+.chat-messages-item--incoming:has(+ .chat-messages-item--incoming) {
+  margin-bottom: 10px;
+}
+
+.chat-messages-item--upcoming:has(+ .chat-messages-item--upcoming) {
+  margin-bottom: 10px;
+}
+
+.chat-messages-item-text {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  padding: 11px;
+  border-radius: 7px;
+}
+
+.chat-messages-item--incoming .chat-messages-item-text {
+  background-color: var(--light-background-color);
+  border-top-left-radius: 0;
+}
+
+.chat-messages-item--upcoming .chat-messages-item-text {
+  background-color: var(--gray-400);
+  border-bottom-right-radius: 0;
+}
+
+.chat-messages-item-text__info {
+  align-self: end;
+  display: flex;
+  gap: 3px;
+  margin-left: 15px;
+  font-size: var(--text-xs);
+}
+
+.chat-messages-item--incoming .chat-messages-item-text__info {
+  color: var(--secondary-text-color);
+}
+
+.chat-messages-item--upcoming .chat-messages-item-text__info {
+  color: var(--primary-color);
+}
+
+.chat-messages-item-text__status {
+  font-size: 9px;
+}

@@ -2,6 +2,11 @@
 
 [[https://github.com/CodingFrontend/middle.messenger.praktikum.yandex/pull/3](https://github.com/CodingFrontend/middle.messenger.praktikum.yandex/pull/3)]
 
+## PR Sprint 2
+
+https://github.com/CodingFrontend/middle.messenger.praktikum.yandex/pull/5
+
+
 ## Netlify link
 
 https://fantastic-sorbet-d8ea1a.netlify.app/

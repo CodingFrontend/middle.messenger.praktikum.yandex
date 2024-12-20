@@ -1,0 +1,40 @@
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 52px;
+}
+
+.auth-page-card {
+  width: 340px;
+  padding: 50px 30px 30px;
+  border-radius: 16px;
+  box-shadow: 0 0 6px 0 #00000024;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form .page-title {
+  align-self: center;
+}
+
+.auth-form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.auth-form__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 50px;
+}
+
+.auth-form__buttons .link-button {
+  align-self: center;
+}

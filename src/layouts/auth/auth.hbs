@@ -1,0 +1,14 @@
+<main class='page auth-page'>
+	<div class="auth-page-card">
+		<form class="form">
+			{{> PageTitle title=title}}
+			<div class="auth-page__body">
+				{{> @partial-block}}
+			</div>
+			<div class="auth-page__buttons">
+				{{> Button label=labelOk type="primary" }}
+				{{> LinkButton label=labelCancel type="primary" }}
+			</div>
+		</form>
+	</div>
+</main>

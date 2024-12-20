@@ -1,0 +1,6 @@
+**/*.min.js
+/node_modules
+/vite.config.ts
+/tsconfig.json
+/.stylelintrc.json
+/dist/

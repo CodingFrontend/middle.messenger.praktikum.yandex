@@ -1,0 +1,13 @@
+.chat-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 15px;
+  background-color: var(--main-background-color);
+  border-radius: 12px;
+  box-shadow: 0 0 6px 0 #00000024;
+}
+
+.chat-widget .link-button__label {
+  text-wrap: nowrap;
+}

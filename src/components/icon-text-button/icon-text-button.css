@@ -1,0 +1,32 @@
+.icon-text-button {
+  all: unset;
+  display: flex;
+  gap: 15px;
+  cursor: pointer;
+}
+
+.icon-text-button--primary {
+  color: var(--primary-color);
+}
+
+.icon-text-button--attention {
+  color: var(--attention-color);
+}
+
+.icon-text-button__icon {
+  color: var(--primary-color);
+  font-size: var(--text-sm);
+}
+
+.icon-text-button__label {
+  font-size: var(--text-sm);
+	text-wrap: nowrap;
+}
+
+.icon-text-button--secondary {
+  color: var(--secondary-text-color);
+}
+
+.icon-text-button--secondary .icon-text-button__icon {
+  color: var(--secondary-text-color);
+}

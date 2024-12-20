@@ -1,0 +1,27 @@
+<div class='chat-dialog'>
+  <div class='chat-dialog-top'>
+    <div class='chat-dialog-top__user'>
+      {{#> Avatar image=image size="small"}}{{/ Avatar}}
+      <div class='chat-dialog-top__user-name'>{{userName}}</div>
+    </div>
+		<div class="chat-dialog-top__actions">
+			<div class='chat-dialog-top__actions-button'>
+				<i class='fa-solid fa-ellipsis-vertical'></i>
+			</div>
+			<div class="chat-dialog-top__actions-widget">
+				{{> ChatWidget items=chatWidgetItems}}
+			</div>
+		</div>
+  </div>
+	<div class="chat-dialog-content">
+		{{> ChatMessageGroup }}
+	</div>
+	<div class="chat-dialog-bottom">
+		<div class="chat-dialog-bottom__field">
+			<input type="text" placeholder="Сообщение">
+		</div>
+		<div class="chat-dialog-bottom__send-button">
+			{{> IconButton faIcon="fa-solid fa-arrow-right" type="primary"}}
+		</div>
+	</div>
+</div>

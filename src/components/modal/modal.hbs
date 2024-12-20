@@ -1,0 +1,20 @@
+<div class="modal">
+	<div class="modal-dialog">
+		<div class="modal-dialog__close-button">
+			{{> IconButton faIcon="fa-solid fa-x" type="secondary"}}
+		</div>
+		<h2 {{#if titleError}}class="modal-dialog__title modal-dialog__title--error"{{/if}} class="modal-dialog__title">{{title}}</h2>
+		<div class="modal-dialog__body">
+			{{> @partial-block }}
+		</div>
+		<div class="modal-dialog__footer">
+			{{> Button label=labelOk type="primary" }}
+			{{#if labelCancel}}
+				{{> Button label=labelCancel type="link"}}
+			{{/if}}
+			{{#if error}}
+				<p class="modal-dialog__error">{{error}}</p>
+			{{/if}}
+		</div>
+	</div>
+</div>

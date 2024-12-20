@@ -1,0 +1,39 @@
+.custom-input {
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom-input__label {
+  font-weight: 500;
+}
+
+.custom-input input {
+  all: unset;
+  text-align: right;
+  font-weight: 500;
+  color: var(--secondary-text-color);
+}
+
+.custom-input__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+input.custom-input__field-error {
+  color: var(--attention-color);
+  caret-color: var(--main-text-color);
+}
+
+.custom-input__error {
+  color: var(--attention-color);
+  caret-color: var(--main-text-color);
+  max-width: 350px;
+  margin-left: auto;
+  text-align: right;
+  font-size: var(--text-xs);
+}
+
+.custom-input input:focus {
+  color: var(--main-text-color);
+}
