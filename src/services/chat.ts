@@ -120,7 +120,7 @@ export const deleteUsers = async (data: AddUsersRequestData) => {
 	const { users, chatId } = data;
 
 	try {
-		await chatApi.addUsers({ users, chatId });
+		await chatApi.deleteUsers({ users, chatId });
 	} catch (error) {
 		window.store.set({ DeleteUsersError: (error as APIError).reason });
 	} finally {

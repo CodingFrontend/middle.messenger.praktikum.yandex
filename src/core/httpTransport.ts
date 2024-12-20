@@ -88,6 +88,10 @@ export default class HTTPTransport {
 						? JSON.parse(xhr.response)
 						: xhr.response;
 					resolve(response);
+				} else if (xhr.status === 500) {
+					reject({
+						reason: "Ошибка сервера",
+					});
 				} else {
 					const res = isJsonString(xhr.response)
 						? JSON.parse(xhr.response)
@@ -146,7 +150,6 @@ export default class HTTPTransport {
 			...options,
 			method: METHODS.PUT,
 		};
-		console.log("req", requestProps);
 		const requestUrl = `${this.apiUrl}${url}`;
 		return this._request(requestUrl, requestProps);
 	};

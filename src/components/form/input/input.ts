@@ -29,6 +29,10 @@ export default class Input extends Block {
 		return (this.children.InputField.getContent() as HTMLInputElement).value;
 	}
 
+	public clear() {
+		(this.children.InputField.getContent() as HTMLInputElement).value = "";
+	}
+
 	public render(): string {
 		return `
         {{{ InputField }}}

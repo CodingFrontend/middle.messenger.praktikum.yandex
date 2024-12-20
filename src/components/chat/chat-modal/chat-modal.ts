@@ -1,10 +1,13 @@
 import Block from "@/core/block";
 import { Modal, Input } from "@/components";
 import { validateField } from "@/utils/validate";
+import { connect } from "@/utils/connect";
 
 interface IModalProps {
 	modalTitle: string;
 	modalButtonLabelOk: string;
+	AddUsersError: string;
+	DeleteUsersError: string;
 	onCloseModal: () => void;
 	onConfirm: () => void;
 	onCancel?: () => void;
@@ -39,25 +42,25 @@ class DialogBody extends Block {
 			},
 			classList: "modal-dialog__content",
 			Input: new Input({
-				label: "Логин",
+				label: "Id пользователя",
 				name: "login",
 				type: "text",
 				onChange: (e: Event) => {
 					const value = (e.target as HTMLInputElement).value;
-					const error = validateField("login", value);
+					// const error = validateField("login", value);
 
-					this.children.Input.setProps({
-						error,
-					});
+					// this.children.Input.setProps({
+					// 	error,
+					// });
 
-					this.setProps({
-						errors: {
-							...((this.props as IDialogBodyProps).errors as IErrors),
-							login: error,
-						},
-					});
+					// this.setProps({
+					// 	errors: {
+					// 		...((this.props as IDialogBodyProps).errors as IErrors),
+					// 		login: error,
+					// 	},
+					// });
 
-					if (error) return;
+					// if (error) return;
 
 					this.setProps({
 						form: {
@@ -75,7 +78,7 @@ class DialogBody extends Block {
 	}
 }
 
-export default class ChatModal extends Block {
+class ChatModalBlock extends Block {
 	constructor(props: IModalProps) {
 		super("div", {
 			...props,
@@ -84,7 +87,11 @@ export default class ChatModal extends Block {
 				title: props.modalTitle,
 				labelOk: props.modalButtonLabelOk,
 				Body: new DialogBody({} as any),
-				onCloseModal: () => props.onCloseModal(),
+				onCloseModal: () => {
+					window.store.set({ AddUsersError: "", DeleteUsersError: "" });
+					this.children.Modal.children.Body.children.Input.clear();
+					props.onCloseModal();
+				},
 				onConfirm: () => {
 					props.onConfirm();
 				},
@@ -93,7 +100,41 @@ export default class ChatModal extends Block {
 		});
 	}
 
+	public componentDidUpdate(
+		oldProps: IModalProps,
+		newProps: IModalProps
+	): boolean {
+		if (
+			newProps.AddUsersError !== oldProps.AddUsersError ||
+			newProps.DeleteUsersError !== oldProps.DeleteUsersError
+		) {
+			this.children.Modal.setProps({
+				error: newProps.AddUsersError || newProps.DeleteUsersError,
+			});
+
+			if (!newProps.AddUsersError && oldProps.AddUsersError) {
+				this.children.Modal.setProps({
+					error: newProps.AddUsersError,
+				});
+			}
+
+			if (!newProps.DeleteUsersError && oldProps.DeleteUsersError) {
+				this.children.Modal.setProps({
+					error: newProps.DeleteUsersError,
+				});
+			}
+		}
+		return true;
+	}
+
 	public render(): string {
 		return `{{{ Modal }}}`;
 	}
 }
+
+const ChatModal = connect(({ AddUsersError, DeleteUsersError }) => ({
+	AddUsersError,
+	DeleteUsersError,
+}))(ChatModalBlock);
+
+export default ChatModal;
