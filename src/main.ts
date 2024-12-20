@@ -1,149 +1,66 @@
-import Handlebars from 'handlebars';
-import * as Components from './components';
-import * as Pages from './pages';
-import * as Layouts from './layouts';
+import Handlebars from "handlebars";
+import * as Components from "./components";
+import * as Pages from "./pages";
+import * as Layouts from "./layouts";
 
-import { render } from '@/core/renderDom';
+import Router from "@/core/Router";
+import { Store } from "@/core/Store";
+import * as authServices from "@/services/auth";
+import * as chatServices from "@/services/chat";
 
-const pages = {
-  login: [Pages.LoginPage],
-  register: [Pages.RegisterPage],
-  nav: [Pages.NavigationPage],
-  chat: [
-    Pages.ChatPage,
-    {
-      chatWidgetItems: [
-        { faIcon: 'fa-regular fa-square-plus', text: 'Добавить пользователя' },
-        { faIcon: 'fa-regular fa-square-minus', text: 'Удалить пользователя' },
-      ],
-      chatItems: [
-        {
-          name: 'Киноклуб',
-          date: '12:00',
-          message:
-            'Друзья, у меня для вас особенный выпуск новостей! В общем говоря,',
-          count: 4,
-          image: '',
-        },
-        {
-          name: 'Вадим',
-          date: '12:00',
-          message: 'Круто',
-          isMessageUpcoming: true,
-          image: '',
-        },
-      ],
-      isChatSelected: true,
-      userName: 'Вадим',
-      messages: [
-        {
-          date: '19 июня',
-          messages: [
-            {
-              type: 'incoming',
-              content: 'text',
-              date: '11:56',
-              value:
-                'Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой.',
-            },
-            {
-              type: 'incoming',
-              content: 'text',
-              date: '11:56',
-              value:
-                'Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой.',
-            },
-            {
-              type: 'upcoming',
-              content: 'text',
-              value: 'Круто!',
-              date: '12:00',
-              read: true,
-            },
-          ],
-        },
-      ],
-      // showModal: true,
-      modalTitle: 'Добавить пользователя',
-      modalButtonLabelOk: 'Добавить',
-    },
-  ],
-  profile: [
-    Pages.ProfilePage,
-    {
-      isGeneralInfo: true,
-      isEditInfo: false,
-      isEditPassword: false,
-      email: 'email@yandex.ru',
-      login: 'admin',
-      first_name: 'Вадим',
-      last_name: 'Иванов',
-      display_name: 'Вадим',
-      phone: '+7 (909) 967 30 30',
-      // showModal: true,
-      fileUploaded: false,
-      emptyError: '',
-      fileName: '',
-      uploadError: true,
-      password: 'admin',
-    },
-  ],
-  serverError: [Pages.ServerErrorPage],
-  notFound: [Pages.NotFoundPage],
-};
+import { ROUTES } from "@/constants";
+import { BlockConsturctor } from "./core/block";
+import { ChatListRequestData } from "./api/types";
 
-Object.entries(Components).forEach(([name, template]) => {
-  if (typeof template === 'function') {
-    return;
-  }
-
-  Handlebars.registerPartial(name, template);
-});
-
-Object.entries(Layouts).forEach(([name, template]) => {
-  if (typeof template === 'function') {
-    return;
-  }
-
-  Handlebars.registerPartial(name, template);
-});
-
-Handlebars.registerHelper('ifCond', function (v1, v2, options) {
-  if (v1 === v2) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return options.fn(this);
-  }
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  return options.inverse(this);
-});
-
-function navigate(page: string) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const [source, context] = pages[page];
-  if (typeof source === 'function') {
-    render('#app', new source());
-    return;
-  }
-
-  const container = document.getElementById('app')!;
-
-  const temlpatingFunction = Handlebars.compile(source);
-  container.innerHTML = temlpatingFunction(context);
+declare global {
+	interface Window {
+		store: Store;
+		router: Router;
+		socket: WebSocket;
+	}
 }
 
-document.addEventListener('DOMContentLoaded', () => navigate('nav'));
+Object.entries(Layouts).forEach(([name, template]) => {
+	if (typeof template === "function") {
+		return;
+	}
 
-document.addEventListener('click', (e) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const page = e.target.getAttribute('page');
-  if (page) {
-    navigate(page);
-
-    e.preventDefault();
-    e.stopImmediatePropagation();
-  }
+	Handlebars.registerPartial(name, template);
 });
+
+Object.entries(Components).forEach(([name, template]) => {
+	if (typeof template === "function") {
+		return;
+	}
+
+	Handlebars.registerPartial(name, template);
+});
+
+Handlebars.registerHelper("ifCond", function (v1, v2, options) {
+	if (v1 === v2) {
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		return options.fn(this);
+	}
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	return options.inverse(this);
+});
+
+window.store = new Store({});
+
+const initRouter = async () => {
+	await authServices.checkLoginUser();
+	await chatServices.getChatList({} as ChatListRequestData);
+
+	window.router = new Router("#app");
+	window.router
+		.use(ROUTES.login, Pages.LoginPage as BlockConsturctor)
+		.use(ROUTES.register, Pages.RegisterPage as BlockConsturctor)
+		.use(ROUTES.messenger, Pages.ChatPage as BlockConsturctor)
+		.use(ROUTES.profile, Pages.ProfilePage as BlockConsturctor)
+		.use(ROUTES.notFound, Pages.NotFoundPage as BlockConsturctor)
+		.start();
+};
+
+initRouter();

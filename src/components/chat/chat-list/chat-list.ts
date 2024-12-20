@@ -1,55 +1,53 @@
-import Block from '@/core/block';
-import { ChatItem } from '@/components';
-import type { IChatItem } from '@/components/chat/chat-item/chat-item';
+import Block from "@/core/block";
+import { ChatItem } from "@/components";
+import type { ChatItemProps } from "@/components/chat/chat-item/chat-item";
 
 interface IChatListProps {
-  items: IChatItem[];
-  onClick?: (e: Event) => void;
-  onChatSelect?: (id: string) => void;
+	items: ChatItemProps[];
+	activeChatId?: number;
+	onClick?: (id: number) => void;
 }
 
-export default class ChatList extends Block {
-  constructor(props: IChatListProps) {
-    super('ul', {
-      ...props,
-      activeChatId: null,
-      classList: 'chat-list',
-      el: props.items,
-      chatItems: props.items.map(
-        (chatItem: IChatItem) =>
-          new ChatItem({
-            ...chatItem,
-            onClick: () => {
-              this.setProps({ activeChatId: chatItem.id });
-              if (props.onChatSelect) props.onChatSelect(chatItem.id);
-            },
-          })
-      ),
-    });
-  }
+class ChatList extends Block {
+	constructor(props: IChatListProps) {
+		super("ul", {
+			...props,
+			activeChatId: null,
+			unreadMessages: null,
+			classList: "chat-list",
+			el: props.items,
+			rawChatItems: [...props.items],
+			chatItems: props.items.map(
+				(chatItem: ChatItemProps) =>
+					new ChatItem({
+						...chatItem,
+						onClick: (id: number) => {
+							this.setProps({ activeChatId: id });
+							window.store.set({ activeChatId: id });
 
-  public componentDidUpdate() {
-    const { items } = this.props;
+							if (props?.onClick) props?.onClick(id);
+						},
+					})
+			),
+		});
+	}
 
-    this.children.chatItems = items.map(
-      (chatItem: IChatItem) =>
-        new ChatItem({
-          ...chatItem,
-          onClick: () => {
-            this.setProps({ activeChatId: chatItem.id });
-            this.props.onChatSelect(chatItem.id);
-          },
-        })
-    );
+	public render() {
+		const { activeChatId } = this.props as IChatListProps;
+		const { chatItems } = this.children as any;
 
-    return true;
-  }
+		chatItems.forEach((item: any) => {
+			return item.props.id === activeChatId
+				? item.setProps({ active: true })
+				: item.setProps({ active: false });
+		});
 
-  public render(): string {
-    return `
+		return `
       {{#each chatItems}}
 				{{{ this }}}
 			{{/each}}
     `;
-  }
+	}
 }
+
+export default ChatList;

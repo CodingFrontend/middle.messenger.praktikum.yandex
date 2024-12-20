@@ -1,486 +1,489 @@
-import Block from '@/core/block';
-
-import { validateField } from '@/utils/validate';
-
+import Block from "@/core/block";
+import { validateField } from "@/utils/validate";
 import {
-  GoBack,
-  Avatar,
-  CustomInput,
-  LinkButton,
-  Button,
-  ChangeAvatarModal,
-} from '@/components';
-
-import mockData from './mockData';
-
-interface IEditInfoForm {
-  email: string;
-  login: string;
-  first_name: string;
-  second_name: string;
-  display_name: string;
-  phone: string;
-}
-
-interface IEditInfoFormErrors {
-  email: string;
-  login: string;
-  first_name: string;
-  second_name: string;
-  display_name: string;
-  phone: string;
-}
+	GoBack,
+	Avatar,
+	CustomInput,
+	LinkButton,
+	Button,
+	ChangeAvatarModal,
+} from "@/components";
+import { withRouter } from "@/utils/withRouter";
+import * as profileServices from "@/services/profile";
+import * as authServices from "@/services/auth";
+import { connect } from "@/utils/connect";
+import { checkPasswordRepeat } from "@/utils/rules";
+import { UserDTO, UserPasswordRequestData } from "@/api/types";
 
 interface IEditPasswordForm {
-  old_password: string;
-  new_password: string;
-  new_password_repeat: string;
+	old_password: string;
+	new_password: string;
+	new_password_repeat: string;
 }
 
-interface IEditPasswordFormErrors {
-  old_password: string;
-  new_password: string;
-  new_password_repeat: string;
+interface IProfileUserProps {
+	isGeneralInfo: boolean;
+	isEditInfo: boolean;
+	isEditPassword: boolean;
+	fileUploaded: boolean;
+	emptyError: string;
+	fileName: string;
+	uploadError: boolean;
+	password: string;
+	image: string;
+	updateAvatarError: string;
 }
 
-interface IProfileContentProps extends IEditInfoForm {
-  isGeneralInfo: boolean;
-  isEditInfo: boolean;
-  isEditPassword: boolean;
-  fileUploaded: boolean;
-  emptyError: string;
-  fileName: string;
-  uploadError: boolean;
-  password: string;
-  image: string;
+type IEditInfoForm = Omit<UserDTO, "avatar" | "id">;
+
+interface IProfileContentProps {
+	user: UserDTO;
+	editInfoForm: IEditInfoForm;
+	editPasswordForm: IEditPasswordForm;
 }
 
 interface AvatarEditSlotProps {
-  onClick?: (e: Event) => void;
+	onClick?: (e: Event) => void;
 }
 
 class AvatarEditSlot extends Block {
-  constructor(props: AvatarEditSlotProps) {
-    super('div', {
-      ...props,
-      classList: 'profile-page-avatar-image',
-      events: {
-        click: props.onClick,
-      },
-    });
-  }
-  render(): string {
-    return `
+	constructor(props: AvatarEditSlotProps) {
+		super("div", {
+			...props,
+			events: {
+				click: props.onClick,
+			},
+		});
+	}
+	render(): string {
+		return `
+			<div class="profile-page-avatar-image">
+			</div>
 			<div class="profile-page-avatar-image__hover">
 				<span>Поменять аватар</span>
 			</div>
 		`;
-  }
+	}
 }
 
-class ProfileContent extends Block {
-  constructor(props: IProfileContentProps) {
-    super('div', {
-      ...props,
-      editInfoForm: {
-        email: props.email,
-        login: props.login,
-        first_name: props.first_name,
-        second_name: props.second_name,
-        display_name: props.display_name,
-        phone: props.phone,
-      },
-      editInfoFormErrors: {
-        email: '',
-        login: '',
-        first_name: '',
-        second_name: '',
-        display_name: '',
-        phone: '',
-      },
-      editPasswordForm: {
-        old_password: '',
-        new_password: '',
-        new_password_repeat: '',
-      },
-      editPasswordFormErrors: {
-        old_password: '',
-        new_password: '',
-        new_password_repeat: '',
-      },
-      classList: 'profile-page-card',
-      AvatarGeneralInfo: new Avatar({
-        image: props.image,
-        size: 'large',
-        Slot: new AvatarEditSlot({
-          onClick: () => this.setProps({ showChangeAvatarModal: true }),
-        }),
-      }),
-      Avatar: new Avatar({
-        image: props.image,
-        size: 'large',
-      }),
-      InputEmail: new CustomInput({
-        label: 'Почта',
-        value: props.email,
-        name: 'email',
-        type: 'email',
-        disabled: true,
-      }),
-      InputLogin: new CustomInput({
-        label: 'Логин',
-        value: props.login,
-        name: 'login',
-        type: 'text',
-        disabled: true,
-      }),
-      InputFirstName: new CustomInput({
-        label: 'Имя',
-        value: props.first_name,
-        name: 'first_name',
-        type: 'text',
-        disabled: true,
-      }),
-      InputLastName: new CustomInput({
-        label: 'Фамилия',
-        value: props.second_name,
-        name: 'second_name',
-        type: 'text',
-        disabled: true,
-      }),
-      InputDisplayName: new CustomInput({
-        label: 'Имя в чате',
-        value: props.display_name,
-        name: 'display_name',
-        type: 'text',
-        disabled: true,
-      }),
-      InputPhone: new CustomInput({
-        label: 'Телефон',
-        value: props.phone,
-        name: 'phone',
-        type: 'phone',
-        disabled: true,
-      }),
-      InputEmailEdit: new CustomInput({
-        label: 'Почта',
-        value: props.email,
-        name: 'email',
-        type: 'email',
-        onChange: (e: Event) => {
-          const value = (e.target as HTMLInputElement).value;
-          const error = validateField('email', value);
+class ProfileContentBlock extends Block {
+	constructor(props: IProfileContentProps) {
+		super("div", {
+			...props,
+			editInfoForm: {
+				email: "",
+				login: "",
+				first_name: "",
+				second_name: "",
+				display_name: "",
+				phone: "",
+			},
+			editPasswordForm: {
+				old_password: "",
+				new_password: "",
+				new_password_repeat: "",
+			},
+			classList: "profile-page-card",
+			isEditPassword: false,
+			isEditInfo: false,
+			AvatarGeneralInfo: new Avatar({
+				image: props.user.avatar,
+				size: "large",
+				Slot: new AvatarEditSlot({
+					onClick: () => this.setProps({ showChangeAvatarModal: true }),
+				}),
+			}),
+			Avatar: new Avatar({
+				image: props.user.avatar,
+				size: "large",
+			}),
+			InputEmail: new CustomInput({
+				label: "Почта",
+				value: props.user.email,
+				name: "email",
+				type: "email",
+				disabled: true,
+			}),
+			InputLogin: new CustomInput({
+				label: "Логин",
+				value: props.user.login || "",
+				name: "login",
+				type: "text",
+				disabled: true,
+			}),
+			InputFirstName: new CustomInput({
+				label: "Имя",
+				value: props.user.first_name || "",
+				name: "first_name",
+				type: "text",
+				disabled: true,
+			}),
+			InputLastName: new CustomInput({
+				label: "Фамилия",
+				value: props.user.second_name || "",
+				name: "second_name",
+				type: "text",
+				disabled: true,
+			}),
+			InputDisplayName: new CustomInput({
+				label: "Имя в чате",
+				value: props.user.display_name || "",
+				name: "display_name",
+				type: "text",
+				disabled: true,
+			}),
+			InputPhone: new CustomInput({
+				label: "Телефон",
+				value: props.user.phone || "",
+				name: "phone",
+				type: "phone",
+				disabled: true,
+			}),
+			InputEmailEdit: new CustomInput({
+				label: "Почта",
+				value: props.user.email || "",
+				name: "email",
+				type: "email",
+				onChange: (e: Event) => {
+					const value = (e.target as HTMLInputElement).value;
+					const error = validateField("email", value);
 
-          this.children.InputEmailEdit.setProps({
-            error,
-          });
+					this.children.InputEmailEdit.setProps({
+						error,
+					});
 
-          this.setProps({
-            editInfoFormErrors: {
-              ...(this.props.editInfoFormErrors as IEditInfoFormErrors),
-              email: error,
-            },
-          });
+					if (error) return;
 
-          if (error) return;
+					this.setProps({
+						editInfoForm: {
+							...(this.props as IProfileContentProps).editInfoForm,
+							email: value,
+						},
+					});
+				},
+			}),
+			InputLoginEdit: new CustomInput({
+				label: "Логин",
+				value: props.user.login || "",
+				name: "login",
+				type: "text",
+				onChange: (e: Event) => {
+					const value = (e.target as HTMLInputElement).value;
+					const error = validateField("login", value);
 
-          this.setProps({
-            editInfoForm: {
-              ...(this.props.editInfoForm as IEditInfoForm),
-              email: value,
-            },
-          });
-        },
-      }),
-      InputLoginEdit: new CustomInput({
-        label: 'Логин',
-        value: props.login,
-        name: 'login',
-        type: 'text',
-        onChange: (e: Event) => {
-          const value = (e.target as HTMLInputElement).value;
-          const error = validateField('login', value);
+					this.children.InputLoginEdit.setProps({
+						error,
+					});
 
-          this.children.InputLoginEdit.setProps({
-            error,
-          });
+					if (error) return;
 
-          this.setProps({
-            editInfoFormErrors: {
-              ...(this.props.editInfoFormErrors as IEditInfoFormErrors),
-              login: error,
-            },
-          });
+					this.setProps({
+						editInfoForm: {
+							...(this.props as IProfileContentProps).editInfoForm,
+							login: value,
+						},
+					});
+				},
+			}),
+			InputFirstNameEdit: new CustomInput({
+				label: "Имя",
+				value: props.user.first_name || "",
+				name: "first_name",
+				type: "text",
+				onChange: (e: Event) => {
+					const value = (e.target as HTMLInputElement).value;
+					const error = validateField("first_name", value);
 
-          if (error) return;
+					this.children.InputFirstNameEdit.setProps({
+						error,
+					});
 
-          this.setProps({
-            editInfoForm: {
-              ...(this.props.editInfoForm as IEditInfoForm),
-              login: value,
-            },
-          });
-        },
-      }),
-      InputFirstNameEdit: new CustomInput({
-        label: 'Имя',
-        value: props.first_name,
-        name: 'first_name',
-        type: 'text',
-        onChange: (e: Event) => {
-          const value = (e.target as HTMLInputElement).value;
-          const error = validateField('first_name', value);
+					if (error) return;
 
-          this.children.InputFirstNameEdit.setProps({
-            error,
-          });
+					this.setProps({
+						editInfoForm: {
+							...(this.props as IProfileContentProps).editInfoForm,
+							first_name: value,
+						},
+					});
+				},
+			}),
+			InputLastNameEdit: new CustomInput({
+				label: "Фамилия",
+				value: props.user.second_name || "",
+				name: "second_name",
+				type: "text",
+				onChange: (e: Event) => {
+					const value = (e.target as HTMLInputElement).value;
+					const error = validateField("second_name", value);
 
-          this.setProps({
-            editInfoFormErrors: {
-              ...(this.props.editInfoFormErrors as IEditInfoFormErrors),
-              first_name: error,
-            },
-          });
+					this.children.InputLastNameEdit.setProps({
+						error,
+					});
 
-          if (error) return;
+					if (error) return;
 
-          this.setProps({
-            editInfoForm: {
-              ...(this.props.editInfoForm as IEditInfoForm),
-              first_name: value,
-            },
-          });
-        },
-      }),
-      InputLastNameEdit: new CustomInput({
-        label: 'Фамилия',
-        value: props.second_name,
-        name: 'second_name',
-        type: 'text',
-        onChange: (e: Event) => {
-          const value = (e.target as HTMLInputElement).value;
-          const error = validateField('second_name', value);
+					this.setProps({
+						editInfoForm: {
+							...(this.props as IProfileContentProps).editInfoForm,
+							second_name: value,
+						},
+					});
+				},
+			}),
+			InputDisplayNameEdit: new CustomInput({
+				label: "Имя в чате",
+				value: props.user.display_name || "",
+				name: "display_name",
+				type: "text",
+			}),
+			InputPhoneEdit: new CustomInput({
+				label: "Телефон",
+				value: props.user.phone,
+				name: "phone",
+				type: "phone",
+				onChange: (e: Event) => {
+					const value = (e.target as HTMLInputElement).value;
+					const error = validateField("phone", value);
 
-          this.children.InputLastNameEdit.setProps({
-            error,
-          });
+					this.children.InputPhoneEdit.setProps({
+						error,
+					});
 
-          this.setProps({
-            editInfoFormErrors: {
-              ...(this.props.editInfoFormErrors as IEditInfoFormErrors),
-              second_name: error,
-            },
-          });
+					if (error) return;
 
-          if (error) return;
+					this.setProps({
+						editInfoForm: {
+							...(this.props as IProfileContentProps).editInfoForm,
+							phone: value,
+						},
+					});
+				},
+			}),
+			InputOldPassword: new CustomInput({
+				label: "Старый пароль",
+				value: "",
+				name: "old_password",
+				type: "password",
+				onChange: (e: Event) => {
+					const value = (e.target as HTMLInputElement).value;
 
-          this.setProps({
-            editInfoForm: {
-              ...(this.props.editInfoForm as IEditInfoForm),
-              second_name: value,
-            },
-          });
-        },
-      }),
-      InputDisplayNameEdit: new CustomInput({
-        label: 'Имя в чате',
-        value: props.display_name,
-        name: 'display_name',
-        type: 'text',
-      }),
-      InputPhoneEdit: new CustomInput({
-        label: 'Телефон',
-        value: props.phone,
-        name: 'phone',
-        type: 'phone',
-        onChange: (e: Event) => {
-          const value = (e.target as HTMLInputElement).value;
-          const error = validateField('phone', value);
+					this.setProps({
+						editPasswordForm: {
+							...(this.props as IProfileContentProps).editPasswordForm,
+							old_password: value,
+						},
+					});
+				},
+			}),
+			InputNewPassword: new CustomInput({
+				label: "Новый пароль",
+				value: "",
+				name: "new_password",
+				type: "password",
+				onChange: (e: Event) => {
+					const value = (e.target as HTMLInputElement).value;
+					const error = validateField("password", value);
 
-          this.children.InputPhoneEdit.setProps({
-            error,
-          });
+					this.children.InputNewPassword.setProps({
+						error,
+					});
 
-          this.setProps({
-            editInfoFormErrors: {
-              ...(this.props.editInfoFormErrors as IEditInfoFormErrors),
-              phone: error,
-            },
-          });
+					if (error) return;
 
-          if (error) return;
+					this.setProps({
+						editPasswordForm: {
+							...(this.props as IProfileContentProps).editPasswordForm,
+							new_password: value,
+						},
+					});
+				},
+			}),
+			InputNewPasswordRepeat: new CustomInput({
+				label: "Повторите новый пароль",
+				value: "",
+				name: "new_password_repeat",
+				type: "password",
+				onChange: (e: Event) => {
+					const value = (e.target as HTMLInputElement).value;
+					const password = this.children.InputNewPassword.value();
 
-          this.setProps({
-            editInfoForm: {
-              ...(this.props.editInfoForm as IEditInfoForm),
-              phone: value,
-            },
-          });
-        },
-      }),
-      InputOldPassword: new CustomInput({
-        label: 'Старый пароль',
-        value: '',
-        name: 'old_password',
-        type: 'password',
-        onChange: (e: Event) => {
-          const value = (e.target as HTMLInputElement).value;
-          let error = '';
+					const error = checkPasswordRepeat(password, value);
 
-          if (this.props.password !== value) error = 'Неверный пароль';
+					this.children.InputNewPasswordRepeat.setProps({
+						error,
+					});
 
-          this.children.InputOldPassword.setProps({
-            error,
-          });
+					if (error) return;
 
-          this.setProps({
-            editPasswordFormErrors: {
-              ...(this.props.editPasswordFormErrors as IEditPasswordFormErrors),
-              old_password: error,
-            },
-          });
+					this.setProps({
+						editPasswordForm: {
+							...(this.props as IProfileContentProps).editPasswordForm,
+							new_password_repeat: value,
+						},
+					});
+				},
+			}),
+			LinkButtonBlurInfo: new LinkButton({
+				label: "Изменить данные",
+				type: "primary",
+				onClick: (e) => {
+					e.preventDefault();
+					this.setProps({ isEditInfo: true });
+				},
+			}),
+			LinkButtonBlurPassword: new LinkButton({
+				label: "Изменить пароль",
+				type: "primary",
+				onClick: (e) => {
+					e.preventDefault();
+					this.setProps({ isEditPassword: true });
+				},
+			}),
+			LinkButtonLogout: new LinkButton({
+				label: "Выйти",
+				type: "attention",
+				onClick: (e) => {
+					e.preventDefault();
+					authServices.logout();
+				},
+			}),
+			ButtonConfirmEditInfo: new Button({
+				label: "Сохранить",
+				type: "primary",
+				attrs: {
+					type: "button",
+				},
+				onClick: () => {
+					const login = this.children.InputLoginEdit.value();
+					const email = this.children.InputEmailEdit.value();
+					const first_name = this.children.InputFirstNameEdit.value();
+					const second_name = this.children.InputLastNameEdit.value();
+					const display_name = this.children.InputDisplayNameEdit.value();
+					const phone = this.children.InputPhoneEdit.value();
 
-          if (error) return;
+					const errorLogin = validateField("login", login);
+					const errorEmail = validateField("email", email);
+					const errorFirstName = validateField("first_name", first_name);
+					const errorSecondName = validateField("second_name", second_name);
+					const errorDisplayName = validateField("display_name", display_name);
+					const errorPhone = validateField("phone", phone);
 
-          this.setProps({
-            editPasswordForm: {
-              ...(this.props.editPasswordForm as IEditPasswordForm),
-              old_password: value,
-            },
-          });
-        },
-      }),
-      InputNewPassword: new CustomInput({
-        label: 'Новый пароль',
-        value: '',
-        name: 'new_password',
-        type: 'password',
-        onChange: (e: Event) => {
-          const value = (e.target as HTMLInputElement).value;
-          const error = validateField('password', value);
+					if (errorLogin) {
+						this.children.InputLoginEdit.setProps({
+							error: errorLogin,
+						});
+					}
 
-          this.children.InputNewPassword.setProps({
-            error,
-          });
+					if (errorEmail) {
+						this.children.InputEmailEdit.setProps({
+							error: errorEmail,
+						});
+					}
 
-          this.setProps({
-            editPasswordFormErrors: {
-              ...(this.props.editPasswordFormErrors as IEditPasswordFormErrors),
-              new_password: error,
-            },
-          });
+					if (errorFirstName) {
+						this.children.InputFirstNameEdit.setProps({
+							error: errorFirstName,
+						});
+					}
 
-          if (error) return;
+					if (errorSecondName) {
+						this.children.InputLastNameEdit.setProps({
+							error: errorSecondName,
+						});
+					}
 
-          this.setProps({
-            editPasswordForm: {
-              ...(this.props.editPasswordForm as IEditPasswordForm),
-              new_password: value,
-            },
-          });
-        },
-      }),
-      InputNewPasswordRepeat: new CustomInput({
-        label: 'Повторите новый пароль',
-        value: '',
-        name: 'new_password_repeat',
-        type: 'password',
-        onChange: (e: Event) => {
-          const value = (e.target as HTMLInputElement).value;
-          let error = '';
+					if (errorPhone) {
+						this.children.InputPhoneEdit.setProps({
+							error: errorPhone,
+						});
+					}
 
-          if (
-            this.props.editPasswordForm &&
-            (this.props.editPasswordForm as IEditPasswordForm).new_password !==
-              value
-          )
-            error = 'Пароли не совпадают';
+					if (errorDisplayName) {
+						this.children.InputDisplayNameEdit.setProps({
+							error: errorDisplayName,
+						});
+					}
 
-          this.children.InputNewPasswordRepeat.setProps({
-            error,
-          });
+					if (
+						errorLogin ||
+						errorEmail ||
+						errorFirstName ||
+						errorSecondName ||
+						errorPhone ||
+						errorDisplayName
+					)
+						return;
 
-          this.setProps({
-            editPasswordFormErrors: {
-              ...(this.props.editPasswordForm as IEditPasswordFormErrors),
-              new_password_repeat: error,
-            },
-          });
+					const data: IEditInfoForm = {
+						login,
+						email,
+						first_name,
+						second_name,
+						display_name,
+						phone,
+					};
 
-          if (error) return;
+					profileServices.updateInfo(data);
+				},
+			}),
+			ButtonConfirmEditPassword: new Button({
+				label: "Сохранить",
+				type: "primary",
+				attrs: {
+					type: "button",
+				},
+				onClick: () => {
+					const oldPassword = this.children.InputOldPassword.value();
+					const newPassword = this.children.InputNewPassword.value();
+					const newPasswordRepeat =
+						this.children.InputNewPasswordRepeat.value();
 
-          this.setProps({
-            editPasswordForm: {
-              ...(this.props.editPasswordForm as IEditPasswordForm),
-              new_password_repeat: value,
-            },
-          });
-        },
-      }),
-      LinkButtonBlurInfo: new LinkButton({
-        label: 'Изменить данные',
-        type: 'primary',
-        onClick: (e) => {
-          e.preventDefault();
-          this.setProps({ isEditInfo: true });
-        },
-      }),
-      LinkButtonBlurPassword: new LinkButton({
-        label: 'Изменить пароль',
-        type: 'primary',
-        onClick: (e) => {
-          e.preventDefault();
-          this.setProps({ isEditPassword: true });
-        },
-      }),
-      LinkButtonLogout: new LinkButton({
-        label: 'Выйти',
-        type: 'attention',
-      }),
-      ButtonConfirmEditInfo: new Button({
-        label: 'Сохранить',
-        type: 'primary',
-        attrs: {
-          type: 'button',
-        },
-        onClick: () => {
-          setTimeout(() => {
-            for (const key in this.props
-              .editInfoFormErrors as IEditInfoFormErrors) {
-              if (this.props.editInfoFormErrors[key]) return;
-            }
+					const errorPassword = validateField("password", newPassword);
+					const errorPasswordRepeat = checkPasswordRepeat(
+						newPassword,
+						newPasswordRepeat
+					);
 
-            console.log(this.props.editInfoForm);
-          }, 0);
-        },
-      }),
-      ButtonConfirmEditPassword: new Button({
-        label: 'Сохранить',
-        type: 'primary',
-        attrs: {
-          type: 'button',
-        },
-        onClick: () => {
-          setTimeout(() => {
-            for (const key in this.props
-              .editPasswordFormErrors as IEditPasswordFormErrors) {
-              if (this.props.editPasswordFormErrors[key]) return;
-            }
+					if (errorPassword) {
+						this.children.InputNewPassword.setProps({
+							error: errorPassword,
+						});
+					}
 
-            console.log(this.props.editPasswordForm);
-          }, 0);
-        },
-      }),
-      ChangeAvatarModal: new ChangeAvatarModal({
-        fileName: '',
-        uploadError: '',
-        onCloseModal: () => this.setProps({ showChangeAvatarModal: false }),
-      }),
-    });
-  }
+					if (errorPasswordRepeat) {
+						this.children.InputNewPasswordRepeat.setProps({
+							error: errorPasswordRepeat,
+						});
+					}
 
-  render(): string {
-    return `
+					if (errorPassword || errorPasswordRepeat) return;
+
+					const data: UserPasswordRequestData = {
+						oldPassword,
+						newPassword,
+					};
+
+					profileServices.updatePassword(data);
+				},
+			}),
+			ChangeAvatarModal: new ChangeAvatarModal({
+				fileName: "",
+				uploadError: "",
+				onCloseModal: () => this.setProps({ showChangeAvatarModal: false }),
+				onCancel: () => this.setProps({ showChangeAvatarModal: false }),
+				onConfirm: async (file: File) => {
+					await profileServices.updateAvatar(file);
+					if (!(this.props as IProfileUserProps).updateAvatarError) {
+						this.setProps({ showChangeAvatarModal: false });
+					}
+				},
+			}),
+		});
+	}
+
+	public render(): string {
+		return `
 			{{#ifCond isEditInfo isEditPassword}}
 				<div class="profile-page-avatar">
 					{{{ AvatarGeneralInfo }}}
@@ -517,6 +520,9 @@ class ProfileContent extends Block {
 						{{{ InputPhoneEdit }}}
 					</div>
 				</div>
+				{{#if updateInfoError}}
+					<p class="error">{{ updateInfoError }}</p>
+				{{/if}}
 				<div class="profile-edit-info__confirm-button">
 					{{{ ButtonConfirmEditInfo }}}
 				</div>
@@ -534,6 +540,9 @@ class ProfileContent extends Block {
 						{{{ InputNewPasswordRepeat }}}
 					</div>
 				</div>
+				{{#if updatePasswordError}}
+					<p class="error">{{ updatePasswordError }}</p>
+				{{/if}}
 				<div class="profile-edit-info__confirm-button">
 					{{{ ButtonConfirmEditPassword }}}
 				</div>
@@ -576,20 +585,40 @@ class ProfileContent extends Block {
 				{{{ ChangeAvatarModal }}}
 			{{/if}}
 		`;
-  }
+	}
 }
 
-export default class ProfilePage extends Block {
-  constructor() {
-    super('main', {
-      classList: 'page profile-page',
-      GoBack: new GoBack(),
-      ProfileContent: new ProfileContent({ ...mockData }),
-    });
-  }
+class ProfilePage extends Block {
+	constructor(props: IProfileUserProps) {
+		super("main", {
+			...props,
+			classList: "page profile-page",
+			GoBack: new GoBack({
+				onClick: () => {
+					if (
+						(this.children.ProfileContent.props as IProfileUserProps)
+							.isEditPassword
+					) {
+						this.children.ProfileContent.setProps({
+							isEditPassword: false,
+						});
+					} else if (
+						(this.children.ProfileContent.props as IProfileUserProps).isEditInfo
+					) {
+						this.children.ProfileContent.setProps({
+							isEditInfo: false,
+						});
+					} else {
+						window.router.back();
+					}
+				},
+			}),
+			ProfileContent: new ProfileContent({} as IProfileContentProps),
+		});
+	}
 
-  public render(): string {
-    return `
+	public render(): string {
+		return `
 		<div class="profile-page-wrapper">
       {{{ GoBack }}}
 			<div class="profile-page-content">
@@ -597,5 +626,23 @@ export default class ProfilePage extends Block {
 			</div>
 		</div>
     `;
-  }
+	}
 }
+
+const ProfileContent = connect(
+	({
+		isLoading,
+		updateInfoError,
+		updateAvatarError,
+		updatePasswordError,
+		user,
+	}) => ({
+		isLoading,
+		updateInfoError,
+		updateAvatarError,
+		updatePasswordError,
+		user,
+	})
+)(ProfileContentBlock);
+
+export default withRouter(ProfilePage);

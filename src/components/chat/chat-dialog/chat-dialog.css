@@ -1,61 +1,80 @@
 .chat-dialog {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 0 20px;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 0 20px;
+	position: relative;
+}
+
+.chat-dialog .loader {
+	position: fixed;
+	top: 55px;
+	width: calc(100% - 310px);
+	height: calc(100% - 55px);
 }
 
 .chat-dialog-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border-color);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 0;
+	border-bottom: 1px solid var(--border-color);
+}
+
+.chat-dialog-body {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	flex-grow: 1;
+	max-height: calc(100vh - 115px);
 }
 
 .chat-dialog-content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 48px 0 30px;
+	padding: 48px 20px 30px 0;
+	overflow-y: auto;
+	max-height: calc(100vh - 115px);
+	box-sizing: content-box;
 }
 
 .chat-dialog-bottom {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 0;
-  border-top: 1px solid var(--border-color);
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 20px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 11px 0;
+	border-top: 1px solid var(--border-color);
 }
 
 .chat-dialog-top__actions {
-  position: relative;
+	position: relative;
 }
 
 .chat-dialog-top__actions-button {
-  width: 10px;
-  margin-inline-end: 3px;
-  cursor: pointer;
+	width: 10px;
+	margin-inline-end: 3px;
+	cursor: pointer;
 }
 
 .chat-dialog-top__actions-widget {
-  position: absolute;
-  top: 35px;
-  right: -10px;
+	position: absolute;
+	top: 35px;
+	right: -10px;
 }
 
 .chat-dialog-bottom__field {
-  display: flex;
-  flex-grow: 1;
+	display: flex;
+	flex-grow: 1;
 }
 
 .chat-dialog-top__user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
 }
 
 .chat-dialog-top__user-name {
-  font-weight: 600;
+	font-weight: 600;
 }

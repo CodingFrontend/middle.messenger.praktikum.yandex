@@ -1,99 +1,158 @@
-import Block from '@/core/block';
+import Block from "@/core/block";
 import {
-  LinkButton,
-  ChatList,
-  ChatDialog,
-  SearchChatsInput,
-} from '@/components';
-import { chatItems, chatDialogs } from '../../mockData/chatDataMock';
+	LinkButton,
+	ChatList,
+	ChatDialog,
+	Button,
+	Modal,
+	Input,
+	Loader,
+} from "@/components";
 
-export default class Chat extends Block {
-  constructor() {
-    super('main', {
-      activeChatId: '',
-      classList: 'page chat-page',
-      searchValue: '',
-      LinkButton: new LinkButton({
-        label: 'Профиль',
-        type: 'secondary',
-      }),
-      SearchChatsInput: new SearchChatsInput({
-        onKeydown: (e: KeyboardEvent) => {
-          const value = (e.target as HTMLInputElement).value;
-          if (e.code === 'Enter') {
-            this.setProps({
-              searchValue: value,
-            });
+import { ROUTES } from "@/constants";
+import { withRouter } from "@/utils/withRouter";
+import * as chatServices from "@/services/chat";
+import { connect } from "@/utils/connect";
+import type { ChatListResponse } from "@/api/types";
 
-            const oldProps = { items: chatItems };
-            const newProps = {
-              items: chatItems.filter((item) => item.name.includes(value)),
-            };
+class ModalBody extends Block {
+	constructor() {
+		super("div", {
+			classList: "add-chat-modal-body",
+			Input: new Input({
+				label: "Название чата",
+				name: "title",
+				type: "title",
+			}),
+		});
+	}
 
-            this.children.ChatList.componentDidUpdate(oldProps, newProps);
-          }
-        },
-      }),
-      ChatList: new ChatList({
-        items: chatItems,
-        onChatSelect: (id: string) => {
-          const activeChatDialog = id
-            ? chatDialogs.find((dialog) => dialog.id === id)
-            : null;
-          if (!activeChatDialog) return;
-          setTimeout(() => {
-            this.setProps({
-              activeChatId: id,
-            });
-            this.setChild({
-              ChatDialog: new ChatDialog({
-                id: activeChatDialog.id,
-                name: activeChatDialog.name,
-                groups: activeChatDialog.groups,
-              }),
-            });
-            this.forceUpdate();
-          }, 0);
-        },
-      }),
-    });
-  }
+	public render(): string {
+		return `
+			{{{ Input }}}
+		`;
+	}
+}
 
-  public render(): string {
-    const { searchValue } = this.props;
+interface IChatProps {
+	createChatError: string;
+	chatListItems: ChatListResponse[];
+	activeChatId: number;
+	rawChatDialog: ChatListResponse[];
+}
 
-    const { ChatList } = this.children;
+class Chat extends Block {
+	constructor(props: IChatProps) {
+		super("main", {
+			...props,
+			classList: "page chat-page",
+			searchValue: "",
+			LinkButton: new LinkButton({
+				label: "Профиль",
+				type: "secondary",
+				onClick: () => window.router.go(ROUTES.profile),
+			}),
+			ButtonCreateChat: new Button({
+				label: "Создать чат",
+				type: "primary",
+				attrs: {
+					type: "button",
+				},
+				onClick: () => this.setProps({ showCreateChatModal: true }),
+			}),
+			ChatList: new ChatList({
+				items: props.chatListItems,
+				onClick: (id: number) => {
+					this.setProps({ activeChatId: id });
+				},
+			}),
+			ChatDialog: new ChatDialog({}),
+			rawChatDialog: [...props.chatListItems],
+			Modal: new Modal({
+				title: "Создать чат",
+				labelOk: "Создать",
+				error: props.createChatError,
+				Body: new ModalBody(),
+				onCloseModal: () => this.setProps({ showCreateChatModal: false }),
+				onConfirm: async () => {
+					const title =
+						this.children.Modal.children.Body.children.Input.value();
+					await chatServices.createChat({ title });
+					if (!(this.props as IChatProps).createChatError) {
+						this.setProps({ showCreateChatModal: false });
+					}
+				},
+				onCancel: () => this.setProps({ showCreateChatModal: false }),
+			}),
+			Loader: new Loader(),
+		});
+	}
 
-    ChatList.setProps({
-      items: chatItems.filter((item) =>
-        item.name.includes(searchValue as string)
-      ),
-    });
+	public render(): string {
+		const { activeChatId, rawChatDialog } = this.props as IChatProps;
+		const { ChatDialog } = this.children;
 
-    return `
-      <div class='chat-left'>
-				<div class='chat-left__top'>
-					<div class="chat-left__profile-link">
-						{{{ LinkButton }}}
-						<span class="arrow"></span>
+		const currentChatDialog = rawChatDialog.find(
+			(item) => item.id === activeChatId
+		);
+		if (currentChatDialog) {
+			const { title, avatar, id } = currentChatDialog;
+			ChatDialog.setProps({ title, avatar, id });
+		}
+
+		return `
+      {{#if isChatListLoading}}
+				{{{ Loader }}}
+			{{ else }}
+				<div class='chat-left'>
+					<div class='chat-left__top'>
+						<div class="chat-left__profile-link">
+							{{{ LinkButton }}}
+							<span class="arrow"></span>
+						</div>
+					</div>
+					<div class='chat-left__button'>
+						{{{ ButtonCreateChat }}}
+					</div>
+					<div class='chat-left__content'>
+						{{{ ChatList }}}
 					</div>
 				</div>
-				<div class='chat-left__search'>
-					{{{ SearchChatsInput }}}
-				</div>
-				<div class='chat-left__content'>
-					{{{ ChatList }}}
-				</div>
-			</div>
-			<div class='chat-content'>
+				<div class='chat-content'>
 				{{#if activeChatId}}
 					{{{ ChatDialog }}}
-				{{else}}
+				{{ else }}
 					<div class="chat-content-empty">
 						<p>Выберите чат чтобы отправить сообщение</p>
 					</div>
-				{{/if}}
-			</div>
+				{{/if }}
+				</div>
+      {{/if}}
+			{{#if showCreateChatModal}}
+				{{{ Modal }}}
+			{{/if}}
     `;
-  }
+	}
 }
+
+const ChatPage = connect(
+	({
+		isCreateChatLoading,
+		createChatError,
+		isChatListLoading,
+		chatListError,
+		chatListItems,
+		isChatTokenLoading,
+		chatTokenError,
+	}) => ({
+		isCreateChatLoading,
+		createChatError,
+		isChatListLoading,
+		chatListError,
+		chatListItems,
+		isChatTokenLoading,
+		chatTokenError,
+	})
+)(Chat);
+
+export default withRouter(ChatPage);
