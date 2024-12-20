@@ -44,6 +44,19 @@ export default class Search extends Block {
 		).value = "";
 	}
 
+	public componentDidUpdate(
+		oldProps: SearchProps,
+		newProps: SearchProps
+	): boolean {
+		if (newProps.options !== oldProps.options) {
+			this.children.SearchList.setProps({
+				options: newProps.options,
+			});
+		}
+
+		return true;
+	}
+
 	public render(): string {
 		console.log(333, this.props, this.children);
 		return `

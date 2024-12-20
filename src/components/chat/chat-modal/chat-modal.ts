@@ -11,6 +11,7 @@ interface IModalProps {
 	AddUsersError: string;
 	DeleteUsersError: string;
 	searchByLoginError: string;
+	addUsersList: { id: number; value: string; text: string }[] | [];
 	onCloseModal: () => void;
 	onConfirm: () => void;
 	onCancel?: () => void;
@@ -51,7 +52,16 @@ class DialogBody extends Block {
 				name: "login",
 				id: "search-login",
 				error: props.searchByLoginError,
-				options: props.addUsersList || [],
+				options: [
+					{
+						id: 1831,
+						first_name: "New",
+						second_name: "N",
+						display_name: null,
+						login: "NewUser42",
+						avatar: null,
+					},
+				],
 				onKeydown: async () => {
 					setTimeout(async () => {
 						const searchValue = this.children.Search.value();
@@ -110,31 +120,20 @@ class ChatModalBlock extends Block {
 			this.children.Modal.setProps({
 				error: newProps.AddUsersError || newProps.DeleteUsersError,
 			});
-
-			if (!newProps.AddUsersError && oldProps.AddUsersError) {
-				this.children.Modal.setProps({
-					error: newProps.AddUsersError,
-				});
-			}
-
-			if (!newProps.DeleteUsersError && oldProps.DeleteUsersError) {
-				this.children.Modal.setProps({
-					error: newProps.DeleteUsersError,
-				});
-			}
 		}
 
 		if (newProps.searchByLoginError !== oldProps.searchByLoginError) {
 			this.children.Modal.children.Body.children.Search.setProps({
 				error: newProps.searchByLoginError,
 			});
-
-			if (!newProps.searchByLoginError && oldProps.searchByLoginError) {
-				this.children.Modal.children.Body.children.Search.setProps({
-					error: newProps.AddUsersError,
-				});
-			}
 		}
+
+		if (newProps.addUsersList !== oldProps.addUsersList) {
+			this.children.Modal.children.Body.children.Search.setProps({
+				options: newProps.addUsersList,
+			});
+		}
+
 		return true;
 	}
 
