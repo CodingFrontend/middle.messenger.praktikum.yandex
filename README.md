@@ -6,6 +6,10 @@
 
 https://github.com/CodingFrontend/middle.messenger.praktikum.yandex/pull/5
 
+## PR Sprint 3
+
+https://github.com/CodingFrontend/middle.messenger.praktikum.yandex/pull/6
+
 
 ## Netlify link
 
