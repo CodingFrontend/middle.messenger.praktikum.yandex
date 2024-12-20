@@ -52,17 +52,17 @@ export default class HTTPTransport {
 
 		const headers: THeaders =
 			data instanceof FormData
-			? {
+				? {
 						"Content-Security-Policy":
 							"default-src 'self'; img-src *; script-src 'self'; style-src 'self'; connect-src 'self' *.netlify.app;",
-			}
+				  }
 				: {
 						"Content-Type": "application/json",
 						"X-Requested-With": "XMLHttpRequest",
 						"Access-Control-Allow-Origin": "*",
 						"Content-Security-Policy":
 							"default-src 'self'; img-src *; script-src 'self'; style-src 'self'; connect-src 'self' *.netlify.app;",
-			};
+				  };
 
 		return new Promise((resolve, reject) => {
 			if (!method) {
@@ -89,7 +89,12 @@ export default class HTTPTransport {
 						: xhr.response;
 					resolve(response);
 				} else {
-					const { error, reason } = JSON.parse(xhr.response);
+					const res = isJsonString(xhr.response)
+						? JSON.parse(xhr.response)
+						: xhr.response;
+
+					const { error, reason } = res;
+
 					reject({
 						error,
 						reason,
