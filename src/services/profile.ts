@@ -29,7 +29,10 @@ export const updateAvatar = async (file: File) => {
 		data.append("avatar", file);
 
 		const user = await profileApi.updateAvatar(data);
-		window.store.set({ user, updateAvatarSuccess: true });
+		window.store.set({
+			user,
+			updateAvatarSuccess: true,
+		});
 	} catch (error) {
 		window.store.set({ updateAvatarError: (error as APIError).reason });
 	} finally {
