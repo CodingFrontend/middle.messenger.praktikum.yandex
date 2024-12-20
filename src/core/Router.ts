@@ -13,7 +13,7 @@ class Router {
 	public history: any;
 	private _currentRoute?: RouteInterface | null;
 	private _rootQuery?: string;
-	public static __instance: Router;
+	public static __instance?: Router;
 
 	constructor(rootQuery: string) {
 		if (Router.__instance) {
@@ -101,7 +101,7 @@ class Router {
 			route.match(pathname as string)
 		);
 		if (!route) {
-			return this.routes.find((route) => route.match("*"));
+			return this.routes.find((route) => route.match(ROUTES.notFound));
 		}
 		return route;
 	}

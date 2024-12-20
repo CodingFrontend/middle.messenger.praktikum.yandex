@@ -3,7 +3,7 @@ import FileUploadField from "@/components/form/file-upload/file-upload-field.ts"
 
 interface Props {
 	label: string;
-	onChange?: (e: Event) => void;
+	onChange?: () => void;
 }
 
 export default class FileUpload extends Block {
@@ -14,7 +14,6 @@ export default class FileUpload extends Block {
 			classList: "file-upload",
 			FileUploadField: new FileUploadField({
 				onChange: () => {
-					console.log(777);
 					if (props.onChange) props.onChange();
 				},
 			}),
@@ -22,11 +21,11 @@ export default class FileUpload extends Block {
 	}
 
 	public value() {
-		return this.children.FileUploadField.getContent().files[0];
+		return this.children.FileUploadField.value();
 	}
 
 	public clear() {
-		this.children.FileUploadField.getContent().files = null;
+		this.children.FileUploadField.clear();
 	}
 
 	public render(): string {

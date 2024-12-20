@@ -20,4 +20,12 @@ export default class FileUploadField extends Block {
 			},
 		});
 	}
+
+	public value(): File {
+		return (this.getContent() as HTMLInputElement).files![0];
+	}
+
+	public clear() {
+		(this.getContent() as HTMLInputElement).value = "";
+	}
 }

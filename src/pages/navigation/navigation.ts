@@ -1,7 +1,8 @@
 import Block from "@/core/block";
 import { LinkButton } from "@/components";
+import { withRouter } from "@/utils/withRouter";
 
-export default class NavigationPage extends Block {
+class NavigationPage extends Block {
 	constructor() {
 		super("nav", {
 			LinkButton: new LinkButton({
@@ -22,3 +23,5 @@ export default class NavigationPage extends Block {
     `;
 	}
 }
+
+export default withRouter(NavigationPage);

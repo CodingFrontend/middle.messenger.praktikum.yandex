@@ -13,6 +13,7 @@ import { ROUTES } from "@/constants";
 import { withRouter } from "@/utils/withRouter";
 import * as chatServices from "@/services/chat";
 import { connect } from "@/utils/connect";
+import type { ChatListResponse } from "@/api/types";
 
 class ModalBody extends Block {
 	constructor() {
@@ -33,8 +34,15 @@ class ModalBody extends Block {
 	}
 }
 
+interface IChatProps {
+	createChatError: string;
+	chatListItems: ChatListResponse[];
+	activeChatId: number;
+	rawChatDialog: ChatListResponse[];
+}
+
 class Chat extends Block {
-	constructor(props) {
+	constructor(props: IChatProps) {
 		super("main", {
 			...props,
 			classList: "page chat-page",
@@ -42,7 +50,7 @@ class Chat extends Block {
 			LinkButton: new LinkButton({
 				label: "Профиль",
 				type: "secondary",
-				onClick: () => props.router.go(ROUTES.profile),
+				onClick: () => window.router.go(ROUTES.profile),
 			}),
 			ButtonCreateChat: new Button({
 				label: "Создать чат",
@@ -70,7 +78,7 @@ class Chat extends Block {
 					const title =
 						this.children.Modal.children.Body.children.Input.value();
 					await chatServices.createChat({ title });
-					if (!this.props.createChatError) {
+					if (!(this.props as IChatProps).createChatError) {
 						this.setProps({ showCreateChatModal: false });
 					}
 				},
@@ -81,7 +89,7 @@ class Chat extends Block {
 	}
 
 	public render(): string {
-		const { activeChatId, rawChatDialog } = this.props;
+		const { activeChatId, rawChatDialog } = this.props as IChatProps;
 		const { ChatDialog } = this.children;
 
 		const currentChatDialog = rawChatDialog.find(

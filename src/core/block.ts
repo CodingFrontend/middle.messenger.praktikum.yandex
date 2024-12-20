@@ -153,9 +153,9 @@ export default class Block<IProps extends TProps = {}> {
 	public componentDidUpdate(
 		oldProps: TProps,
 		newProps: TProps
-	): Promise<boolean> {
+	): Promise<boolean> | boolean {
 		console.log(oldProps, newProps);
-		return new Promise((resolve) => resolve(true));
+		return true;
 	}
 
 	public forceUpdate() {
@@ -300,7 +300,7 @@ export default class Block<IProps extends TProps = {}> {
 		(this.getContent() as HTMLElement).style.display = "none";
 	}
 
-	public value() {
+	public value(): any {
 		return "";
 	}
 

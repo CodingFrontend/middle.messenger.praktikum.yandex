@@ -3,16 +3,18 @@ import { Modal, FileUpload } from "@/components";
 import { connect } from "@/utils/connect";
 
 interface ChangeAvatarModalProps {
-	fileName?: string;
-	uploadError?: string;
-	emptyError?: string;
+	fileName: string;
+	file: File;
+	uploadError: string;
+	emptyError: string;
+	updateAvatarError: string;
 	onCloseModal: () => void;
-	onConfirm?: (file) => void;
+	onConfirm?: (file: File) => void;
 	onCancel?: () => void;
 }
 
 interface IModalBodyUploadProps {
-	onChange?: (e: Event) => void;
+	onChange: () => void;
 }
 
 class ModalBodyUpload extends Block {
@@ -42,6 +44,7 @@ class ChangeAvatarModalBlock extends Block {
 	constructor(props: ChangeAvatarModalProps) {
 		super("div", {
 			...props,
+			file: "",
 			ModalUpload: new Modal({
 				title: "Загрузите файл",
 				labelOk: "Поменять",
@@ -70,18 +73,17 @@ class ChangeAvatarModalBlock extends Block {
 				},
 				onCancel: () => props.onCancel?.(),
 				onConfirm: () => {
-					const file = this.props.file;
+					const file = (this.props as ChangeAvatarModalProps).file;
 					props.onConfirm?.(file);
 				},
 			}),
 		});
 	}
 
-	public async componentDidUpdate(
-		oldProps: IProps<any>,
-		newProps: IProps<any>
-	): Promise<boolean> {
-		console.log("newProps", newProps);
+	public componentDidUpdate(
+		oldProps: ChangeAvatarModalProps,
+		newProps: ChangeAvatarModalProps
+	): boolean {
 		if (
 			newProps.updateAvatarError &&
 			newProps.updateAvatarError !== oldProps.updateAvatarError
@@ -93,6 +95,7 @@ class ChangeAvatarModalBlock extends Block {
 				fileName: "",
 			});
 		}
+		return true;
 	}
 
 	public render(): string {

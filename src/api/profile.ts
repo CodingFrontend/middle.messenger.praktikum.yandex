@@ -3,7 +3,6 @@ import {
 	APIError,
 	UserRequestData,
 	UserDTO,
-	UserAvatarRequestData,
 	UserPasswordRequestData,
 } from "./types";
 
@@ -14,7 +13,7 @@ export default class ProfileApi {
 		return profileApi.put<UserDTO | APIError>("/profile", { data });
 	}
 
-	async updateAvatar(data: UserAvatarRequestData): Promise<UserDTO | APIError> {
+	async updateAvatar(data: FormData): Promise<UserDTO | APIError> {
 		return profileApi.put<UserDTO | APIError>("/profile/avatar", { data });
 	}
 

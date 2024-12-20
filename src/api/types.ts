@@ -59,7 +59,7 @@ export type UserRequestData = {
 };
 
 export type UserAvatarRequestData = {
-	avatar: File;
+	avatar: FormData;
 };
 
 export type UserPasswordRequestData = {

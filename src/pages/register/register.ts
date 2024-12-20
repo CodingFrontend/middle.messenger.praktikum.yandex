@@ -22,8 +22,17 @@ interface IForm extends IFormData {
 	password_repeat: string;
 }
 
+interface IRegisterPageProps {
+	isLoading: boolean;
+	registerError: boolean;
+}
+
+interface IRegisterProps extends IRegisterPageProps {
+	form: IForm;
+}
+
 class RegisterContent extends Block {
-	constructor(props) {
+	constructor(props: IRegisterProps) {
 		super("div", {
 			...props,
 			form: {
@@ -52,7 +61,7 @@ class RegisterContent extends Block {
 
 					this.setProps({
 						form: {
-							...(this.props.form as IForm),
+							...((this.props as IRegisterProps).form as IForm),
 							email: value,
 						},
 					});
@@ -74,7 +83,7 @@ class RegisterContent extends Block {
 
 					this.setProps({
 						loginForm: {
-							...(this.props.form as IForm),
+							...((this.props as IRegisterProps).form as IForm),
 							login: value,
 						},
 					});
@@ -96,7 +105,7 @@ class RegisterContent extends Block {
 
 					this.setProps({
 						form: {
-							...(this.props.form as IForm),
+							...((this.props as IRegisterProps).form as IForm),
 							first_name: value,
 						},
 					});
@@ -118,7 +127,7 @@ class RegisterContent extends Block {
 
 					this.setProps({
 						form: {
-							...(this.props.form as IForm),
+							...((this.props as IRegisterProps).form as IForm),
 							second_name: value,
 						},
 					});
@@ -140,7 +149,7 @@ class RegisterContent extends Block {
 
 					this.setProps({
 						form: {
-							...(this.props.form as IForm),
+							...((this.props as IRegisterProps).form as IForm),
 							phone: value,
 						},
 					});
@@ -162,7 +171,7 @@ class RegisterContent extends Block {
 
 					this.setProps({
 						form: {
-							...(this.props.form as IForm),
+							...((this.props as IRegisterProps).form as IForm),
 							password: value,
 						},
 					});
@@ -186,7 +195,7 @@ class RegisterContent extends Block {
 
 					this.setProps({
 						form: {
-							...(this.props.form as IForm),
+							...((this.props as IRegisterProps).form as IForm),
 							password_repeat: value,
 						},
 					});
@@ -287,7 +296,7 @@ class RegisterContent extends Block {
 			ButtonCancel: new LinkButton({
 				label: "Нет аккаунта?",
 				type: "primary",
-				onClick: () => props.router.go(ROUTES.login),
+				onClick: () => window.router.go(ROUTES.login),
 			}),
 		});
 	}
@@ -313,7 +322,7 @@ class RegisterContent extends Block {
 }
 
 class RegisterPage extends Block {
-	constructor(props) {
+	constructor(props: IRegisterPageProps) {
 		super("main", {
 			...props,
 			classList: "page auth-page",

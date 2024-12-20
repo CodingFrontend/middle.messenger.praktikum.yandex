@@ -9,6 +9,8 @@ import * as authServices from "@/services/auth";
 import * as chatServices from "@/services/chat";
 
 import { ROUTES } from "@/constants";
+import { BlockConsturctor } from "./core/block";
+import { ChatListRequestData } from "./api/types";
 
 declare global {
 	interface Window {
@@ -49,15 +51,15 @@ window.store = new Store({});
 
 const initRouter = async () => {
 	await authServices.checkLoginUser();
-	await chatServices.getChatList({});
+	await chatServices.getChatList({} as ChatListRequestData);
 
 	window.router = new Router("#app");
 	window.router
-		.use(ROUTES.login, Pages.LoginPage)
-		.use(ROUTES.register, Pages.RegisterPage)
-		.use(ROUTES.messenger, Pages.ChatPage)
-		.use(ROUTES.profile, Pages.ProfilePage)
-		.use("*", Pages.NavigationPage)
+		.use(ROUTES.login, Pages.LoginPage as BlockConsturctor)
+		.use(ROUTES.register, Pages.RegisterPage as BlockConsturctor)
+		.use(ROUTES.messenger, Pages.ChatPage as BlockConsturctor)
+		.use(ROUTES.profile, Pages.ProfilePage as BlockConsturctor)
+		.use(ROUTES.notFound, Pages.NotFoundPage as BlockConsturctor)
 		.start();
 };
 

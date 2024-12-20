@@ -13,16 +13,7 @@ import * as profileServices from "@/services/profile";
 import * as authServices from "@/services/auth";
 import { connect } from "@/utils/connect";
 import { checkPasswordRepeat } from "@/utils/rules";
-import { UserPasswordRequestData } from "@/api/types";
-
-interface IEditInfoForm {
-	email: string;
-	login: string;
-	first_name: string;
-	second_name: string;
-	display_name: string;
-	phone: string;
-}
+import { UserDTO, UserPasswordRequestData } from "@/api/types";
 
 interface IEditPasswordForm {
 	old_password: string;
@@ -30,7 +21,7 @@ interface IEditPasswordForm {
 	new_password_repeat: string;
 }
 
-interface IProfileUser extends IEditInfoForm {
+interface IProfileUserProps {
 	isGeneralInfo: boolean;
 	isEditInfo: boolean;
 	isEditPassword: boolean;
@@ -40,10 +31,15 @@ interface IProfileUser extends IEditInfoForm {
 	uploadError: boolean;
 	password: string;
 	image: string;
+	updateAvatarError: string;
 }
 
+type IEditInfoForm = Omit<UserDTO, "avatar" | "id">;
+
 interface IProfileContentProps {
-	user: IProfileUser;
+	user: UserDTO;
+	editInfoForm: IEditInfoForm;
+	editPasswordForm: IEditPasswordForm;
 }
 
 interface AvatarEditSlotProps {
@@ -70,7 +66,7 @@ class AvatarEditSlot extends Block {
 	}
 }
 
-class ProfileContent extends Block {
+class ProfileContentBlock extends Block {
 	constructor(props: IProfileContentProps) {
 		super("div", {
 			...props,
@@ -160,7 +156,7 @@ class ProfileContent extends Block {
 
 					this.setProps({
 						editInfoForm: {
-							...(this.props.editInfoForm as IEditInfoForm),
+							...(this.props as IProfileContentProps).editInfoForm,
 							email: value,
 						},
 					});
@@ -183,7 +179,7 @@ class ProfileContent extends Block {
 
 					this.setProps({
 						editInfoForm: {
-							...(this.props.editInfoForm as IEditInfoForm),
+							...(this.props as IProfileContentProps).editInfoForm,
 							login: value,
 						},
 					});
@@ -206,7 +202,7 @@ class ProfileContent extends Block {
 
 					this.setProps({
 						editInfoForm: {
-							...(this.props.editInfoForm as IEditInfoForm),
+							...(this.props as IProfileContentProps).editInfoForm,
 							first_name: value,
 						},
 					});
@@ -229,7 +225,7 @@ class ProfileContent extends Block {
 
 					this.setProps({
 						editInfoForm: {
-							...(this.props.editInfoForm as IEditInfoForm),
+							...(this.props as IProfileContentProps).editInfoForm,
 							second_name: value,
 						},
 					});
@@ -258,7 +254,7 @@ class ProfileContent extends Block {
 
 					this.setProps({
 						editInfoForm: {
-							...(this.props.editInfoForm as IEditInfoForm),
+							...(this.props as IProfileContentProps).editInfoForm,
 							phone: value,
 						},
 					});
@@ -268,15 +264,13 @@ class ProfileContent extends Block {
 				label: "Старый пароль",
 				value: "",
 				name: "old_password",
-				attrs: {
-					type: "password",
-				},
+				type: "password",
 				onChange: (e: Event) => {
 					const value = (e.target as HTMLInputElement).value;
 
 					this.setProps({
 						editPasswordForm: {
-							...(this.props.editPasswordForm as IEditPasswordForm),
+							...(this.props as IProfileContentProps).editPasswordForm,
 							old_password: value,
 						},
 					});
@@ -299,7 +293,7 @@ class ProfileContent extends Block {
 
 					this.setProps({
 						editPasswordForm: {
-							...(this.props.editPasswordForm as IEditPasswordForm),
+							...(this.props as IProfileContentProps).editPasswordForm,
 							new_password: value,
 						},
 					});
@@ -324,7 +318,7 @@ class ProfileContent extends Block {
 
 					this.setProps({
 						editPasswordForm: {
-							...(this.props.editPasswordForm as IEditPasswordForm),
+							...(this.props as IProfileContentProps).editPasswordForm,
 							new_password_repeat: value,
 						},
 					});
@@ -478,9 +472,9 @@ class ProfileContent extends Block {
 				uploadError: "",
 				onCloseModal: () => this.setProps({ showChangeAvatarModal: false }),
 				onCancel: () => this.setProps({ showChangeAvatarModal: false }),
-				onConfirm: async (file) => {
+				onConfirm: async (file: File) => {
 					await profileServices.updateAvatar(file);
-					if (!this.props.updateAvatarError) {
+					if (!(this.props as IProfileUserProps).updateAvatarError) {
 						this.setProps({ showChangeAvatarModal: false });
 					}
 				},
@@ -595,26 +589,31 @@ class ProfileContent extends Block {
 }
 
 class ProfilePage extends Block {
-	constructor(props) {
+	constructor(props: IProfileUserProps) {
 		super("main", {
 			...props,
 			classList: "page profile-page",
 			GoBack: new GoBack({
 				onClick: () => {
-					if (this.children.ProfileContent.props.isEditPassword) {
+					if (
+						(this.children.ProfileContent.props as IProfileUserProps)
+							.isEditPassword
+					) {
 						this.children.ProfileContent.setProps({
 							isEditPassword: false,
 						});
-					} else if (this.children.ProfileContent.props.isEditInfo) {
+					} else if (
+						(this.children.ProfileContent.props as IProfileUserProps).isEditInfo
+					) {
 						this.children.ProfileContent.setProps({
 							isEditInfo: false,
 						});
 					} else {
-						props.router.back();
+						window.router.back();
 					}
 				},
 			}),
-			ProfileContent: new ProfileContentBlock({}),
+			ProfileContent: new ProfileContent({} as IProfileContentProps),
 		});
 	}
 
@@ -630,7 +629,7 @@ class ProfilePage extends Block {
 	}
 }
 
-const ProfileContentBlock = connect(
+const ProfileContent = connect(
 	({
 		isLoading,
 		updateInfoError,
@@ -644,6 +643,6 @@ const ProfileContentBlock = connect(
 		updatePasswordError,
 		user,
 	})
-)(ProfileContent);
+)(ProfileContentBlock);
 
 export default withRouter(ProfilePage);

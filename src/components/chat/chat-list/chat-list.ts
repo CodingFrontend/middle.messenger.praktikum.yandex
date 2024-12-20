@@ -4,7 +4,7 @@ import type { ChatItemProps } from "@/components/chat/chat-item/chat-item";
 
 interface IChatListProps {
 	items: ChatItemProps[];
-	activeChatId: number;
+	activeChatId?: number;
 	onClick?: (id: number) => void;
 }
 

@@ -3,4 +3,5 @@ export enum ROUTES {
 	register = "/sign-up",
 	messenger = "/messenger",
 	profile = "/settings",
+	notFound = "/not-found",
 }
