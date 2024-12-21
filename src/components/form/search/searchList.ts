@@ -1,25 +1,22 @@
 import Block from "@/core/block";
-import SearchOption from "@/components/form/search/searchOption";
-import { Input } from "../input";
+import SearchOption, { IOption } from "./searchOption";
 
 export interface ISearchListProps {
-	options: { id: number; value: string; text: string }[] | [];
-	onSelect?: (id: number) => void;
+	id: string;
+	open?: boolean;
+	options: IOption[] | [];
+	onSelect?: (option: IOption) => void;
 }
 
 class SearchList extends Block {
 	constructor(props: ISearchListProps) {
-		super("datalist", {
+		super("div", {
 			...props,
 			classList: "search-list",
-			searchOptions: props.options.map((option) => {
-				new SearchOption({
-					value: option.id,
-					onSelect: (value: number) => {
-						if (props?.onSelect) props.onSelect(value);
-					},
-				});
-			}),
+			open: true,
+			attrs: {
+				id: props.id,
+			},
 		});
 	}
 
@@ -27,36 +24,46 @@ class SearchList extends Block {
 		oldProps: ISearchListProps,
 		newProps: ISearchListProps
 	): boolean {
-		if (
-			newProps.options &&
-			newProps.options.length &&
-			newProps.options !== oldProps.options
-		) {
-			this.setProps({
-				searchOptions: newProps.options.map((option) => {
-					new SearchOption({
-						value: option.id,
-						onSelect: (value: number) => {
-							if ((this.props as ISearchListProps)?.onSelect)
-								(this.props as ISearchListProps).onSelect?.(value);
-						},
-					});
-				}),
+		if (newProps.options && newProps.options !== oldProps.options) {
+			this.setChild({
+				searchOptions: newProps.options.map(
+					(option) =>
+						new SearchOption({
+							value: option.value,
+							label: option.label,
+							onSelect: (option: IOption) => {
+								if ((this.props as ISearchListProps)?.onSelect)
+									(this.props as ISearchListProps).onSelect?.(option);
+							},
+						})
+				),
 			});
-
-			console.log(4, newProps, this.children);
-			return true;
 		}
 
-		return false;
+		return true;
 	}
 
 	public render() {
-		console.log(5, this.props, this.children);
 		return `
-      {{#each searchOptions}}
-				{{{ this }}}
-			{{/each}}
+			{{#if ${
+				(this.props as ISearchListProps).open &&
+				(this.props as ISearchListProps).options &&
+				(this.props as ISearchListProps).options.length
+			}}}
+				<ul>
+					{{#each searchOptions}}
+						{{{ this }}}
+					{{/each}}
+				</ul>
+			{{else if error}}
+				<p class="search-list__error">{{error}}</p>
+			{{else if ${
+				!(this.props as ISearchListProps).open ||
+				!(this.props as ISearchListProps).options ||
+				!(this.props as ISearchListProps).options.length
+			}}}
+				<p class="search-list__text">Введите значение для поиска</p>
+			{{/if}}
     `;
 	}
 }

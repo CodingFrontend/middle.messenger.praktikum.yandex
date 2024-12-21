@@ -92,7 +92,9 @@ export const getNewMessagesCount = async (id: number) => {
 
 	try {
 		const res = await chatApi.getNewMessagesCount(id);
-		return (res as ChatUreadMessagesResponse).unread_count;
+		const unreadMessagesInChat = (res as ChatUreadMessagesResponse)
+			.unread_count;
+		window.store.set({ unreadMessagesInChat });
 	} catch (error) {
 		window.store.set({ unreadCountError: (error as APIError).reason });
 	} finally {

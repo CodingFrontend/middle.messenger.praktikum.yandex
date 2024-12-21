@@ -48,30 +48,25 @@ class ChatWidgetBlock extends Block {
 				modalButtonLabelOk: "Добавить",
 				onCloseModal: () => {
 					this.setProps({ showModalAdd: false });
+					this.children.ChatModalAdd.children.Modal.setProps({
+						success: false,
+					});
 					props.onCloseModal();
 				},
 				onConfirm: async () => {
-					const login = Number(
-						this.children.ChatModalAdd.children.Modal.children.Body.children.Input.value()
-					);
-					// const errorLogin = validateField("login", login);
+					const login =
+						this.children.ChatModalAdd.children.Modal.children.Body.children.Search.selectedValue();
 
-					// if (errorLogin) {
-					// 	this.children.ChatModalAdd.children.Modal.children.Body.children.Input.setProps(
-					// 		{
-					// 			error: errorLogin,
-					// 		}
-					// 	);
-					// 	return;
-					// }
-
-					await chatServices.addUsers({
-						users: [login],
-						chatId: (this.props as IChatWidgetProps).activeChatId,
-					});
-
-					if (!(this.props as IChatWidgetProps).AddUsersError) {
-						props.onCloseModal();
+					if (login) {
+						await chatServices.addUsers({
+							users: [login],
+							chatId: (this.props as IChatWidgetProps).activeChatId,
+						});
+						if (!(this.props as IChatWidgetProps).AddUsersError) {
+							this.children.ChatModalAdd.children.Modal.setProps({
+								success: true,
+							});
+						}
 					}
 				},
 			}),
@@ -80,31 +75,25 @@ class ChatWidgetBlock extends Block {
 				modalButtonLabelOk: "Удалить",
 				onCloseModal: () => {
 					this.setProps({ showModalDelete: false });
+					this.children.ChatModalAdd.children.Modal.setProps({
+						success: false,
+					});
 					props.onCloseModal();
 				},
 				onConfirm: async () => {
-					const login = Number(
-						this.children.ChatModalDelete.children.Modal.children.Body.children.Input.value()
-					);
+					const login =
+						this.children.ChatModalAdd.children.Modal.children.Body.children.Search.selectedValue();
+					if (login) {
+						await chatServices.deleteUsers({
+							users: [login],
+							chatId: (this.props as IChatWidgetProps).activeChatId,
+						});
 
-					// const errorLogin = validateField("login", login);
-
-					// if (errorLogin) {
-					// 	this.children.ChatModalAdd.children.Modal.children.Body.children.Input.setProps(
-					// 		{
-					// 			error: errorLogin,
-					// 		}
-					// 	);
-					// 	return;
-					// }
-
-					await chatServices.deleteUsers({
-						users: [login],
-						chatId: (this.props as IChatWidgetProps).activeChatId,
-					});
-
-					if (!(this.props as IChatWidgetProps).DeleteUsersError) {
-						props.onCloseModal();
+						if (!(this.props as IChatWidgetProps).DeleteUsersError) {
+							this.children.ChatModalAdd.children.Modal.setProps({
+								success: true,
+							});
+						}
 					}
 				},
 			}),

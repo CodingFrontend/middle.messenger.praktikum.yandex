@@ -59,9 +59,8 @@ export const searchByLogin = async (data: SearchUserRequestData) => {
 	try {
 		const users = await profileApi.searchByLogin(data);
 		const addUsersList = (users as UserDTO[]).map((user) => ({
-			id: user.id,
-			value: user.login,
-			text: `${user.first_name} ${user.second_name}`,
+			value: user.id,
+			label: user.login,
 		}));
 		window.store.set({ addUsersList });
 	} catch (error) {

@@ -1,56 +1,75 @@
 import Block from "@/core/block";
-import { Input } from "@/components";
+import InputField from "@/components/form/input/inputField";
 import SearchList from "./searchList";
+import { IOption } from "./searchOption";
 
 interface SearchProps {
 	id: string;
 	label: string;
 	name: string;
-	options: { id: number; value: string; text: string }[] | [];
+	options: IOption[] | [];
 	error?: string;
+	clicked?: boolean;
+	selectedValue: string;
 	onKeydown?: () => void;
-	onSelect?: (id: number) => void;
+	onSelect?: (option: IOption) => void;
 }
 
 export default class Search extends Block {
 	constructor(props: SearchProps) {
 		super("div", {
 			...props,
-			classList: "search",
-			Input: new Input({
-				label: props.label,
+			classList: "input search",
+			clicked: false,
+			InputField: new InputField({
 				name: props.name,
-				id: props.id,
 				type: "text",
 				error: props.error,
+				list: props.id,
+				value: props.selectedValue,
 				onKeydown: props.onKeydown,
 			}),
 			SearchList: new SearchList({
-				options: props.options,
-				onSelect: (id: number) => {
-					if (props.onSelect) props.onSelect(id);
+				id: props.id,
+				options: props.options || [],
+				onSelect: (option: IOption) => {
+					this.setProps({ selectedValue: option.value });
+					this.children.SearchList.setProps({
+						open: false,
+					});
+					(this.children.InputField.getContent() as HTMLInputElement).value =
+						option.label;
+					if (props.onSelect) props.onSelect(option);
 				},
 			}),
 		});
 	}
 
 	public value() {
-		return this.children.Input.value();
+		return (this.children.InputField.getContent() as HTMLInputElement).value;
+	}
+
+	public selectedValue() {
+		return (this.props as SearchProps).selectedValue;
 	}
 
 	public clear() {
-		(
-			this.children.Input.children.InputField.getContent() as HTMLInputElement
-		).value = "";
+		(this.children.InputField.getContent() as HTMLInputElement).value = "";
 	}
 
 	public componentDidUpdate(
 		oldProps: SearchProps,
 		newProps: SearchProps
 	): boolean {
-		if (newProps.options !== oldProps.options) {
+		if (newProps.options && newProps.options !== oldProps.options) {
 			this.children.SearchList.setProps({
 				options: newProps.options,
+			});
+		}
+
+		if (!this.value()) {
+			this.setProps({
+				options: [],
 			});
 		}
 
@@ -60,16 +79,9 @@ export default class Search extends Block {
 	public render(): string {
 		console.log(333, this.props, this.children);
 		return `
-        {{{ Input }}}
-				 <div class="search-list">
-					{{#if options}}
-						<datalist id="{{id}}">
-							{{{OptionsList}}}
-						</datalist>  
-					{{else if error}}
-					<p class="search-list__error">{{error}}</p>
-					{{/if}}
-				</div>
+        {{{ InputField }}}
+				<label for='{{name}}' class='input__label'>{{label}}</label>
+				{{{SearchList}}}
     `;
 	}
 }

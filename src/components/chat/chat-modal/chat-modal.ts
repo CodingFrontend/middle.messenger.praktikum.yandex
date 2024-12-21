@@ -4,6 +4,7 @@ import { connect } from "@/utils/connect";
 import { validateField } from "@/utils/validate";
 import { UserDTO } from "@/api/types";
 import * as profileServices from "@/services/profile";
+import { IOption } from "@/components/form/search/searchOption";
 
 interface IModalProps {
 	modalTitle: string;
@@ -11,7 +12,7 @@ interface IModalProps {
 	AddUsersError: string;
 	DeleteUsersError: string;
 	searchByLoginError: string;
-	addUsersList: { id: number; value: string; text: string }[] | [];
+	addUsersList: { value: string; label: string; text: string }[] | [];
 	onCloseModal: () => void;
 	onConfirm: () => void;
 	onCancel?: () => void;
@@ -33,7 +34,7 @@ type IDialogBodyProps = {
 	form: {
 		login: string;
 	};
-	addUsersList: { id: number; value: string; text: string }[] | [];
+	addUsersList: { value: string; label: string }[] | [];
 } & {};
 
 class DialogBody extends Block {
@@ -52,30 +53,14 @@ class DialogBody extends Block {
 				name: "login",
 				id: "search-login",
 				error: props.searchByLoginError,
-				options: [
-					{
-						id: 1831,
-						first_name: "New",
-						second_name: "N",
-						display_name: null,
-						login: "NewUser42",
-						avatar: null,
-					},
-				],
+				options: props.addUsersList,
 				onKeydown: async () => {
 					setTimeout(async () => {
 						const searchValue = this.children.Search.value();
 
-						await profileServices.searchByLogin({ login: searchValue });
-
-						console.log(1, searchValue);
-
-						// this.setProps({
-						// 	form: {
-						// 		...((this.props as IDialogBodyProps).form as IForm),
-						// 		login: value,
-						// 	},
-						// });
+						if (searchValue) {
+							await profileServices.searchByLogin({ login: searchValue });
+						}
 					}, 1000);
 				},
 			}),
@@ -97,8 +82,13 @@ class ChatModalBlock extends Block {
 				labelOk: props.modalButtonLabelOk,
 				Body: new DialogBody({} as any),
 				onCloseModal: () => {
-					window.store.set({ AddUsersError: "", DeleteUsersError: "" });
+					window.store.set({
+						AddUsersError: "",
+						DeleteUsersError: "",
+						options: [],
+					});
 					this.children.Modal.children.Body.children.Search.clear();
+
 					props.onCloseModal();
 				},
 				onConfirm: () => {

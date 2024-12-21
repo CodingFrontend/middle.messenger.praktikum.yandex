@@ -5,6 +5,8 @@ interface InputFieldProps {
 	type: string;
 	id?: string | number;
 	error?: string;
+	list: string;
+	value?: any;
 	onChange?: (e: Event) => void;
 	onBlur?: (e: Event) => void;
 	onKeydown?: (e: Event) => void;
@@ -18,6 +20,8 @@ export default class InputField extends Block {
 				autocomplete: "off",
 				placeholder: "",
 				type: props.type,
+				list: props.list,
+				value: props.value || "",
 			},
 			events: {
 				change: props.onChange,

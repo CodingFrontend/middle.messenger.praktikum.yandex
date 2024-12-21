@@ -18,27 +18,8 @@ export default class ChatMessageGroupItem extends Block {
 		});
 	}
 
-	// public componentDidUpdate(
-	// 	oldProps: IProps<any>,
-	// 	newProps: IProps<any>
-	// ): boolean {
-	// 	if (newProps && newProps !== oldProps) {
-	// 		const scrollContent = document.getElementById("scroll-content");
-	// 		if (scrollContent?.scrollHeight)
-	// 			scrollContent.scrollTop = scrollContent?.scrollHeight;
-	// 		console.log(scrollContent?.scrollTop, scrollContent?.scrollHeight);
-
-	// 		return true;
-	// 	}
-
-	// 	return false;
-	// }
 
 	public render(): string {
-		// const scrollContent = document.getElementById("scroll-content");
-		// if (scrollContent?.scrollHeight)
-		// 	scrollContent.scrollTop = scrollContent?.scrollHeight;
-		// console.log(scrollContent?.scrollTop, scrollContent?.scrollHeight);
 		return `
 			<div class="chat-messages__date">
 				<span>{{date}}</span>

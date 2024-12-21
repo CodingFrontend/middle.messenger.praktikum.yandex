@@ -1,13 +1,19 @@
 import Block from "@/core/block";
 
-interface SearchOptionProps {
+export interface IOption {
 	value: number;
-	onSelect?: (id: number) => void;
+	label: string;
+}
+
+interface SearchOptionProps {
+	label: string;
+	value: number;
+	onSelect?: (option: IOption) => void;
 }
 
 export default class SearchOption extends Block {
 	constructor(props: SearchOptionProps) {
-		super("option", {
+		super("li", {
 			...props,
 			classList: "select-option-item",
 			attrs: {
@@ -15,9 +21,15 @@ export default class SearchOption extends Block {
 			},
 			events: {
 				click: () => {
-					if (props?.onSelect) props.onSelect(props.value);
+					if (props?.onSelect) props.onSelect({ ...props });
 				},
 			},
 		});
+	}
+
+	public render() {
+		return `
+			{{label}}
+    `;
 	}
 }

@@ -7,6 +7,7 @@ interface InputProps {
 	type: string;
 	error?: string;
 	id?: string | number;
+	list?: string;
 	onChange?: (e: Event) => void;
 	onBlur?: (e: Event) => void;
 	onKeydown?: (e: Event) => void;
@@ -21,6 +22,7 @@ export default class Input extends Block {
 				name: props.name,
 				type: props.type || "text",
 				error: props.error,
+				list: props.list,
 				onChange: props.onChange,
 				onBlur: props.onBlur,
 				onKeydown: props.onKeydown,

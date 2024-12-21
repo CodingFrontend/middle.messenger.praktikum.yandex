@@ -20,7 +20,7 @@ export interface IChatDialogProps {
 	avatar: string | null;
 	showChatWidget: boolean;
 	newMessage: WSResponseMessage;
-	unread_count: number;
+	unreadMessagesInChat: number;
 	messages: WSResponseMessage[] | [];
 }
 
@@ -94,10 +94,10 @@ class ChatDialogBlock extends Block {
 
 		if (
 			socket &&
-			newProps.unread_count &&
-			newProps.unread_count !== oldProps.unread_count
+			newProps.unreadMessagesInChat &&
+			newProps.unreadMessagesInChat !== oldProps.unreadMessagesInChat
 		) {
-			if (newProps.messages.length !== newProps.unread_count) {
+			if (newProps.messages.length !== newProps.unreadMessagesInChat) {
 				const lastMessage = newProps.messages[newProps.messages.length - 1];
 				socket.send(
 					JSON.stringify({
@@ -270,13 +270,13 @@ const ChatDialog = connect(
 		newMessage,
 		isChatTokenLoading,
 		chatTokenError,
-		unread_count,
+		unreadMessagesInChat,
 	}) => ({
 		messages,
 		newMessage,
 		isChatTokenLoading,
 		chatTokenError,
-		unread_count,
+		unreadMessagesInChat,
 	})
 )(ChatDialogBlock);
 
