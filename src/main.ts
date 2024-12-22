@@ -6,11 +6,9 @@ import * as Layouts from "./layouts";
 import Router from "@/core/Router";
 import { Store } from "@/core/Store";
 import * as authServices from "@/services/auth";
-import * as chatServices from "@/services/chat";
 
 import { ROUTES } from "@/constants";
 import { BlockConsturctor } from "./core/block";
-import { ChatListRequestData } from "./api/types";
 
 declare global {
 	interface Window {

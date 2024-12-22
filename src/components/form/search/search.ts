@@ -10,7 +10,7 @@ interface SearchProps {
 	options: IOption[] | [];
 	error?: string;
 	clicked?: boolean;
-	selectedValue: string;
+	selectedValue?: string;
 	onKeydown?: () => void;
 	onSelect?: (option: IOption) => void;
 }
@@ -55,6 +55,7 @@ export default class Search extends Block {
 
 	public clear() {
 		(this.children.InputField.getContent() as HTMLInputElement).value = "";
+		this.setProps({ selectedValue: "", options: [] });
 	}
 
 	public componentDidUpdate(
@@ -67,17 +68,10 @@ export default class Search extends Block {
 			});
 		}
 
-		if (!this.value()) {
-			this.setProps({
-				options: [],
-			});
-		}
-
 		return true;
 	}
 
 	public render(): string {
-		console.log(333, this.props, this.children);
 		return `
         {{{ InputField }}}
 				<label for='{{name}}' class='input__label'>{{label}}</label>

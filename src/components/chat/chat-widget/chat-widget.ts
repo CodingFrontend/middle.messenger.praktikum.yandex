@@ -1,6 +1,5 @@
 import Block from "@/core/block";
 import { IconTextButton, ChatModal } from "@/components";
-import { validateField } from "@/utils/validate";
 import * as chatServices from "@/services/chat";
 import { connect } from "@/utils/connect";
 
@@ -54,8 +53,10 @@ class ChatWidgetBlock extends Block {
 					props.onCloseModal();
 				},
 				onConfirm: async () => {
-					const login =
-						this.children.ChatModalAdd.children.Modal.children.Body.children.Search.selectedValue();
+					const login = (
+						this.children.ChatModalAdd.children.Modal.children.Body.children
+							.Search as any
+					).selectedValue();
 
 					if (login) {
 						await chatServices.addUsers({
@@ -81,8 +82,10 @@ class ChatWidgetBlock extends Block {
 					props.onCloseModal();
 				},
 				onConfirm: async () => {
-					const login =
-						this.children.ChatModalAdd.children.Modal.children.Body.children.Search.selectedValue();
+					const login = (
+						this.children.ChatModalAdd.children.Modal.children.Body.children
+							.Search as any
+					).selectedValue();
 					if (login) {
 						await chatServices.deleteUsers({
 							users: [login],

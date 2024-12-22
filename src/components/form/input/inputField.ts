@@ -5,7 +5,7 @@ interface InputFieldProps {
 	type: string;
 	id?: string | number;
 	error?: string;
-	list: string;
+	list?: string;
 	value?: any;
 	onChange?: (e: Event) => void;
 	onBlur?: (e: Event) => void;
@@ -32,3 +32,4 @@ export default class InputField extends Block {
 		});
 	}
 }
+
