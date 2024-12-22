@@ -21,6 +21,7 @@ export interface IChatDialogProps {
 	showChatWidget: boolean;
 	newMessage: WSResponseMessage;
 	unreadMessagesInChat: number;
+	lastMessageId: number;
 	messages: WSResponseMessage[] | [];
 }
 
@@ -89,6 +90,10 @@ class ChatDialogBlock extends Block {
 		}
 
 		if (newProps.newMessage && newProps.newMessage !== oldProps.newMessage) {
+			window.store.set({ chatScrolled: false });
+
+			console.log(window.store.getState().chatScroll);
+
 			const oldMessages = window.store.getState().messages;
 			window.store.set({ messages: [...oldMessages, newProps.newMessage] });
 		}
@@ -192,16 +197,17 @@ class ChatDialogBlock extends Block {
 	public componentDidMount() {
 		setTimeout(() => {
 			const scrollContent = document.querySelector(".chat-dialog-content");
-			const messages = (this.props as IChatDialogProps).messages;
+			const { messages } = this.props as IChatDialogProps;
 
 			if (messages && scrollContent) {
 				const getOldMessages = (e: Event) => {
 					const element = e.target as HTMLElement;
+					window.store.set({ chatScrolled: true });
 
 					if (element && element.scrollTop === 0) {
 						const lastMessageId = messages[messages.length - 1].id;
 
-						window.store.set({ lastMessageId, chatScrolled: true });
+						window.store.set({ lastMessageId });
 					}
 				};
 
