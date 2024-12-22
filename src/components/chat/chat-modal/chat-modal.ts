@@ -1,8 +1,6 @@
 import Block from "@/core/block";
 import { Modal, Search } from "@/components";
 import { connect } from "@/utils/connect";
-import { validateField } from "@/utils/validate";
-import { UserDTO } from "@/api/types";
 import * as profileServices from "@/services/profile";
 import { IOption } from "@/components/form/search/searchOption";
 
@@ -12,14 +10,10 @@ interface IModalProps {
 	AddUsersError: string;
 	DeleteUsersError: string;
 	searchByLoginError: string;
-	addUsersList: { value: string; label: string; text: string }[] | [];
+	addUsersList: IOption[] | [];
 	onCloseModal: () => void;
 	onConfirm: () => void;
 	onCancel?: () => void;
-}
-
-interface IForm {
-	login: string;
 }
 
 export interface IErrors {
@@ -34,7 +28,7 @@ type IDialogBodyProps = {
 	form: {
 		login: string;
 	};
-	addUsersList: { value: string; label: string }[] | [];
+	addUsersList: IOption[] | [];
 } & {};
 
 class DialogBody extends Block {

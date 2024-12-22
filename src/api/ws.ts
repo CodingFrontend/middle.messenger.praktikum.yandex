@@ -1,5 +1,4 @@
 import type { WSChatOptions, WSResponseMessage } from "./types";
-import isEqual from "@/utils/isEqual";
 
 export default class WebScoketService {
 	public socket: any;
