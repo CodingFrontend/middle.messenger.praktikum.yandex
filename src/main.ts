@@ -51,7 +51,6 @@ window.store = new Store({});
 
 const initRouter = async () => {
 	await authServices.checkLoginUser();
-	await chatServices.getChatList({} as ChatListRequestData);
 
 	window.router = new Router("#app");
 	window.router

@@ -17,8 +17,8 @@ const chatApi = new HTTPTransport("/chats");
 export default class ChatApi {
 	async getChatList(
 		data: ChatListRequestData
-	): Promise<ChatListResponse | APIError> {
-		return chatApi.get<ChatListResponse | APIError>("", { data });
+	): Promise<ChatListResponse[] | APIError> {
+		return chatApi.get<ChatListResponse[] | APIError>("", { data });
 	}
 
 	async createChat(

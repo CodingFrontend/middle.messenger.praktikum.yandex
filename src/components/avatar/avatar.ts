@@ -16,7 +16,7 @@ export default class Avatar extends Block {
 	public render(): string {
 		return `
       {{#if image}}
-				<img src='{{image}}' alt='avatar-image' />
+				<img src='https://ya-praktikum.tech/api/v2/resources${(this.props as AvatarProps).image}' alt='avatar-image' />
 			{{/if}}
 
 			{{{ Slot }}}

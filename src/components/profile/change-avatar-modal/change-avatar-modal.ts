@@ -8,6 +8,7 @@ interface ChangeAvatarModalProps {
 	uploadError: string;
 	emptyError: string;
 	updateAvatarError: string;
+	updateAvatarSuccess: string;
 	onCloseModal: () => void;
 	onConfirm?: (file: File) => void;
 	onCancel?: () => void;
@@ -90,11 +91,19 @@ class ChangeAvatarModalBlock extends Block {
 		) {
 			this.children.ModalUpload.setProps({
 				title: "Ошибка, попробуйте еще раз",
+				success: false,
 			});
 			this.children.ModalUpload.children.Body.setProps({
 				fileName: "",
 			});
 		}
+
+		if (newProps.updateAvatarSuccess !== oldProps.updateAvatarSuccess) {
+			this.children.ModalUpload.setProps({
+				success: true,
+			});
+		}
+
 		return true;
 	}
 
@@ -105,8 +114,11 @@ class ChangeAvatarModalBlock extends Block {
 	}
 }
 
-const ChangeAvatarModal = connect(({ updateAvatarError }) => ({
-	updateAvatarError,
-}))(ChangeAvatarModalBlock);
+const ChangeAvatarModal = connect(
+	({ updateAvatarError, updateAvatarSuccess }) => ({
+		updateAvatarError,
+		updateAvatarSuccess,
+	})
+)(ChangeAvatarModalBlock);
 
 export default ChangeAvatarModal;

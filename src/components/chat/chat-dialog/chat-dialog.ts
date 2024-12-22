@@ -20,7 +20,8 @@ export interface IChatDialogProps {
 	avatar: string | null;
 	showChatWidget: boolean;
 	newMessage: WSResponseMessage;
-	unread_count: number;
+	unreadMessagesInChat: number;
+	lastMessageId: number;
 	messages: WSResponseMessage[] | [];
 }
 
@@ -51,6 +52,25 @@ class ChatDialogBlock extends Block {
 			}),
 			SendMessageInput: new SendMessageInput({
 				name: "message",
+				onKeyDown: (e: KeyboardEvent) => {
+					if (e.code === "Enter") {
+						const value = (this.children as TChildren).SendMessageInput.value();
+						const error = validateField("message", value);
+
+						if (error) return;
+
+						const socket = window.socket;
+
+						socket.send(
+							JSON.stringify({
+								content: value,
+								type: "message",
+							})
+						);
+
+						(this.children as TChildren).SendMessageInput.clear();
+					}
+				},
 			}),
 			SendMessageButton: new IconButton({
 				faIcon: "fa-solid fa-arrow-right",
@@ -80,44 +100,37 @@ class ChatDialogBlock extends Block {
 		oldProps: IChatDialogProps,
 		newProps: IChatDialogProps
 	): Promise<boolean> {
+		const socket = window.socket;
+
 		if (newProps.id && newProps.id !== oldProps.id) {
 			const chatId = newProps.id;
 			await chatServices.createChatWSConnection(chatId);
-			chatServices.getNewMessagesCount(newProps.id);
+
+			window.store.set({ chatScrolledTop: false });
 		}
 
 		if (newProps.newMessage && newProps.newMessage !== oldProps.newMessage) {
-			chatServices.getNewMessagesCount(newProps.id);
-		}
-
-		const socket = window.socket;
-
-		if (
-			socket &&
-			newProps.unread_count &&
-			newProps.unread_count !== oldProps.unread_count
-		) {
-			if (newProps.messages.length !== newProps.unread_count) {
-				const lastMessage = newProps.messages[newProps.messages.length - 1];
-				socket.send(
-					JSON.stringify({
-						content: lastMessage.id,
-						type: "get old",
-					})
-				);
-			}
+			const oldMessages = window.store.getState().messages;
+			window.store.set({ messages: [...oldMessages, newProps.newMessage] });
 		}
 
 		if (
-			(newProps.messages && newProps.messages !== oldProps.messages) ||
-			(newProps.newMessage && newProps.newMessage !== oldProps.newMessage)
+			newProps.lastMessageId &&
+			newProps.lastMessageId !== oldProps.lastMessageId
 		) {
-			const { messages, newMessage } = newProps;
+			socket.send(
+				JSON.stringify({
+					content: newProps.lastMessageId,
+					type: "get old",
+				})
+			);
+		}
+
+		if (newProps.messages && newProps.messages !== oldProps.messages) {
+			const { messages } = newProps;
 			const { ChatMessageGroup } = this.children;
 
 			const allMessages = [...messages];
-
-			if (newMessage) allMessages.push(newMessage);
 
 			const checkMessageState = (message: WSResponseMessage) => {
 				const { user } = window.store.getState();
@@ -182,35 +195,34 @@ class ChatDialogBlock extends Block {
 	public componentDidMount() {
 		setTimeout(() => {
 			const scrollContent = document.querySelector(".chat-dialog-content");
+			const { messages, newMessage } = this.props as IChatDialogProps;
 
-			if ((this.props as IChatDialogProps).messages && scrollContent) {
-				const socket = window.socket;
-				const lastMessageId = (this.props as IChatDialogProps).messages[
-					(this.props as IChatDialogProps).messages.length - 1
-				].id;
-
+			if (messages && scrollContent) {
 				const getOldMessages = (e: Event) => {
 					const element = e.target as HTMLElement;
-					window.store.set({ lastMessageId, chatScrolled: true });
+
 					if (element && element.scrollTop === 0) {
-						socket.send(
-							JSON.stringify({
-								content: lastMessageId,
-								type: "get old",
-							})
-						);
+						window.store.set({ chatScrolledTop: true });
+
+						const lastMessageId = messages[messages.length - 1].id;
+
+						window.store.set({ lastMessageId });
 					}
 				};
-
 				scrollContent?.addEventListener("scroll", getOldMessages);
 
 				const getMessages = () => {
-					const { chatScrolled } = window.store.getState();
+					const { chatScrolledTop } = window.store.getState();
 
 					const isBottom =
 						Math.floor(scrollContent.scrollTop + scrollContent.clientHeight) ===
 						scrollContent.scrollHeight + 1;
-					if (!isBottom && !chatScrolled) {
+
+					if (newMessage && !chatScrolledTop) {
+						scrollContent.scrollTop = scrollContent.scrollHeight;
+						window.store.set({ chatScrolledTop: false });
+						window.store.set({ newMessage: null });
+					} else if (!isBottom && !chatScrolledTop && !newMessage) {
 						scrollContent.scrollTop = scrollContent.scrollHeight;
 					}
 				};
@@ -270,13 +282,15 @@ const ChatDialog = connect(
 		newMessage,
 		isChatTokenLoading,
 		chatTokenError,
-		unread_count,
+		unreadMessagesInChat,
+		lastMessageId,
 	}) => ({
 		messages,
 		newMessage,
 		isChatTokenLoading,
 		chatTokenError,
-		unread_count,
+		unreadMessagesInChat,
+		lastMessageId,
 	})
 )(ChatDialogBlock);
 

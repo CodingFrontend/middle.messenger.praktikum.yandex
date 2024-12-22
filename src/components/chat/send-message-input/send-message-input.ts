@@ -4,6 +4,7 @@ interface InputFieldProps {
 	name: string;
 	value?: string;
 	onBlur?: (e: Event) => void;
+	onKeyDown?: (e: KeyboardEvent) => void;
 }
 
 export default class CustomInputField extends Block {
@@ -18,6 +19,7 @@ export default class CustomInputField extends Block {
 			},
 			events: {
 				blur: props.onBlur,
+				keydown: props.onKeyDown,
 			},
 		});
 	}

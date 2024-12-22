@@ -2,6 +2,8 @@ import { ROUTES } from "@/constants";
 import ProfileApi from "@/api/profile";
 import {
 	APIError,
+	SearchUserRequestData,
+	UserDTO,
 	UserPasswordRequestData,
 	UserRequestData,
 } from "@/api/types";
@@ -23,13 +25,16 @@ export const updateInfo = async (data: UserRequestData) => {
 };
 
 export const updateAvatar = async (file: File) => {
-	window.store.set({ isLoading: true });
+	window.store.set({ isLoading: true, updateAvatarSuccess: false });
 	try {
 		const data: FormData = new FormData();
 		data.append("avatar", file);
 
 		const user = await profileApi.updateAvatar(data);
-		window.store.set({ user });
+		window.store.set({
+			user,
+			updateAvatarSuccess: true,
+		});
 	} catch (error) {
 		window.store.set({ updateAvatarError: (error as APIError).reason });
 	} finally {
@@ -43,9 +48,24 @@ export const updatePassword = async (data: UserPasswordRequestData) => {
 		await profileApi.updatePassword(data);
 		window.router.go(ROUTES.profile);
 	} catch (error) {
-		console.log("error", error);
 		window.store.set({ updatePasswordError: (error as APIError).reason });
 	} finally {
 		window.store.set({ isLoading: false });
+	}
+};
+
+export const searchByLogin = async (data: SearchUserRequestData) => {
+	window.store.set({ isSearchUserLoading: true });
+	try {
+		const users = await profileApi.searchByLogin(data);
+		const addUsersList = (users as UserDTO[]).map((user) => ({
+			value: user.id,
+			label: user.login,
+		}));
+		window.store.set({ addUsersList });
+	} catch (error) {
+		window.store.set({ searchByLoginError: (error as APIError).reason });
+	} finally {
+		window.store.set({ isSearchUserLoading: false });
 	}
 };

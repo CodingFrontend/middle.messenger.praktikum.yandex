@@ -14,10 +14,10 @@ export default class ChatMessageGroup extends Block {
 		});
 	}
 
-	public async componentDidUpdate(
+	public componentDidUpdate(
 		oldProps: IChatMessageGroupProps,
 		newProps: IChatMessageGroupProps
-	): Promise<boolean> {
+	): boolean {
 		if (newProps.groups && newProps.groups !== oldProps.groups) {
 			this.setChild({
 				groupsList: newProps.groups.map(

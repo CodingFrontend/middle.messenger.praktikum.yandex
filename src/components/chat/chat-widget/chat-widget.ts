@@ -13,6 +13,8 @@ export interface IChatWidgetItem {
 interface IChatWidgetProps {
 	items: IChatWidgetItem[];
 	activeChatId: number;
+	AddUsersError: string;
+	DeleteUsersError: string;
 	onCloseModal: () => void;
 }
 
@@ -46,28 +48,26 @@ class ChatWidgetBlock extends Block {
 				modalButtonLabelOk: "Добавить",
 				onCloseModal: () => {
 					this.setProps({ showModalAdd: false });
+					this.children.ChatModalAdd.children.Modal.setProps({
+						success: false,
+					});
 					props.onCloseModal();
 				},
 				onConfirm: async () => {
 					const login =
-						this.children.ChatModalAdd.children.Modal.children.Body.children.Input.value();
-					const errorLogin = validateField("login", login);
+						this.children.ChatModalAdd.children.Modal.children.Body.children.Search.selectedValue();
 
-					if (errorLogin) {
-						this.children.ChatModalAdd.children.Modal.children.Body.children.Input.setProps(
-							{
-								error: errorLogin,
-							}
-						);
-						return;
+					if (login) {
+						await chatServices.addUsers({
+							users: [login],
+							chatId: (this.props as IChatWidgetProps).activeChatId,
+						});
+						if (!(this.props as IChatWidgetProps).AddUsersError) {
+							this.children.ChatModalAdd.children.Modal.setProps({
+								success: true,
+							});
+						}
 					}
-
-					await chatServices.addUsers({
-						users: [login],
-						chatId: (this.props as IChatWidgetProps).activeChatId,
-					});
-
-					props.onCloseModal();
 				},
 			}),
 			ChatModalDelete: new ChatModal({
@@ -75,28 +75,26 @@ class ChatWidgetBlock extends Block {
 				modalButtonLabelOk: "Удалить",
 				onCloseModal: () => {
 					this.setProps({ showModalDelete: false });
+					this.children.ChatModalAdd.children.Modal.setProps({
+						success: false,
+					});
 					props.onCloseModal();
 				},
 				onConfirm: async () => {
 					const login =
-						this.children.ChatModalAdd.children.Modal.children.Body.children.Input.value();
-					const errorLogin = validateField("login", login);
+						this.children.ChatModalAdd.children.Modal.children.Body.children.Search.selectedValue();
+					if (login) {
+						await chatServices.deleteUsers({
+							users: [login],
+							chatId: (this.props as IChatWidgetProps).activeChatId,
+						});
 
-					if (errorLogin) {
-						this.children.ChatModalAdd.children.Modal.children.Body.children.Input.setProps(
-							{
-								error: errorLogin,
-							}
-						);
-						return;
+						if (!(this.props as IChatWidgetProps).DeleteUsersError) {
+							this.children.ChatModalAdd.children.Modal.setProps({
+								success: true,
+							});
+						}
 					}
-
-					await chatServices.deleteUsers({
-						users: [login],
-						chatId: (this.props as IChatWidgetProps).activeChatId,
-					});
-
-					props.onCloseModal();
 				},
 			}),
 		});

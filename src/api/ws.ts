@@ -1,4 +1,5 @@
 import type { WSChatOptions, WSResponseMessage } from "./types";
+import isEqual from "@/utils/isEqual";
 
 export default class WebScoketService {
 	public socket: any;
@@ -14,17 +15,33 @@ export default class WebScoketService {
 	public connect(): void {
 		this.socket = new WebSocket(this.apiUrl);
 
-		this.socket.onopen = () => {
-			if (this.socket.readyState !== 1) return;
+		this._open();
 
-			this.socket.send(
-				JSON.stringify({
-					content: String(this.count),
-					type: "get old",
-				})
-			);
-		};
+		this._message();
 
+		this._close();
+
+		this._error();
+	}
+
+	public ping() {
+		this.socket.send(
+			JSON.stringify({
+				content: "",
+				type: "ping",
+			})
+		);
+	}
+
+	public getState() {
+		return this.socket.readyState;
+	}
+
+	public getSocket() {
+		return this.socket;
+	}
+
+	private _message() {
 		this.socket.onmessage = (event: MessageEvent) => {
 			const messages = JSON.parse(event.data);
 
@@ -46,7 +63,8 @@ export default class WebScoketService {
 				)
 					return;
 
-				allMessages = [...allMessages, ...messagesFiltered];
+				allMessages = allMessages.concat(messagesFiltered);
+
 				window.store.set({ messages: allMessages });
 			} else {
 				if (messages.type === "message" || messages.type === "file") {
@@ -54,7 +72,30 @@ export default class WebScoketService {
 				}
 			}
 		};
+	}
 
+	public message() {
+		this._message();
+	}
+
+	private _open() {
+		this.socket.onopen = () => {
+			if (this.socket.readyState !== 1) return;
+
+			this.socket.send(
+				JSON.stringify({
+					content: this.count.toString(),
+					type: "get old",
+				})
+			);
+		};
+	}
+
+	public open() {
+		this._open();
+	}
+
+	private _close() {
 		this.socket.onclose = (event: CloseEvent) => {
 			if (event.wasClean) {
 				console.log("Соединение закрыто чисто");
@@ -66,26 +107,19 @@ export default class WebScoketService {
 
 			this.socket = null;
 		};
+	}
 
+	public close() {
+		this._close();
+	}
+
+	private _error() {
 		this.socket.onerror = (event: ErrorEvent) => {
 			console.log("Ошибка", event.message);
 		};
 	}
 
-	public ping() {
-		this.socket.send(
-			JSON.stringify({
-				content: "",
-				type: "ping",
-			})
-		);
-	}
-
-	public getState() {
-		return this.socket.readyState;
-	}
-
-	public getSocket() {
-		return this.socket;
+	public error() {
+		this._error();
 	}
 }

@@ -13,7 +13,7 @@ import { ROUTES } from "@/constants";
 import { withRouter } from "@/utils/withRouter";
 import * as chatServices from "@/services/chat";
 import { connect } from "@/utils/connect";
-import type { ChatListResponse } from "@/api/types";
+import type { ChatListRequestData, ChatListResponse } from "@/api/types";
 
 class ModalBody extends Block {
 	constructor() {
@@ -60,14 +60,15 @@ class Chat extends Block {
 				},
 				onClick: () => this.setProps({ showCreateChatModal: true }),
 			}),
-			ChatList: new ChatList({
-				items: props.chatListItems,
-				onClick: (id: number) => {
-					this.setProps({ activeChatId: id });
-				},
-			}),
+			// ChatList: new ChatList({
+			// 	items: props.chatListItems,
+			// 	onClick: (id: number) => {
+			// 		this.setProps({ activeChatId: id });
+			// 		window.store.set({ chatScrolled: false });
+			// 	},
+			// }),
 			ChatDialog: new ChatDialog({}),
-			rawChatDialog: [...props.chatListItems],
+			// rawChatDialog: [...props.chatListItems],
 			Modal: new Modal({
 				title: "Создать чат",
 				labelOk: "Создать",
@@ -88,16 +89,47 @@ class Chat extends Block {
 		});
 	}
 
+	public componentDidUpdate(
+		oldProps: IChatProps,
+		newProps: IChatProps
+	): boolean {
+		if (
+			newProps.chatListItems &&
+			newProps.chatListItems !== oldProps.chatListItems
+		) {
+			this.setProps({
+				rawChatDialog: [...newProps.chatListItems],
+			});
+
+			this.setChild({
+				ChatList: new ChatList({
+					items: newProps.chatListItems,
+					onClick: (id: number) => {
+						this.setProps({ activeChatId: id });
+					},
+				}),
+			});
+		}
+
+		return true;
+	}
+
+	public async componentDidMount(): Promise<void> {
+		await chatServices.getChatList({} as ChatListRequestData);
+	}
+
 	public render(): string {
 		const { activeChatId, rawChatDialog } = this.props as IChatProps;
 		const { ChatDialog } = this.children;
 
-		const currentChatDialog = rawChatDialog.find(
-			(item) => item.id === activeChatId
-		);
-		if (currentChatDialog) {
-			const { title, avatar, id } = currentChatDialog;
-			ChatDialog.setProps({ title, avatar, id });
+		if (rawChatDialog) {
+			const currentChatDialog = rawChatDialog.find(
+				(item) => item.id === activeChatId
+			);
+			if (currentChatDialog) {
+				const { title, avatar, id } = currentChatDialog;
+				ChatDialog.setProps({ title, avatar, id });
+			}
 		}
 
 		return `

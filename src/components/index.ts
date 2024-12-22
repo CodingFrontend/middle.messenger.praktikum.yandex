@@ -22,3 +22,4 @@ export { GoBack } from "./go-back";
 export { ChangeAvatarModal } from "./profile/change-avatar-modal";
 export { PageTitle } from "./page-title";
 export { Loader } from "./loader";
+export { Search } from "./form/search";

@@ -149,12 +149,14 @@ export default class Block<IProps extends TProps = {}> {
 
 		this._render();
 	}
-
 	public componentDidUpdate(
+		/* eslint-disable */
+		// @ts-ignore
 		oldProps: TProps,
+		/* eslint-disable */
+		// @ts-ignore
 		newProps: TProps
 	): Promise<boolean> | boolean {
-		console.log(oldProps, newProps);
 		return true;
 	}
 

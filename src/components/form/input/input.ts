@@ -6,8 +6,11 @@ interface InputProps {
 	name: string;
 	type: string;
 	error?: string;
+	id?: string | number;
+	list?: string;
 	onChange?: (e: Event) => void;
 	onBlur?: (e: Event) => void;
+	onKeydown?: (e: Event) => void;
 }
 
 export default class Input extends Block {
@@ -19,14 +22,20 @@ export default class Input extends Block {
 				name: props.name,
 				type: props.type || "text",
 				error: props.error,
+				list: props.list,
 				onChange: props.onChange,
 				onBlur: props.onBlur,
+				onKeydown: props.onKeydown,
 			}),
 		});
 	}
 
 	public value() {
 		return (this.children.InputField.getContent() as HTMLInputElement).value;
+	}
+
+	public clear() {
+		(this.children.InputField.getContent() as HTMLInputElement).value = "";
 	}
 
 	public render(): string {

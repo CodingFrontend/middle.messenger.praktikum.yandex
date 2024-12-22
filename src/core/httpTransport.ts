@@ -52,17 +52,17 @@ export default class HTTPTransport {
 
 		const headers: THeaders =
 			data instanceof FormData
-			? {
+				? {
 						"Content-Security-Policy":
 							"default-src 'self'; img-src *; script-src 'self'; style-src 'self'; connect-src 'self' *.netlify.app;",
-			}
+				  }
 				: {
 						"Content-Type": "application/json",
 						"X-Requested-With": "XMLHttpRequest",
 						"Access-Control-Allow-Origin": "*",
 						"Content-Security-Policy":
 							"default-src 'self'; img-src *; script-src 'self'; style-src 'self'; connect-src 'self' *.netlify.app;",
-			};
+				  };
 
 		return new Promise((resolve, reject) => {
 			if (!method) {
@@ -88,8 +88,17 @@ export default class HTTPTransport {
 						? JSON.parse(xhr.response)
 						: xhr.response;
 					resolve(response);
+				} else if (xhr.status === 500) {
+					reject({
+						reason: "Ошибка сервера",
+					});
 				} else {
-					const { error, reason } = JSON.parse(xhr.response);
+					const res = isJsonString(xhr.response)
+						? JSON.parse(xhr.response)
+						: xhr.response;
+
+					const { error, reason } = res;
+
 					reject({
 						error,
 						reason,
@@ -141,7 +150,6 @@ export default class HTTPTransport {
 			...options,
 			method: METHODS.PUT,
 		};
-		console.log("req", requestProps);
 		const requestUrl = `${this.apiUrl}${url}`;
 		return this._request(requestUrl, requestProps);
 	};

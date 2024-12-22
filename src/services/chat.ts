@@ -3,6 +3,7 @@ import {
 	AddUsersRequestData,
 	APIError,
 	ChatListRequestData,
+	ChatListResponse,
 	ChatTokenResponse,
 	ChatUreadMessagesResponse,
 	CreateChatRequestData,
@@ -10,13 +11,31 @@ import {
 } from "@/api/types";
 const chatApi = new ChatApi();
 import WebScoketService from "@/api/ws";
+import { formatDate, getTime } from "@/utils/formatDate";
 
 export const getChatList = async (model: ChatListRequestData) => {
 	window.store.set({ isChatListLoading: true });
 
 	try {
 		const chatListItems = await chatApi.getChatList(model);
-		window.store.set({ chatListItems });
+
+		const formatTime = (time: string): string => {
+			const date = new Date(time);
+			const todaysDate = new Date();
+			const isToday =
+				date.setHours(0, 0, 0, 0) == todaysDate.setHours(0, 0, 0, 0);
+
+			return isToday ? getTime(time) : `${formatDate(date)} ${getTime(time)}`;
+		};
+
+		const { user } = window.store.getState();
+
+		const chatItems = (chatListItems as ChatListResponse[]).map((item) => ({
+			...item,
+			upcoming: user.login === item.last_message?.user.login,
+			date: item.last_message ? formatTime(item.last_message?.time) : null,
+		}));
+		window.store.set({ chatListItems: chatItems });
 	} catch (error) {
 		window.store.set({ chatListError: (error as APIError).reason });
 	} finally {
@@ -92,7 +111,8 @@ export const getNewMessagesCount = async (id: number) => {
 
 	try {
 		const res = await chatApi.getNewMessagesCount(id);
-		return (res as ChatUreadMessagesResponse).unread_count;
+		const unread_count = (res as ChatUreadMessagesResponse).unread_count;
+		window.store.set({ unread_count });
 	} catch (error) {
 		window.store.set({ unreadCountError: (error as APIError).reason });
 	} finally {
@@ -120,7 +140,7 @@ export const deleteUsers = async (data: AddUsersRequestData) => {
 	const { users, chatId } = data;
 
 	try {
-		await chatApi.addUsers({ users, chatId });
+		await chatApi.deleteUsers({ users, chatId });
 	} catch (error) {
 		window.store.set({ DeleteUsersError: (error as APIError).reason });
 	} finally {
