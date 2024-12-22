@@ -52,6 +52,25 @@ class ChatDialogBlock extends Block {
 			}),
 			SendMessageInput: new SendMessageInput({
 				name: "message",
+				onKeyDown: (e: KeyboardEvent) => {
+					if (e.code === "Enter") {
+						const value = (this.children as TChildren).SendMessageInput.value();
+						const error = validateField("message", value);
+
+						if (error) return;
+
+						const socket = window.socket;
+
+						socket.send(
+							JSON.stringify({
+								content: value,
+								type: "message",
+							})
+						);
+
+						(this.children as TChildren).SendMessageInput.clear();
+					}
+				},
 			}),
 			SendMessageButton: new IconButton({
 				faIcon: "fa-solid fa-arrow-right",
@@ -86,14 +105,11 @@ class ChatDialogBlock extends Block {
 		if (newProps.id && newProps.id !== oldProps.id) {
 			const chatId = newProps.id;
 			await chatServices.createChatWSConnection(chatId);
-			chatServices.getNewMessagesCount(newProps.id);
+
+			window.store.set({ chatScrolledTop: false });
 		}
 
 		if (newProps.newMessage && newProps.newMessage !== oldProps.newMessage) {
-			window.store.set({ chatScrolled: false });
-
-			console.log(window.store.getState().chatScroll);
-
 			const oldMessages = window.store.getState().messages;
 			window.store.set({ messages: [...oldMessages, newProps.newMessage] });
 		}
@@ -108,24 +124,6 @@ class ChatDialogBlock extends Block {
 					type: "get old",
 				})
 			);
-		}
-
-		if (
-			socket &&
-			socket.readyState === 1 &&
-			newProps.unreadMessagesInChat &&
-			newProps.unreadMessagesInChat !== oldProps.unreadMessagesInChat &&
-			newProps.messages
-		) {
-			if (newProps.messages.length !== newProps.unreadMessagesInChat) {
-				const lastMessage = newProps.messages[newProps.messages.length - 1];
-				socket.send(
-					JSON.stringify({
-						content: lastMessage?.id,
-						type: "get old",
-					})
-				);
-			}
 		}
 
 		if (newProps.messages && newProps.messages !== oldProps.messages) {
@@ -197,29 +195,34 @@ class ChatDialogBlock extends Block {
 	public componentDidMount() {
 		setTimeout(() => {
 			const scrollContent = document.querySelector(".chat-dialog-content");
-			const { messages } = this.props as IChatDialogProps;
+			const { messages, newMessage } = this.props as IChatDialogProps;
 
 			if (messages && scrollContent) {
 				const getOldMessages = (e: Event) => {
 					const element = e.target as HTMLElement;
-					window.store.set({ chatScrolled: true });
 
 					if (element && element.scrollTop === 0) {
+						window.store.set({ chatScrolledTop: true });
+
 						const lastMessageId = messages[messages.length - 1].id;
 
 						window.store.set({ lastMessageId });
 					}
 				};
-
 				scrollContent?.addEventListener("scroll", getOldMessages);
 
 				const getMessages = () => {
-					const { chatScrolled } = window.store.getState();
+					const { chatScrolledTop } = window.store.getState();
 
 					const isBottom =
 						Math.floor(scrollContent.scrollTop + scrollContent.clientHeight) ===
 						scrollContent.scrollHeight + 1;
-					if (!isBottom && !chatScrolled) {
+
+					if (newMessage && !chatScrolledTop) {
+						scrollContent.scrollTop = scrollContent.scrollHeight;
+						window.store.set({ chatScrolledTop: false });
+						window.store.set({ newMessage: null });
+					} else if (!isBottom && !chatScrolledTop && !newMessage) {
 						scrollContent.scrollTop = scrollContent.scrollHeight;
 					}
 				};

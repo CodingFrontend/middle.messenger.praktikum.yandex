@@ -71,14 +71,6 @@ export default class WebScoketService {
 					window.store.set({ newMessage: messages });
 				}
 			}
-
-			const {
-				messages: messages1,
-				newMessage: newMessage1,
-				unread_count,
-			} = window.store.getState();
-
-			console.log("store", messages1, newMessage1, unread_count);
 		};
 	}
 

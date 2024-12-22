@@ -106,7 +106,6 @@ class Chat extends Block {
 					items: newProps.chatListItems,
 					onClick: (id: number) => {
 						this.setProps({ activeChatId: id });
-						window.store.set({ chatScrolled: false });
 					},
 				}),
 			});
