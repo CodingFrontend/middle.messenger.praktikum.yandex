@@ -55,14 +55,14 @@ export default class HTTPTransport {
 				? {
 						"Content-Security-Policy":
 							"default-src 'self'; img-src *; script-src 'self'; style-src 'self'; connect-src 'self' *.netlify.app;",
-				  }
+				}
 				: {
 						"Content-Type": "application/json",
 						"X-Requested-With": "XMLHttpRequest",
 						"Access-Control-Allow-Origin": "*",
 						"Content-Security-Policy":
 							"default-src 'self'; img-src *; script-src 'self'; style-src 'self'; connect-src 'self' *.netlify.app;",
-				  };
+				};
 
 		return new Promise((resolve, reject) => {
 			if (!method) {
