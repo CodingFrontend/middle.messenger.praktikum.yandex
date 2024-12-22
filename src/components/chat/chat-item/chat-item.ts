@@ -32,14 +32,16 @@ export default class ChatItem extends Block {
 					<div class='chat-item__content'>
 						<div class='chat-item__top'>
 							<div class='chat-item__name'>{{title}}</div>
-							<div class='chat-item__date'>{{date}}</div>
+							{{#if date}}
+								<div class='chat-item__date'>{{date}}</div>
+							{{/if}}
 						</div>
 						<div class='chat-item__body'>
 							<div class='chat-item__message'>
-								{{#if isMessageUpcoming}}
+								{{#if upcoming}}
 									<span class='chat-item__message-mine'>Вы: </span>
 								{{/if}}
-								<span class='chat-item__message-text'>{{message}}</span>
+								<span class='chat-item__message-text'>{{last_message.content}}</span>
 							</div>
 						</div>
 						{{#if unread_count}}

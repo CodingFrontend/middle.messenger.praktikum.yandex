@@ -3,6 +3,7 @@ import {
 	AddUsersRequestData,
 	APIError,
 	ChatListRequestData,
+	ChatListResponse,
 	ChatTokenResponse,
 	ChatUreadMessagesResponse,
 	CreateChatRequestData,
@@ -10,13 +11,31 @@ import {
 } from "@/api/types";
 const chatApi = new ChatApi();
 import WebScoketService from "@/api/ws";
+import { formatDate, getTime } from "@/utils/formatDate";
 
 export const getChatList = async (model: ChatListRequestData) => {
 	window.store.set({ isChatListLoading: true });
 
 	try {
 		const chatListItems = await chatApi.getChatList(model);
-		window.store.set({ chatListItems });
+
+		const formatTime = (time: string): string => {
+			const date = new Date(time);
+			const todaysDate = new Date();
+			const isToday =
+				date.setHours(0, 0, 0, 0) == todaysDate.setHours(0, 0, 0, 0);
+
+			return isToday ? getTime(time) : `${formatDate(date)} ${getTime(time)}`;
+		};
+
+		const { user } = window.store.getState();
+
+		const chatItems = (chatListItems as ChatListResponse[]).map((item) => ({
+			...item,
+			upcoming: user.login === item.last_message?.user.login,
+			date: item.last_message ? formatTime(item.last_message?.time) : null,
+		}));
+		window.store.set({ chatListItems: chatItems });
 	} catch (error) {
 		window.store.set({ chatListError: (error as APIError).reason });
 	} finally {
