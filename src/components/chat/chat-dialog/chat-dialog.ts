@@ -80,6 +80,8 @@ class ChatDialogBlock extends Block {
 		oldProps: IChatDialogProps,
 		newProps: IChatDialogProps
 	): Promise<boolean> {
+		const socket = window.socket;
+
 		if (newProps.id && newProps.id !== oldProps.id) {
 			const chatId = newProps.id;
 			await chatServices.createChatWSConnection(chatId);
@@ -87,37 +89,45 @@ class ChatDialogBlock extends Block {
 		}
 
 		if (newProps.newMessage && newProps.newMessage !== oldProps.newMessage) {
-			chatServices.getNewMessagesCount(newProps.id);
+			const oldMessages = window.store.getState().messages;
+			window.store.set({ messages: [...oldMessages, newProps.newMessage] });
 		}
 
-		const socket = window.socket;
+		if (
+			newProps.lastMessageId &&
+			newProps.lastMessageId !== oldProps.lastMessageId
+		) {
+			socket.send(
+				JSON.stringify({
+					content: newProps.lastMessageId,
+					type: "get old",
+				})
+			);
+		}
 
 		if (
 			socket &&
+			socket.readyState === 1 &&
 			newProps.unreadMessagesInChat &&
-			newProps.unreadMessagesInChat !== oldProps.unreadMessagesInChat
+			newProps.unreadMessagesInChat !== oldProps.unreadMessagesInChat &&
+			newProps.messages
 		) {
 			if (newProps.messages.length !== newProps.unreadMessagesInChat) {
 				const lastMessage = newProps.messages[newProps.messages.length - 1];
 				socket.send(
 					JSON.stringify({
-						content: lastMessage.id,
+						content: lastMessage?.id,
 						type: "get old",
 					})
 				);
 			}
 		}
 
-		if (
-			(newProps.messages && newProps.messages !== oldProps.messages) ||
-			(newProps.newMessage && newProps.newMessage !== oldProps.newMessage)
-		) {
-			const { messages, newMessage } = newProps;
+		if (newProps.messages && newProps.messages !== oldProps.messages) {
+			const { messages } = newProps;
 			const { ChatMessageGroup } = this.children;
 
 			const allMessages = [...messages];
-
-			if (newMessage) allMessages.push(newMessage);
 
 			const checkMessageState = (message: WSResponseMessage) => {
 				const { user } = window.store.getState();
@@ -182,23 +192,16 @@ class ChatDialogBlock extends Block {
 	public componentDidMount() {
 		setTimeout(() => {
 			const scrollContent = document.querySelector(".chat-dialog-content");
+			const messages = (this.props as IChatDialogProps).messages;
 
-			if ((this.props as IChatDialogProps).messages && scrollContent) {
-				const socket = window.socket;
-				const lastMessageId = (this.props as IChatDialogProps).messages[
-					(this.props as IChatDialogProps).messages.length - 1
-				].id;
-
+			if (messages && scrollContent) {
 				const getOldMessages = (e: Event) => {
 					const element = e.target as HTMLElement;
-					window.store.set({ lastMessageId, chatScrolled: true });
+
 					if (element && element.scrollTop === 0) {
-						socket.send(
-							JSON.stringify({
-								content: lastMessageId,
-								type: "get old",
-							})
-						);
+						const lastMessageId = messages[messages.length - 1].id;
+
+						window.store.set({ lastMessageId, chatScrolled: true });
 					}
 				};
 
@@ -271,12 +274,14 @@ const ChatDialog = connect(
 		isChatTokenLoading,
 		chatTokenError,
 		unreadMessagesInChat,
+		lastMessageId,
 	}) => ({
 		messages,
 		newMessage,
 		isChatTokenLoading,
 		chatTokenError,
 		unreadMessagesInChat,
+		lastMessageId,
 	})
 )(ChatDialogBlock);
 
