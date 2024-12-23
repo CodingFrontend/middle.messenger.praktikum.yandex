@@ -91,7 +91,12 @@ class ProfileContentBlock extends Block {
 				image: props.user.avatar,
 				size: "large",
 				Slot: new AvatarEditSlot({
-					onClick: () => this.setProps({ showChangeAvatarModal: true }),
+					onClick: () => {
+						this.setProps({ showChangeAvatarModal: true });
+						this.children.AvatarGeneralInfo.children.ModalUpload.setProps({
+							title: "Загрузите файл",
+						});
+					},
 				}),
 			}),
 			Avatar: new Avatar({
