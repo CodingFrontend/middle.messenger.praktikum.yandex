@@ -9,7 +9,7 @@ interface InputFieldProps {
 	value?: string | number | boolean;
 	onChange?: (e: Event) => void;
 	onBlur?: (e: Event) => void;
-	onKeydown?: (e: Event) => void;
+	onKeydown?: (e: KeyboardEvent) => void;
 }
 
 export default class InputField extends Block {

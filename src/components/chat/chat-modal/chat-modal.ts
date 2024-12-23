@@ -136,3 +136,4 @@ const ChatModal = connect(
 )(ChatModalBlock);
 
 export default ChatModal;
+

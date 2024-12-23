@@ -4,13 +4,13 @@
 
 .chat-left {
 	flex: 0 0 310px;
-	padding: 21px 0;
+	max-height: 100vh;
 }
 
 .chat-left__top {
 	display: flex;
 	justify-content: flex-end;
-	padding: 0 10px;
+	padding: 21px 10px 0 0;
 }
 
 .chat-left__top .arrow {
@@ -53,4 +53,9 @@
 	display: flex;
 	align-items: center;
 	gap: 5px;
+}
+
+.chat-left__content {
+	max-height: calc(100% - 113px);
+	overflow: auto;
 }

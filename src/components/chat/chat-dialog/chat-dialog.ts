@@ -37,7 +37,7 @@ class ChatDialogBlock extends Block {
 				image: props.avatar || "",
 				size: "small",
 			}),
-			ChatWidget: new ChatWidget()({
+			ChatWidget: new ChatWidget({
 				items: chatWidgetItems,
 				onCloseModal: () => this.setProps({ showChatWidget: false }),
 			}),
@@ -173,8 +173,6 @@ class ChatDialogBlock extends Block {
 						result.push(current);
 					}
 				});
-
-				console.log(result);
 
 				return result.map((item: TSortedMessage) => ({
 					...item,
