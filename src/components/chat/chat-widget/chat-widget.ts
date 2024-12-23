@@ -9,7 +9,7 @@ export interface IChatWidgetItem {
 	action: string;
 }
 
-interface IChatWidgetProps {
+export interface IChatWidgetProps {
 	items: IChatWidgetItem[];
 	activeChatId: number;
 	AddUsersError: string;

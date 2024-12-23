@@ -39,6 +39,7 @@ interface IChatProps {
 	chatListItems: ChatListResponse[];
 	activeChatId: number;
 	rawChatDialog: ChatListResponse[];
+	createChatSuccess: string;
 }
 
 class Chat extends Block {
@@ -60,15 +61,7 @@ class Chat extends Block {
 				},
 				onClick: () => this.setProps({ showCreateChatModal: true }),
 			}),
-			// ChatList: new ChatList({
-			// 	items: props.chatListItems,
-			// 	onClick: (id: number) => {
-			// 		this.setProps({ activeChatId: id });
-			// 		window.store.set({ chatScrolled: false });
-			// 	},
-			// }),
 			ChatDialog: new ChatDialog({}),
-			// rawChatDialog: [...props.chatListItems],
 			Modal: new Modal({
 				title: "Создать чат",
 				labelOk: "Создать",
@@ -79,6 +72,7 @@ class Chat extends Block {
 					const title =
 						this.children.Modal.children.Body.children.Input.value();
 					await chatServices.createChat({ title });
+					await chatServices.getChatList({} as ChatListRequestData);
 					if (!(this.props as IChatProps).createChatError) {
 						this.setProps({ showCreateChatModal: false });
 					}
@@ -108,6 +102,18 @@ class Chat extends Block {
 						this.setProps({ activeChatId: id });
 					},
 				}),
+			});
+		}
+
+		if (
+			newProps.createChatSuccess &&
+			newProps.createChatSuccess !== oldProps.createChatSuccess
+		) {
+			const { chatListItems } = window.store.getState();
+
+			this.children.ChatList.setProps({
+				...this.props,
+				items: chatListItems,
 			});
 		}
 
@@ -176,6 +182,7 @@ const ChatPage = connect(
 		chatListItems,
 		isChatTokenLoading,
 		chatTokenError,
+		createChatSuccess,
 	}) => ({
 		isCreateChatLoading,
 		createChatError,
@@ -184,6 +191,7 @@ const ChatPage = connect(
 		chatListItems,
 		isChatTokenLoading,
 		chatTokenError,
+		createChatSuccess,
 	})
 )(Chat);
 

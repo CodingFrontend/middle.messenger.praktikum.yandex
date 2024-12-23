@@ -37,7 +37,7 @@ class ChatDialogBlock extends Block {
 				image: props.avatar || "",
 				size: "small",
 			}),
-			ChatWidget: new ChatWidget({
+			ChatWidget: new ChatWidget()({
 				items: chatWidgetItems,
 				onCloseModal: () => this.setProps({ showChatWidget: false }),
 			}),
@@ -146,6 +146,7 @@ class ChatDialogBlock extends Block {
 
 			const groupMessagesByDay = (msgs: WSResponseMessage[]) => {
 				if (!msgs) return [];
+				type TSortedMessage = Omit<WSResponseMessage, "time"> & { date: Date };
 
 				const result: any = [];
 				let current;
@@ -155,13 +156,10 @@ class ChatDialogBlock extends Block {
 						Number(new Date(item_1.time)) - Number(new Date(item_2.time))
 				);
 
-				type TSortedMessage = Omit<WSResponseMessage, "time">;
-
 				sortedMessages.forEach((message) => {
 					const date = new Date(message.time);
-					const index = result.findIndex(
-						(item: TSortedMessage & { date: Date }) =>
-							item.date.getDate() === date.getDate()
+					const index: number = result.findIndex(
+						(item: TSortedMessage) => item.date.getDate() === date.getDate()
 					);
 
 					if (index !== -1) {
@@ -176,7 +174,9 @@ class ChatDialogBlock extends Block {
 					}
 				});
 
-				return result.map((item: TSortedMessage & { date: Date }) => ({
+				console.log(result);
+
+				return result.map((item: TSortedMessage) => ({
 					...item,
 					date: formatDate(item.date),
 				}));

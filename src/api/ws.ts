@@ -1,7 +1,7 @@
 import type { WSChatOptions, WSResponseMessage } from "./types";
 
 export default class WebScoketService {
-	public socket: any;
+	public socket!: WebSocket | null;
 	public apiUrl;
 	public count;
 
@@ -24,7 +24,7 @@ export default class WebScoketService {
 	}
 
 	public ping() {
-		this.socket.send(
+		this.socket!.send(
 			JSON.stringify({
 				content: "",
 				type: "ping",
@@ -33,7 +33,7 @@ export default class WebScoketService {
 	}
 
 	public getState() {
-		return this.socket.readyState;
+		return this.socket!.readyState;
 	}
 
 	public getSocket() {
@@ -41,34 +41,38 @@ export default class WebScoketService {
 	}
 
 	private _message() {
-		this.socket.onmessage = (event: MessageEvent) => {
-			const messages = JSON.parse(event.data);
+		this.socket!.onmessage = (event: MessageEvent) => {
+			try {
+				const messages = JSON.parse(event.data);
 
-			if (Array.isArray(messages)) {
-				const state = window.store.getState();
+				if (Array.isArray(messages)) {
+					const state = window.store.getState();
 
-				let allMessages = state.messages;
+					let allMessages = state.messages;
 
-				const messagesFiltered = messages.filter(
-					(message) => message.type === "message" || message.type === "file"
-				);
+					const messagesFiltered = messages.filter(
+						(message) => message.type === "message" || message.type === "file"
+					);
 
-				if (
-					allMessages.some(
-						(message: WSResponseMessage) =>
-							messagesFiltered.findIndex((item) => item.id === message.id) !==
-							-1
+					if (
+						allMessages.some(
+							(message: WSResponseMessage) =>
+								messagesFiltered.findIndex((item) => item.id === message.id) !==
+								-1
+						)
 					)
-				)
-					return;
+						return;
 
-				allMessages = allMessages.concat(messagesFiltered);
+					allMessages = allMessages.concat(messagesFiltered);
 
-				window.store.set({ messages: allMessages });
-			} else {
-				if (messages.type === "message" || messages.type === "file") {
-					window.store.set({ newMessage: messages });
+					window.store.set({ messages: allMessages });
+				} else {
+					if (messages.type === "message" || messages.type === "file") {
+						window.store.set({ newMessage: messages });
+					}
 				}
+			} catch (e) {
+				window.store.set({ messagesError: "Невалидные данные" });
 			}
 		};
 	}
@@ -78,10 +82,10 @@ export default class WebScoketService {
 	}
 
 	private _open() {
-		this.socket.onopen = () => {
-			if (this.socket.readyState !== 1) return;
+		this.socket!.onopen = () => {
+			if (this.socket!.readyState !== 1) return;
 
-			this.socket.send(
+			this.socket!.send(
 				JSON.stringify({
 					content: this.count.toString(),
 					type: "get old",
@@ -95,7 +99,7 @@ export default class WebScoketService {
 	}
 
 	private _close() {
-		this.socket.onclose = (event: CloseEvent) => {
+		this.socket!.onclose = (event: CloseEvent) => {
 			if (event.wasClean) {
 				console.log("Соединение закрыто чисто");
 			} else {
@@ -113,8 +117,8 @@ export default class WebScoketService {
 	}
 
 	private _error() {
-		this.socket.onerror = (event: ErrorEvent) => {
-			console.log("Ошибка", event.message);
+		this.socket!.onerror = (event: Event) => {
+			console.log("Ошибка", (event as ErrorEvent).message);
 		};
 	}
 

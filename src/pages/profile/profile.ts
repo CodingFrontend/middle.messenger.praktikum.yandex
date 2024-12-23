@@ -40,6 +40,7 @@ interface IProfileContentProps {
 	user: UserDTO;
 	editInfoForm: IEditInfoForm;
 	editPasswordForm: IEditPasswordForm;
+	updateAvatarSuccess: string;
 }
 
 interface AvatarEditSlotProps {
@@ -474,12 +475,29 @@ class ProfileContentBlock extends Block {
 				onCancel: () => this.setProps({ showChangeAvatarModal: false }),
 				onConfirm: async (file: File) => {
 					await profileServices.updateAvatar(file);
-					// if (!(this.props as IProfileUserProps).updateAvatarError) {
-					// 	this.setProps({ showChangeAvatarModal: false });
-					// }
+					if (!(this.props as IProfileUserProps).updateAvatarError) {
+						this.setProps({ showChangeAvatarModal: false });
+					}
 				},
 			}),
 		});
+	}
+
+	public componentDidUpdate(
+		oldProps: IProfileContentProps,
+		newProps: IProfileContentProps
+	): boolean {
+		if (
+			newProps.updateAvatarSuccess &&
+			newProps.updateAvatarSuccess !== oldProps.updateAvatarSuccess
+		) {
+			const { user } = window.store.getState();
+
+			this.children.AvatarGeneralInfo.setProps({
+				image: user.avatar,
+			});
+		}
+		return true;
 	}
 
 	public render(): string {
@@ -635,12 +653,14 @@ const ProfileContent = connect(
 		updateInfoError,
 		updateAvatarError,
 		updatePasswordError,
+		updateAvatarSuccess,
 		user,
 	}) => ({
 		isLoading,
 		updateInfoError,
 		updateAvatarError,
 		updatePasswordError,
+		updateAvatarSuccess,
 		user,
 	})
 )(ProfileContentBlock);
