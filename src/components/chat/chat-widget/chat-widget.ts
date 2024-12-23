@@ -9,7 +9,7 @@ export interface IChatWidgetItem {
 	action: string;
 }
 
-interface IChatWidgetProps {
+export interface IChatWidgetProps {
 	items: IChatWidgetItem[];
 	activeChatId: number;
 	AddUsersError: string;
@@ -76,14 +76,14 @@ class ChatWidgetBlock extends Block {
 				modalButtonLabelOk: "Удалить",
 				onCloseModal: () => {
 					this.setProps({ showModalDelete: false });
-					this.children.ChatModalAdd.children.Modal.setProps({
+					this.children.ChatModalDelete.children.Modal.setProps({
 						success: false,
 					});
 					props.onCloseModal();
 				},
 				onConfirm: async () => {
 					const login = (
-						this.children.ChatModalAdd.children.Modal.children.Body.children
+						this.children.ChatModalDelete.children.Modal.children.Body.children
 							.Search as any
 					).selectedValue();
 					if (login) {
@@ -93,7 +93,7 @@ class ChatWidgetBlock extends Block {
 						});
 
 						if (!(this.props as IChatWidgetProps).DeleteUsersError) {
-							this.children.ChatModalAdd.children.Modal.setProps({
+							this.children.ChatModalDelete.children.Modal.setProps({
 								success: true,
 							});
 						}

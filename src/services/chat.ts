@@ -44,9 +44,10 @@ export const getChatList = async (model: ChatListRequestData) => {
 };
 
 export const createChat = async (model: CreateChatRequestData) => {
-	window.store.set({ isCreateChatLoading: true });
+	window.store.set({ isCreateChatLoading: true, createChatSuccess: false });
 	try {
 		await chatApi.createChat(model);
+		window.store.set({ createChatSuccess: true });
 	} catch (error) {
 		window.store.set({ createChatError: (error as APIError).reason });
 	} finally {
@@ -102,7 +103,7 @@ export const createChatWSConnection = async (chatId: number) => {
 		interval = setInterval(() => {
 			socket.ping();
 		}, 10000);
-		window.socket = socket.getSocket();
+		window.socket = socket.getSocket() as WebSocket;
 	}
 };
 

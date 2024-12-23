@@ -18,6 +18,11 @@ interface IAuthContentProps {
 	loginForm: ILoginForm;
 }
 
+interface ILoginPageProps {
+	isLoading: boolean;
+	loginError: boolean;
+}
+
 class AuthContent extends Block {
 	constructor(props: IAuthContentProps) {
 		super("div", {
@@ -133,7 +138,7 @@ class AuthContent extends Block {
 }
 
 class LoginPage extends Block {
-	constructor(props: any) {
+	constructor(props: ILoginPageProps) {
 		super("main", {
 			...props,
 			classList: "page auth-page",

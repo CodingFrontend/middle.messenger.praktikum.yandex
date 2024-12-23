@@ -75,7 +75,12 @@ class ChangeAvatarModalBlock extends Block {
 				onCancel: () => props.onCancel?.(),
 				onConfirm: () => {
 					const file = (this.props as ChangeAvatarModalProps).file;
+
 					props.onConfirm?.(file);
+
+					this.children.ModalUpload.children.Body.setProps({
+						fileName: "",
+					});
 				},
 			}),
 		});
@@ -91,16 +96,9 @@ class ChangeAvatarModalBlock extends Block {
 		) {
 			this.children.ModalUpload.setProps({
 				title: "Ошибка, попробуйте еще раз",
-				success: false,
 			});
 			this.children.ModalUpload.children.Body.setProps({
 				fileName: "",
-			});
-		}
-
-		if (newProps.updateAvatarSuccess !== oldProps.updateAvatarSuccess) {
-			this.children.ModalUpload.setProps({
-				success: true,
 			});
 		}
 
@@ -114,11 +112,8 @@ class ChangeAvatarModalBlock extends Block {
 	}
 }
 
-const ChangeAvatarModal = connect(
-	({ updateAvatarError, updateAvatarSuccess }) => ({
-		updateAvatarError,
-		updateAvatarSuccess,
-	})
-)(ChangeAvatarModalBlock);
+const ChangeAvatarModal = connect(({ updateAvatarError }) => ({
+	updateAvatarError,
+}))(ChangeAvatarModalBlock);
 
 export default ChangeAvatarModal;

@@ -52,7 +52,7 @@ class Route implements RouteInterface {
 
 	render() {
 		if (!this._block) {
-			this._block = new this._blockClass({} as any) as Block;
+			this._block = new this._blockClass({} as unknown) as Block;
 		}
 
 		// this._block.show();
