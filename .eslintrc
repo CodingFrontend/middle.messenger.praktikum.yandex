@@ -1,15 +1,16 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
-  "rules": {
-    "no-console": "off",
-    "no-unsafe-optional-chaining": "off",
-    "no-debugger": "warn",
-    "@typescript-eslint/no-unused-vars": 2,
-    "@typescript-eslint/ban-ts-comment": "off"
-  }
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"plugins": ["@typescript-eslint"],
+	"rules": {
+		"no-console": "off",
+		"no-unsafe-optional-chaining": "off",
+		"no-debugger": "warn",
+		"@typescript-eslint/no-unused-vars": "error",
+		"@typescript-eslint/ban-ts-comment": "off"
+	}
 }
+

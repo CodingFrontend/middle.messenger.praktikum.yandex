@@ -1,97 +1,109 @@
-import Block from '@/core/block';
-import { IconTextButton, ChatModal } from '@/components';
-import type { IErrors } from '@/components/chat/chat-modal/chat-modal';
+import Block from "@/core/block";
+import { IconTextButton, ChatModal } from "@/components";
+import * as chatServices from "@/services/chat";
+import { connect } from "@/utils/connect";
 
 export interface IChatWidgetItem {
-  faIcon?: string;
-  text: string;
-  action: string;
+	faIcon?: string;
+	text: string;
+	action: string;
 }
 
-interface IChatWidgetProps {
-  items: IChatWidgetItem[];
-  onCloseModal: () => void;
+export interface IChatWidgetProps {
+	items: IChatWidgetItem[];
+	activeChatId: number;
+	AddUsersError: string;
+	DeleteUsersError: string;
+	onCloseModal: () => void;
 }
 
-export default class ChatWidget extends Block {
-  constructor(props: IChatWidgetProps) {
-    super('ul', {
-      ...props,
-      classList: 'chat-widget',
-      showModalAdd: false,
-      action: '',
-      widgetItems: props.items.map(
-        (item: IChatWidgetItem) =>
-          new IconTextButton({
-            label: item.text,
-            iconLeft: item.faIcon,
-            onClick: () => {
-              if (item.action === 'add') {
-                this.setProps({
-                  showModalAdd: true,
-                });
-              } else if (item.action === 'remove') {
-                this.setProps({
-                  showModalDelete: true,
-                });
-              }
-            },
-          })
-      ),
-      ChatModalAdd: new ChatModal({
-        modalTitle: 'Добавить пользователя',
-        modalButtonLabelOk: 'Добавить',
-        onCloseModal: () => {
-          this.setProps({ showModalAdd: false });
-          props.onCloseModal();
-        },
-        onConfirm: () => {
-          setTimeout(() => {
-            // ToDo отрефакторить
-            const form =
-              this.children.ChatModalAdd.children.Modal.children.Body.props
-                .form;
-            const errors =
-              this.children.ChatModalAdd.children.Modal.children.Body.props
-                .errors;
+class ChatWidgetBlock extends Block {
+	constructor(props: IChatWidgetProps) {
+		super("ul", {
+			...props,
+			classList: "chat-widget",
+			showModalAdd: false,
+			action: "",
+			widgetItems: props.items.map(
+				(item: IChatWidgetItem) =>
+					new IconTextButton({
+						label: item.text,
+						iconLeft: item.faIcon,
+						onClick: () => {
+							if (item.action === "add") {
+								this.setProps({
+									showModalAdd: true,
+								});
+							} else if (item.action === "remove") {
+								this.setProps({
+									showModalDelete: true,
+								});
+							}
+						},
+					})
+			),
+			ChatModalAdd: new ChatModal({
+				modalTitle: "Добавить пользователя",
+				modalButtonLabelOk: "Добавить",
+				onCloseModal: () => {
+					this.setProps({ showModalAdd: false });
+					this.children.ChatModalAdd.children.Modal.setProps({
+						success: false,
+					});
+					props.onCloseModal();
+				},
+				onConfirm: async () => {
+					const login = (
+						this.children.ChatModalAdd.children.Modal.children.Body.children
+							.Search as any
+					).selectedValue();
 
-            for (const key in errors) {
-              if (errors[key]) return;
-            }
-            console.log(form);
-            props.onCloseModal();
-          }, 0);
-        },
-      }),
-      ChatModalDelete: new ChatModal({
-        modalTitle: 'Удалить пользователя',
-        modalButtonLabelOk: 'Удалить',
-        onCloseModal: () => {
-          this.setProps({ showModalDelete: false });
-          props.onCloseModal();
-        },
-        onConfirm: () => {
-          setTimeout(() => {
-            // ToDo отрефакторить
-            const form =
-              this.children.ChatModalDelete.children.Modal.children.Body.props
-                .form;
-            const errors =
-              this.children.ChatModalDelete.children.Modal.children.Body.props
-                .errors;
+					if (login) {
+						await chatServices.addUsers({
+							users: [login],
+							chatId: (this.props as IChatWidgetProps).activeChatId,
+						});
+						if (!(this.props as IChatWidgetProps).AddUsersError) {
+							this.children.ChatModalAdd.children.Modal.setProps({
+								success: true,
+							});
+						}
+					}
+				},
+			}),
+			ChatModalDelete: new ChatModal({
+				modalTitle: "Удалить пользователя",
+				modalButtonLabelOk: "Удалить",
+				onCloseModal: () => {
+					this.setProps({ showModalDelete: false });
+					this.children.ChatModalDelete.children.Modal.setProps({
+						success: false,
+					});
+					props.onCloseModal();
+				},
+				onConfirm: async () => {
+					const login = (
+						this.children.ChatModalDelete.children.Modal.children.Body.children
+							.Search as any
+					).selectedValue();
+					if (login) {
+						await chatServices.deleteUsers({
+							users: [login],
+							chatId: (this.props as IChatWidgetProps).activeChatId,
+						});
 
-            for (const key in errors as IErrors) {
-              if (errors[key]) return;
-            }
-            console.log(form);
-            props.onCloseModal();
-          }, 0);
-        },
-      }),
-    });
-  }
-  public render(): string {
-    return `
+						if (!(this.props as IChatWidgetProps).DeleteUsersError) {
+							this.children.ChatModalDelete.children.Modal.setProps({
+								success: true,
+							});
+						}
+					}
+				},
+			}),
+		});
+	}
+	public render(): string {
+		return `
       {{#each widgetItems}}
 				<li>
 					{{{ this }}}
@@ -104,5 +116,23 @@ export default class ChatWidget extends Block {
 				{{{ ChatModalDelete }}}
 			{{/if}}
     `;
-  }
+	}
 }
+
+const ChatWidget = connect(
+	({
+		activeChatId,
+		AddUsersError,
+		isAddUsersLoading,
+		isDeleteUsersLoading,
+		DeleteUsersError,
+	}) => ({
+		activeChatId,
+		AddUsersError,
+		isAddUsersLoading,
+		isDeleteUsersLoading,
+		DeleteUsersError,
+	})
+)(ChatWidgetBlock);
+
+export default ChatWidget;

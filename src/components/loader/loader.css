@@ -1,0 +1,10 @@
+.loader {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+
+.loader__text {
+	font-size: 20px;
+}

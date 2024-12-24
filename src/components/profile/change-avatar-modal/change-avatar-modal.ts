@@ -1,101 +1,119 @@
-import Block from '@/core/block';
-import { Modal, LinkButton } from '@/components';
+import Block from "@/core/block";
+import { Modal, FileUpload } from "@/components";
+import { connect } from "@/utils/connect";
 
 interface ChangeAvatarModalProps {
-  fileName?: string;
-  uploadError?: string;
-  emptyError?: string;
-  onCloseModal: () => void;
-  onConfirm?: () => void;
-  onCancel?: () => void;
+	fileName: string;
+	file: File;
+	uploadError: string;
+	emptyError: string;
+	updateAvatarError: string;
+	updateAvatarSuccess: string;
+	onCloseModal: () => void;
+	onConfirm?: (file: File) => void;
+	onCancel?: () => void;
 }
 
 interface IModalBodyUploadProps {
-  onSelectFile: () => void;
-}
-
-class ModalBody extends Block {
-  constructor() {
-    super('div', {
-      classList: 'avatar-modal-body',
-    });
-  }
-
-  public render(): string {
-    return `
-			<p class="avatar-modal-file">{{fileName}}</p>
-		`;
-  }
+	onChange: () => void;
 }
 
 class ModalBodyUpload extends Block {
-  constructor(props: IModalBodyUploadProps) {
-    super('div', {
-      classList: 'avatar-modal-body',
-      LinkButton: new LinkButton({
-        label: 'Выберите файл на компьютере',
-        type: 'primary',
-        onClick: () => props.onSelectFile(),
-      }),
-    });
-  }
+	constructor(props: IModalBodyUploadProps) {
+		super("div", {
+			classList: "avatar-modal-body",
+			FileUpload: new FileUpload({
+				label: "Выберите файл на компьютере",
+				onChange: () => props.onChange(),
+			}),
+		});
+	}
 
-  public render(): string {
-    return `
+	public render(): string {
+		return `
+			{{#if fileName}}
+				<p class="avatar-modal-file">{{fileName}}</p>
+			{{/if}}
 			<div class="avatar-modal-button">
-				{{{ LinkButton }}}
+				{{{ FileUpload }}}
 			</div>
 		`;
-  }
+	}
 }
 
-export default class ChangeAvatarModal extends Block {
-  constructor(props: ChangeAvatarModalProps) {
-    super('div', {
-      ...props,
-      Modal: new Modal({
-        title: 'Файл загружен',
-        labelOk: 'Поменять',
-        error: props.emptyError,
-        Body: new ModalBody(),
-        onCloseModal: () => props.onCloseModal(),
-        onConfirm: () => props.onConfirm?.(),
-        onCancel: () => props.onCancel?.(),
-      }),
-      ModalError: new Modal({
-        title: 'Ошибка, попробуйте еще раз',
-        labelOk: 'Поменять',
-        error: props.emptyError,
-        Body: new ModalBodyUpload({
-          onSelectFile: () => {},
-        }),
-        onCloseModal: () => props.onCloseModal(),
-        onConfirm: () => props.onConfirm?.(),
-        onCancel: () => props.onCancel?.(),
-      }),
-      ModalUpload: new Modal({
-        title: 'Загрузите файл',
-        labelOk: 'Поменять',
-        error: props.emptyError,
-        Body: new ModalBodyUpload({
-          onSelectFile: () => {},
-        }),
-        onCloseModal: () => props.onCloseModal(),
-        onCancel: () => props.onCancel?.(),
-        onConfirm: () => props.onConfirm?.(),
-      }),
-    });
-  }
+class ChangeAvatarModalBlock extends Block {
+	constructor(props: ChangeAvatarModalProps) {
+		super("div", {
+			...props,
+			file: "",
+			ModalUpload: new Modal({
+				title: "Загрузите файл",
+				labelOk: "Поменять",
+				error: props.emptyError,
+				Body: new ModalBodyUpload({
+					onChange: () => {
+						const file =
+							this.children.ModalUpload.children.Body.children.FileUpload.value();
+						if (file) {
+							this.setProps({
+								file,
+							});
 
-  public render(): string {
-    return `
-		{{#if fileName}}
-			{{{ Modal }}}
-		{{else if uploadError}}
-			{{{ ModalError }}}
-		{{else}}
+							this.children.ModalUpload.setProps({
+								title: "Файл загружен",
+							});
+
+							this.children.ModalUpload.children.Body.setProps({
+								fileName: file.name,
+							});
+						}
+					},
+				}),
+				onCloseModal: () => {
+					props.onCloseModal();
+				},
+				onCancel: () => props.onCancel?.(),
+				onConfirm: () => {
+					const file = (this.props as ChangeAvatarModalProps).file;
+
+					props.onConfirm?.(file);
+
+					this.children.ModalUpload.children.Body.setProps({
+						fileName: "",
+					});
+				},
+			}),
+		});
+	}
+
+	public componentDidUpdate(
+		oldProps: ChangeAvatarModalProps,
+		newProps: ChangeAvatarModalProps
+	): boolean {
+		if (
+			newProps.updateAvatarError &&
+			newProps.updateAvatarError !== oldProps.updateAvatarError
+		) {
+			this.children.ModalUpload.setProps({
+				title: "Ошибка, попробуйте еще раз",
+			});
+			this.children.ModalUpload.children.Body.setProps({
+				fileName: "",
+			});
+		}
+
+		return true;
+	}
+
+	public render(): string {
+		return `
 			{{{ ModalUpload }}}
-		{{/if}}
 		`;
-  }
+	}
 }
+
+const ChangeAvatarModal = connect(({ updateAvatarError }) => ({
+	updateAvatarError,
+}))(ChangeAvatarModalBlock);
+
+export default ChangeAvatarModal;
