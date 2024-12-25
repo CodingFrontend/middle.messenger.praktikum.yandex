@@ -54,7 +54,10 @@ class ChatDialogBlock extends Block {
 				name: "message",
 				onKeyDown: (e: KeyboardEvent) => {
 					if (e.code === "Enter") {
-						const value = (this.children as TChildren).SendMessageInput.value();
+						const value = (
+							(this.children as TChildren)
+								.SendMessageInput as unknown as SendMessageInput
+						).value();
 						const error = validateField("message", value);
 
 						if (error) return;
@@ -68,7 +71,10 @@ class ChatDialogBlock extends Block {
 							})
 						);
 
-						(this.children as TChildren).SendMessageInput.clear();
+						(
+							(this.children as TChildren)
+								.SendMessageInput as unknown as SendMessageInput
+						).clear();
 					}
 				},
 			}),
@@ -76,7 +82,10 @@ class ChatDialogBlock extends Block {
 				faIcon: "fa-solid fa-arrow-right",
 				type: "primary",
 				onClick: () => {
-					const value = (this.children as TChildren).SendMessageInput.value();
+					const value = (
+						(this.children as TChildren)
+							.SendMessageInput as unknown as SendMessageInput
+					).value();
 					const error = validateField("message", value);
 
 					if (error) return;
@@ -90,7 +99,10 @@ class ChatDialogBlock extends Block {
 						})
 					);
 
-					(this.children as TChildren).SendMessageInput.clear();
+					(
+						(this.children as TChildren)
+							.SendMessageInput as unknown as SendMessageInput
+					).clear();
 				},
 			}),
 		});

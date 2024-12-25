@@ -69,8 +69,9 @@ class Chat extends Block {
 				Body: new ModalBody(),
 				onCloseModal: () => this.setProps({ showCreateChatModal: false }),
 				onConfirm: async () => {
-					const title =
-						this.children.Modal.children.Body.children.Input.value();
+					const title = (
+						this.children.Modal.children.Body.children.Input as unknown as Input
+					).value();
 					await chatServices.createChat({ title });
 					await chatServices.getChatList({} as ChatListRequestData);
 					if (!(this.props as IChatProps).createChatError) {

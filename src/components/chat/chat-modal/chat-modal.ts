@@ -50,7 +50,9 @@ class DialogBody extends Block {
 				options: props.addUsersList,
 				onKeydown: async () => {
 					setTimeout(async () => {
-						const searchValue = this.children.Search.value();
+						const searchValue = (
+							this.children.Search as unknown as Search
+						).value();
 
 						if (searchValue) {
 							await profileServices.searchByLogin({ login: searchValue });
@@ -81,7 +83,10 @@ class ChatModalBlock extends Block {
 						DeleteUsersError: "",
 						options: [],
 					});
-					this.children.Modal.children.Body.children.Search.clear();
+					(
+						this.children.Modal.children.Body.children
+							.Search as unknown as Search
+					).clear();
 
 					props.onCloseModal();
 				},
@@ -136,4 +141,3 @@ const ChatModal = connect(
 )(ChatModalBlock);
 
 export default ChatModal;
-

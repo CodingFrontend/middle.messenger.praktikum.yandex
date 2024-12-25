@@ -52,8 +52,10 @@ class ChangeAvatarModalBlock extends Block {
 				error: props.emptyError,
 				Body: new ModalBodyUpload({
 					onChange: () => {
-						const file =
-							this.children.ModalUpload.children.Body.children.FileUpload.value();
+						const file = (
+							this.children.ModalUpload.children.Body.children
+								.FileUpload as unknown as FileUpload
+						).value();
 						if (file) {
 							this.setProps({
 								file,

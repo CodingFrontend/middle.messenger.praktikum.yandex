@@ -35,7 +35,6 @@ class Route implements RouteInterface {
 	leave() {
 		if (this._block) {
 			this._block.dispatchComponentDidUnmount();
-			// this._block.hide();
 		}
 	}
 
@@ -55,7 +54,6 @@ class Route implements RouteInterface {
 			this._block = new this._blockClass({} as unknown) as Block;
 		}
 
-		// this._block.show();
 		if (this._block) {
 			this._renderDom(this._props.rootQuery, this._block);
 			this._block.componentDidMount();

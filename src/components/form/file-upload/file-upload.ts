@@ -21,11 +21,13 @@ export default class FileUpload extends Block {
 	}
 
 	public value() {
-		return this.children.FileUploadField.value();
+		return (
+			this.children.FileUploadField as unknown as FileUploadField
+		).value();
 	}
 
 	public clear() {
-		this.children.FileUploadField.clear();
+		(this.children.FileUploadField as unknown as FileUploadField).clear();
 	}
 
 	public render(): string {
