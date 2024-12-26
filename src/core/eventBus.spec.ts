@@ -20,7 +20,7 @@ describe("EventBus", () => {
 
 		eventBus.on("clicked", clickHandlerStub);
 		eventBus.emit("clicked");
-		// eventBus.off("clicked", clickHandlerStub);
+		eventBus.off("clicked", clickHandlerStub);
 		eventBus.emit("clicked");
 
 		expect(clickHandlerStub.calledOnce).to.be.true;
