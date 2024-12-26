@@ -11,14 +11,14 @@
 		"check-types": "tsc --noEmit",
 		"eslint": "eslint",
 		"stylelint": "stylelint \"src/**/*.css\" --fix",
-		"lint": "npm run eslint && npm run stylelint && npm run check-types",
+		"lint": "eslint src/",
 		"test": "mocha",
 		"prepare": "husky"
 	},
 	"husky": {
 		"hooks": {
 			"prepare": "husky install",
-			"pre-commit": "npm run test"
+			"pre-commit": "npm-run-all test lint"
 		}
 	},
 	"devDependencies": {
