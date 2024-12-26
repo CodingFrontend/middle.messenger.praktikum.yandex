@@ -18,7 +18,7 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "echo 'pre-commit'"
+			"pre-commit": "npm-run-all test lint"
 		}
 	},
 	"devDependencies": {
