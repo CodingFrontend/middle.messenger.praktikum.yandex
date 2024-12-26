@@ -16,6 +16,11 @@
 		"prepare": "husky install",
 		"pre-commit": "npm-run-all test lint"
 	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm-run-all test lint"
+		}
+	},
 	"devDependencies": {
 		"@types/chai": "^5.0.1",
 		"@types/chai-http": "^4.2.4",
