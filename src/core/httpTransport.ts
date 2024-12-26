@@ -1,4 +1,4 @@
-import isJsonString from "@/utils/isJsonString";
+import isJsonString from "../utils/isJsonString";
 
 enum METHODS {
 	GET = "GET",
@@ -55,14 +55,14 @@ export default class HTTPTransport {
 				? {
 						"Content-Security-Policy":
 							"default-src 'self'; img-src *; script-src 'self'; style-src 'self'; connect-src 'self' *.netlify.app;",
-				}
+				  }
 				: {
 						"Content-Type": "application/json",
 						"X-Requested-With": "XMLHttpRequest",
 						"Access-Control-Allow-Origin": "*",
 						"Content-Security-Policy":
 							"default-src 'self'; img-src *; script-src 'self'; style-src 'self'; connect-src 'self' *.netlify.app;",
-				};
+				  };
 
 		return new Promise((resolve, reject) => {
 			if (!method) {
@@ -71,6 +71,7 @@ export default class HTTPTransport {
 			}
 
 			const xhr = new XMLHttpRequest();
+
 			xhr.withCredentials = true;
 			const urlString =
 				method === "GET" && !!data
@@ -81,7 +82,6 @@ export default class HTTPTransport {
 			Object.keys(headers).forEach((key) =>
 				xhr.setRequestHeader(key, headers[key])
 			);
-
 			xhr.onload = function () {
 				if (xhr.status >= 200 && xhr.status < 300) {
 					const response = isJsonString(xhr.response)
@@ -123,6 +123,10 @@ export default class HTTPTransport {
 			} else {
 				xhr.send(JSON.stringify(data));
 			}
+
+			xhr.onreadystatechange = function () {
+				console.log(xhr.readyState, xhr.status);
+			};
 		});
 	}
 
@@ -133,6 +137,7 @@ export default class HTTPTransport {
 		};
 
 		const requestUrl = `${this.apiUrl}${url}`;
+
 		return this._request(requestUrl, requestProps);
 	};
 

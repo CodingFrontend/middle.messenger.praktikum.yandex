@@ -1,5 +1,5 @@
 import Route from "./Route";
-import { ROUTES } from "@/constants";
+import { ROUTES } from "../constants";
 import type { BlockConsturctor } from "./block";
 
 export interface RouteInterface {
@@ -37,10 +37,10 @@ class Router {
 	}
 
 	start() {
-		const { user } = window.store.getState();
+		const store = window.store?.getState();
 
 		if (
-			!user &&
+			!store?.user &&
 			window.location.pathname !== ROUTES.register &&
 			window.location.pathname !== ROUTES.login
 		) {
@@ -50,7 +50,7 @@ class Router {
 		}
 
 		if (
-			user &&
+			store?.user &&
 			(window.location.pathname === ROUTES.register ||
 				window.location.pathname === ROUTES.login)
 		) {
