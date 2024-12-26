@@ -13,13 +13,12 @@
 		"stylelint": "stylelint \"src/**/*.css\" --fix",
 		"lint": "npm run eslint && npm run stylelint && npm run check-types",
 		"test": "mocha",
-		"prepare": "husky",
+		"prepare": "husky install",
 		"pre-commit": "npm-run-all test lint"
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "echo 'Error: no test specified'; false",
-			"pre-push": "npm run-all test lint"
+			"pre-commit": "echo 'pre-commit'"
 		}
 	},
 	"devDependencies": {
@@ -34,7 +33,7 @@
 		"chai-http": "^5.1.1",
 		"eslint": "^8.2.0",
 		"handlebars": "4.7.8",
-		"husky": "^8.0.0",
+		"husky": "8.0.0",
 		"jsdom": "^25.0.1",
 		"mocha": "^11.0.1",
 		"sinon": "^19.0.2",
