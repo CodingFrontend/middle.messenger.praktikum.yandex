@@ -10,7 +10,7 @@ describe("EventBus", () => {
 		const clickHandlerStub = sinon.stub();
 
 		eventBus.on("clicked", clickHandlerStub);
-		eventBus.emit("clickeds");
+		eventBus.emit("clicked");
 
 		expect(clickHandlerStub.calledOnce).to.be.true;
 	});
