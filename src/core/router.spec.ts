@@ -1,28 +1,20 @@
-import Block from "./block";
+import Block, { TProps } from "./block";
 import { expect } from "chai";
 import Router from "./Router";
 
 describe("Router", () => {
-	let router;
-	let PageComponent;
-
-	before(() => {
-		class Page extends Block {
-			constructor(props) {
-				super("div", props);
-			}
-
-			render() {
-				return `
-					<span id="test-text">Test</span>
-				`;
-			}
+	const router = new Router("#app");
+	class PageComponent extends Block {
+		constructor(props: TProps) {
+			super("div", props);
 		}
 
-		PageComponent = Page;
-
-		router = new Router("#app");
-	});
+		render() {
+			return `
+				<span id="test-text">Test</span>
+			`;
+		}
+	}
 
 	it("Должен отрисовывать содержимое страницу с роутом '/'", async () => {
 		const pageRoute = "/";
@@ -35,18 +27,18 @@ describe("Router", () => {
 	it("Должен осуществлять переход по роуту", () => {
 		router.go("/register");
 
-		expect(router.history.length).to.eq(3);
+		expect(router.history.length).to.eq(2);
 	});
 
 	it("Должен осуществлять переход назад", () => {
 		router.back();
 
-		expect(router.history.length).to.eq(3);
+		expect(router.history.length).to.eq(2);
 	});
 
 	it("Должен осуществлять переход вперед", () => {
 		router.forward();
 
-		expect(router.history.length).to.eq(3);
+		expect(router.history.length).to.eq(2);
 	});
 });

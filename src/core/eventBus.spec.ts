@@ -4,11 +4,7 @@ import { expect } from "chai";
 import sinon from "sinon";
 
 describe("EventBus", () => {
-	let eventBus;
-
-	before(() => {
-		eventBus = new EventBus();
-	});
+	const eventBus = new EventBus();
 
 	it("Должен добавлять события", () => {
 		const clickHandlerStub = sinon.stub();

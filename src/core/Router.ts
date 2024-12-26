@@ -1,6 +1,5 @@
 import Route from "./Route";
 import { ROUTES } from "../constants";
-import type { BlockConsturctor } from "./block";
 
 export interface RouteInterface {
 	render: () => void;
@@ -28,7 +27,7 @@ class Router {
 		Router.__instance = this;
 	}
 
-	use(pathname: string, block: BlockConsturctor) {
+	use(pathname: string, block: unknown) {
 		const route: RouteInterface = new Route(pathname, block, {
 			rootQuery: this._rootQuery,
 		});

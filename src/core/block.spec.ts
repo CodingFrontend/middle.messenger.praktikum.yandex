@@ -1,46 +1,42 @@
 import { describe } from "mocha";
-import Block from "./block";
+import Block, { TProps } from "./block";
 import sinon from "sinon";
 import { expect } from "chai";
 
 describe("Block", () => {
-	let PageComponent;
-	let ButtonComponent;
+	interface TPageProps extends TProps {
+		text?: string;
+	}
 
-	before(() => {
-		class Page extends Block {
-			constructor(props) {
-				super("div", props);
-			}
+	class PageComponent extends Block<TPageProps> {
+		constructor(props: TPageProps) {
+			super("div", props);
+		}
 
-			render() {
-				return `
+		render() {
+			return `
 					<span id="test-text">{{text}}</span>
 				`;
-			}
 		}
+	}
 
-		PageComponent = Page;
-
-		class Button extends Block {
-			constructor(props) {
-				super("button", {
-					...props,
-					classList: "new-button",
-				});
-			}
+	class ButtonComponent extends Block {
+		constructor(props: TProps) {
+			super("button", {
+				...props,
+				classList: "new-button",
+			});
 		}
-
-		ButtonComponent = Button;
-	});
+	}
 
 	it("Должен создать компонент с состоянием из конструктора", () => {
 		const text = "Hello";
 
 		const pageComponent = new PageComponent({ text });
 
-		const spanText =
-			pageComponent.element?.querySelector("#test-text")?.innerHTML;
+		const spanText = (pageComponent.element as HTMLElement)?.querySelector(
+			"#test-text"
+		)?.innerHTML;
 
 		expect(spanText).to.be.eq(text);
 	});
@@ -51,8 +47,9 @@ describe("Block", () => {
 		const pageComponent = new PageComponent({ text: "Hello" });
 
 		pageComponent.setProps({ text: newValue });
-		const spanText =
-			pageComponent.element?.querySelector("#test-text")?.innerHTML;
+		const spanText = (pageComponent.element as HTMLElement)?.querySelector(
+			"#test-text"
+		)?.innerHTML;
 
 		expect(spanText).to.be.eq(newValue);
 	});
@@ -66,19 +63,19 @@ describe("Block", () => {
 		});
 
 		const event = new MouseEvent("click");
-		pageComponent.element?.dispatchEvent(event);
+		(pageComponent.element as HTMLElement)?.dispatchEvent(event);
 
 		expect(clickHandlerStub.calledOnce).to.be.true;
 	});
 
 	it("Компонент должен вызвать dispatchComponentDidMount метод", () => {
 		const clock = sinon.useFakeTimers();
-		const pageComponent = new PageComponent();
+		const pageComponent = new PageComponent({});
 
 		const spyCDM = sinon.spy(pageComponent, "componentDidMount");
 
 		const element = pageComponent.getContent();
-		document.body.append(element!);
+		document.body.append(element! as HTMLElement);
 		clock.next();
 
 		expect(spyCDM.calledOnce).to.be.true;
@@ -98,7 +95,7 @@ describe("Block", () => {
 	it("Компонент должен добавлять аттрибуты", () => {
 		const attr = "disabled";
 
-		const buttonComponent = new ButtonComponent();
+		const buttonComponent = new ButtonComponent({});
 
 		buttonComponent.setAttrs(attr);
 
