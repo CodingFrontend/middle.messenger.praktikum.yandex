@@ -1,6 +1,5 @@
 import Route from "./Route";
-import { ROUTES } from "@/constants";
-import type { BlockConsturctor } from "./block";
+import { ROUTES } from "../constants";
 
 export interface RouteInterface {
 	render: () => void;
@@ -28,7 +27,7 @@ class Router {
 		Router.__instance = this;
 	}
 
-	use(pathname: string, block: BlockConsturctor) {
+	use(pathname: string, block: unknown) {
 		const route: RouteInterface = new Route(pathname, block, {
 			rootQuery: this._rootQuery,
 		});
@@ -37,10 +36,10 @@ class Router {
 	}
 
 	start() {
-		const { user } = window.store.getState();
+		const store = window.store?.getState();
 
 		if (
-			!user &&
+			!store?.user &&
 			window.location.pathname !== ROUTES.register &&
 			window.location.pathname !== ROUTES.login
 		) {
@@ -50,7 +49,7 @@ class Router {
 		}
 
 		if (
-			user &&
+			store?.user &&
 			(window.location.pathname === ROUTES.register ||
 				window.location.pathname === ROUTES.login)
 		) {

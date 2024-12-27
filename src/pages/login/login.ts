@@ -84,8 +84,10 @@ class AuthContent extends Block {
 					type: "button",
 				},
 				onClick: () => {
-					const login = this.children.InputLogin.value();
-					const password = this.children.InputPassword.value();
+					const login = (this.children.InputLogin as unknown as Input).value();
+					const password = (
+						this.children.InputPassword as unknown as Input
+					).value();
 					const errorLogin = validateField("login", login);
 					const errorPassword = validateField("password", password);
 

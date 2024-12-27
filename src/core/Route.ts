@@ -1,13 +1,13 @@
 import { RouteInterface } from "./Router";
 import Block from "./block";
-import type { TProps, BlockConsturctor } from "./block";
+import type { BlockConsturctor, TProps } from "./block";
 
 export type TPathName = string;
 
 export interface RouteContsructorInterface extends Route {
 	new (name: string): {
 		pathname: TPathName;
-		view: BlockConsturctor;
+		view: unknown;
 		props: TProps;
 	};
 }
@@ -18,24 +18,16 @@ class Route implements RouteInterface {
 	private _block: Block | null;
 	private _props: TProps;
 
-	constructor(pathname: TPathName, view: BlockConsturctor, props: TProps) {
+	constructor(pathname: TPathName, view: unknown, props: TProps) {
 		this._pathname = pathname;
-		this._blockClass = view;
+		this._blockClass = view as BlockConsturctor;
 		this._block = null;
 		this._props = props;
-	}
-
-	navigate(pathname: string) {
-		if (this.match(pathname)) {
-			this._pathname = pathname;
-			this.render();
-		}
 	}
 
 	leave() {
 		if (this._block) {
 			this._block.dispatchComponentDidUnmount();
-			// this._block.hide();
 		}
 	}
 
@@ -55,7 +47,6 @@ class Route implements RouteInterface {
 			this._block = new this._blockClass({} as unknown) as Block;
 		}
 
-		// this._block.show();
 		if (this._block) {
 			this._renderDom(this._props.rootQuery, this._block);
 			this._block.componentDidMount();

@@ -11,17 +11,37 @@
 		"check-types": "tsc --noEmit",
 		"eslint": "eslint",
 		"stylelint": "stylelint \"src/**/*.css\" --fix",
-		"lint": "npm run eslint && npm run stylelint && npm run check-types"
+		"lint": "npm run eslint && npm run stylelint && npm run check-types",
+		"test": "mocha",
+		"prepare": "husky install",
+		"pre-commit": "npm run test && npm run lint"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm run test && npm run lint"
+		}
 	},
 	"devDependencies": {
+		"@types/chai": "^5.0.1",
+		"@types/chai-http": "^4.2.4",
+		"@types/mocha": "^10.0.10",
+		"@types/node": "^22.10.2",
+		"@types/sinon": "^17.0.3",
 		"@typescript-eslint/eslint-plugin": "^7.4.0",
 		"@typescript-eslint/parser": "^7.14.0",
+		"chai": "^5.1.2",
+		"chai-http": "^5.1.1",
 		"eslint": "^8.2.0",
 		"handlebars": "4.7.8",
+		"husky": "8.0.0",
+		"jsdom": "^25.0.1",
+		"mocha": "^11.0.1",
+		"sinon": "^19.0.2",
 		"stylelint": "^16.10.0",
 		"stylelint-config-standard": "^36.0.1",
 		"stylelint-selector-bem-pattern": "^4.0.1",
-		"typescript": "^5.0.2",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.7.2",
 		"vite": "^5.4.10"
 	},
 	"dependencies": {
@@ -35,4 +55,3 @@
 		"node": "18.x"
 	}
 }
-
