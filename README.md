@@ -18,7 +18,7 @@ https://github.com/CodingFrontend/middle.messenger.praktikum.yandex/pull/7
 
 https://fantastic-sorbet-d8ea1a.netlify.app/
 
-## Technologies used in this project
+## Technologies
 
 Typescript
 HandleBars
