@@ -24,7 +24,7 @@ describe("HttpTransport", function () {
 		const requestStub = httpRequest.rejects(new Error(errorMessage));
 
 		try {
-			// @ts-expect-error
+			// @ts-expect-error for tests
 			await api.request(`${baseUrl}/test`, { method: "SOMEMETHOD" });
 			expect(requestStub.calledOnce).to.be.true;
 		} catch (error) {
