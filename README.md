@@ -10,10 +10,19 @@ https://github.com/CodingFrontend/middle.messenger.praktikum.yandex/pull/5
 
 https://github.com/CodingFrontend/middle.messenger.praktikum.yandex/pull/6
 
+## PR Sprint 4
+
+https://github.com/CodingFrontend/middle.messenger.praktikum.yandex/pull/7
 
 ## Netlify link
 
 https://fantastic-sorbet-d8ea1a.netlify.app/
+
+## Technologies used in this project
+
+Typescript
+HandleBars
+Mocha Sinon Chai
 
 ## Project Setup
 
@@ -31,5 +40,10 @@ npm run start
 
 ```sh
 npm run build
+```
+### Run tests
+
+```sh
+npm run test
 ```
 
