@@ -57,3 +57,4 @@ export const logout = async () => {
 		window.store.set({ isLogoutLoading: false });
 	}
 };
+

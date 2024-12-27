@@ -183,7 +183,9 @@ class RegisterContent extends Block {
 				type: "password",
 				onChange: (e: Event) => {
 					const value = (e.target as HTMLInputElement).value;
-					const password = this.children.InputPassword.value();
+					const password = (
+						this.children.InputPassword as unknown as Input
+					).value();
 
 					const error = checkPasswordRepeat(password, value);
 
@@ -209,13 +211,21 @@ class RegisterContent extends Block {
 					type: "button",
 				},
 				onClick: () => {
-					const login = this.children.InputLogin.value();
-					const password = this.children.InputPassword.value();
-					const password_repeat = this.children.InputPasswordRepeat.value();
-					const email = this.children.InputEmail.value();
-					const first_name = this.children.InputName.value();
-					const second_name = this.children.InputLastName.value();
-					const phone = this.children.InputPhone.value();
+					const login = (this.children.InputLogin as unknown as Input).value();
+					const password = (
+						this.children.InputPassword as unknown as Input
+					).value();
+					const password_repeat = (
+						this.children.InputPasswordRepeat as unknown as Input
+					).value();
+					const email = (this.children.InputEmail as unknown as Input).value();
+					const first_name = (
+						this.children.InputName as unknown as Input
+					).value();
+					const second_name = (
+						this.children.InputLastName as unknown as Input
+					).value();
+					const phone = (this.children.InputPhone as unknown as Input).value();
 
 					const errorLogin = validateField("login", login);
 					const errorPassword = validateField("password", password);

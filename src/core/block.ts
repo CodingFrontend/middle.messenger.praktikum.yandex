@@ -149,6 +149,7 @@ export default class Block<IProps extends TProps = {}> {
 
 		this._render();
 	}
+
 	public componentDidUpdate(
 		/* eslint-disable */
 		// @ts-ignore
@@ -158,10 +159,6 @@ export default class Block<IProps extends TProps = {}> {
 		newProps: TProps
 	): Promise<boolean> | boolean {
 		return true;
-	}
-
-	public forceUpdate() {
-		this._render();
 	}
 
 	public setProps = (nextProps: IProps) => {
@@ -174,10 +171,6 @@ export default class Block<IProps extends TProps = {}> {
 
 	public setAttrs = (attrName: string, attrValue?: string) => {
 		(this._element as HTMLElement)?.setAttribute(attrName, attrValue as string);
-	};
-
-	public removeAttrs = (attrName: string) => {
-		(this._element as HTMLElement)?.removeAttribute(attrName);
 	};
 
 	public setChild = (child: unknown) => {
@@ -264,8 +257,18 @@ export default class Block<IProps extends TProps = {}> {
 		return "";
 	}
 
+	// public getContent(): unknown {
+	// 	return this._element;
+	// }
+
 	public getContent(): unknown {
-		return this._element;
+		// Хак, чтобы вызвать CDM только после добавления в DOM
+		setTimeout(() => {
+			if ((this.element as HTMLElement)?.nodeType === Node.ELEMENT_NODE) {
+				this.eventBus().emit(Block.EVENTS.FLOW_CDM);
+			}
+		}, 100);
+		return this.element;
 	}
 
 	private _makePropsProxy(props: IProps) {
@@ -293,18 +296,4 @@ export default class Block<IProps extends TProps = {}> {
 	private _createDocumentElement(tagName: string) {
 		return document.createElement(tagName);
 	}
-
-	public show() {
-		(this.getContent() as HTMLElement).style.display = "block";
-	}
-
-	public hide() {
-		(this.getContent() as HTMLElement).style.display = "none";
-	}
-
-	public value(): any {
-		return "";
-	}
-
-	public clear() {}
 }

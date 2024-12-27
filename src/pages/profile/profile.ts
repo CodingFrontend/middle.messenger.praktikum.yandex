@@ -312,7 +312,9 @@ class ProfileContentBlock extends Block {
 				type: "password",
 				onChange: (e: Event) => {
 					const value = (e.target as HTMLInputElement).value;
-					const password = this.children.InputNewPassword.value();
+					const password = (
+						this.children.InputNewPassword as unknown as CustomInput
+					).value();
 
 					const error = checkPasswordRepeat(password, value);
 
@@ -361,12 +363,24 @@ class ProfileContentBlock extends Block {
 					type: "button",
 				},
 				onClick: () => {
-					const login = this.children.InputLoginEdit.value();
-					const email = this.children.InputEmailEdit.value();
-					const first_name = this.children.InputFirstNameEdit.value();
-					const second_name = this.children.InputLastNameEdit.value();
-					const display_name = this.children.InputDisplayNameEdit.value();
-					const phone = this.children.InputPhoneEdit.value();
+					const login = (
+						this.children.InputLoginEdit as unknown as CustomInput
+					).value();
+					const email = (
+						this.children.InputEmailEdit as unknown as CustomInput
+					).value();
+					const first_name = (
+						this.children.InputFirstNameEdit as unknown as CustomInput
+					).value();
+					const second_name = (
+						this.children.InputLastNameEdit as unknown as CustomInput
+					).value();
+					const display_name = (
+						this.children.InputDisplayNameEdit as unknown as CustomInput
+					).value();
+					const phone = (
+						this.children.InputPhoneEdit as unknown as CustomInput
+					).value();
 
 					const errorLogin = validateField("login", login);
 					const errorEmail = validateField("email", email);
@@ -440,10 +454,15 @@ class ProfileContentBlock extends Block {
 					type: "button",
 				},
 				onClick: () => {
-					const oldPassword = this.children.InputOldPassword.value();
-					const newPassword = this.children.InputNewPassword.value();
-					const newPasswordRepeat =
-						this.children.InputNewPasswordRepeat.value();
+					const oldPassword = (
+						this.children.InputOldPassword as unknown as CustomInput
+					).value();
+					const newPassword = (
+						this.children.InputNewPassword as unknown as CustomInput
+					).value();
+					const newPasswordRepeat = (
+						this.children.InputNewPasswordRepeat as unknown as CustomInput
+					).value();
 
 					const errorPassword = validateField("password", newPassword);
 					const errorPasswordRepeat = checkPasswordRepeat(

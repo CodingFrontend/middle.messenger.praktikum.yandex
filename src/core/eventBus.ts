@@ -1,5 +1,5 @@
 export default class EventBus<E extends string> {
-	private listeners: Record<string, Function[]>;
+	public listeners: Record<string, Function[]>;
 	constructor() {
 		this.listeners = {};
 	}
@@ -27,3 +27,4 @@ export default class EventBus<E extends string> {
 		});
 	}
 }
+
