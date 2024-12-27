@@ -24,7 +24,7 @@ describe("HttpTransport", function () {
 		const requestStub = httpRequest.rejects(new Error(errorMessage));
 
 		try {
-			// @ts-ignore
+			// @ts-expect-error
 			await api.request(`${baseUrl}/test`, { method: "SOMEMETHOD" });
 			expect(requestStub.calledOnce).to.be.true;
 		} catch (error) {
@@ -73,3 +73,4 @@ describe("HttpTransport", function () {
 		expect(requestStub.firstCall.args[1].data.id).to.equal("id");
 	});
 });
+
