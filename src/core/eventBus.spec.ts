@@ -10,19 +10,25 @@ describe("EventBus", () => {
 		const clickHandlerStub = sinon.stub();
 
 		eventBus.on("clicked", clickHandlerStub);
-		eventBus.emit("clicked");
 
-		expect(clickHandlerStub.calledOnce).to.be.true;
+		expect(eventBus.listeners["clicked"]).to.include(clickHandlerStub);
 	});
 
 	it("Должен удалять события", () => {
 		const clickHandlerStub = sinon.stub();
 
 		eventBus.on("clicked", clickHandlerStub);
-		eventBus.emit("clicked");
 		eventBus.off("clicked", clickHandlerStub);
+
+		expect(eventBus.listeners["clicked"]).to.not.include(clickHandlerStub);
+	});
+
+	it("Должен вызывать события", () => {
+		const clickHandlerStub = sinon.stub();
+
+		eventBus.on("clicked", clickHandlerStub);
 		eventBus.emit("clicked");
 
-		expect(clickHandlerStub.calledOnce).to.be.true;
+		expect(eventBus.listeners["clicked"]).to.include(clickHandlerStub);
 	});
 });

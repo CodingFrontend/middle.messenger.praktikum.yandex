@@ -1,56 +1,75 @@
-// import sinon from "sinon";
-// import { expect } from "chai";
+import sinon, { SinonStub } from "sinon";
+import { expect } from "chai";
 import { describe } from "mocha";
 
 import HttpTransport from "./httpTransport";
+import { baseUrl } from "../constants";
 
 describe("HttpTransport", function () {
-	this.timeout(20000);
-	let authApi;
+	const api = new HttpTransport("/test");
+	let httpRequest: SinonStub;
+	const testUrl = "";
+	const testOptions = { data: { id: "id" } };
 
-	before(() => {
-		authApi = new HttpTransport("/auth");
+	beforeEach(() => {
+		httpRequest = sinon.stub(api, "request");
 	});
 
-	// it("Должен отправлять успешный Get запрос /user на получение пользователя", async () => {
-	// 	const res = await authApi.get("/user");
-	// 	expect(res.status).to.be.equal(200);
-	// 	expect(res.body).not.to.be.empty;
-	// 	expect(res.body).to.be.an("object");
-	// 	expect(res.body.id).to.be.a("number");
-	// });
+	afterEach(() => {
+		sinon.restore();
+	});
 
-	// it("Должен отправлять успешный Post запрос авторизацию пользователя", function (done) {
-	// 	authApi = new HttpTransport("/auth");
+	it("Должен возвращать ошибку при отсутствии метода", async () => {
+		const errorMessage = "Данный метод отсутствует";
+		const requestStub = httpRequest.rejects(new Error(errorMessage));
 
-	// 	let res;
-	// 	authApi
-	// 		.post("/signin", {
-	// 			login: "mje",
-	// 			password: "12345678AB",
-	// 		})
-	// 		.then((result) => {
-	// 			console.log(1);
-	// 			res = result;
-	// 			console.log(result);
+		try {
+			// @ts-ignore
+			await api.request(`${baseUrl}/test`, { method: "SOMEMETHOD" });
+			expect(requestStub.calledOnce).to.be.true;
+		} catch (error) {
+			const err = error as Error;
+			expect(err.message).to.equal(errorMessage);
+		}
+	});
 
-	// 			expect(res).to.equal("OK");
+	it("Должен успешно отправлять GET-запрос с переданными параметрами { data: { id: 'id' } }", async () => {
+		const requestStub = httpRequest.resolves();
+		await api.get(testUrl, testOptions);
 
-	// 			done();
-	// 		})
-	// 		.catch((err) => console.log(err));
-	// }, 20000);
+		expect(requestStub.calledOnce).to.be.true;
+		expect(requestStub.firstCall.args[0]).to.equal(`${baseUrl}/test`);
+		expect(requestStub.firstCall.args[1].method).to.equal("GET");
+		expect(requestStub.firstCall.args[1].data.id).to.equal("id");
+	});
 
-	// it("Должен выбрасывать ошибку при неуспешном Get запросе /user на получение пользователя", async (done) => {
-	// 	try {
-	// 		await authApi.get("/user");
-	// 		done();
-	// 	} catch (e) {
-	// 		console.log(1);
-	// 		const statuses = [400, 401, 500];
-	// 		expect(e).to.be.instanceOf(Error);
+	it("Должен успешно отправлять POST-запрос с переданными параметрами { data: { id: 'id' } }", async () => {
+		const requestStub = httpRequest.resolves();
+		await api.post(testUrl, testOptions);
 
-	// 		expect(e.status).to.satisfy((value) => statuses.indexOf(value) !== -1);
-	// 	}
-	// });
+		expect(requestStub.calledOnce).to.be.true;
+		expect(requestStub.firstCall.args[0]).to.equal(`${baseUrl}/test`);
+		expect(requestStub.firstCall.args[1].method).to.equal("POST");
+		expect(requestStub.firstCall.args[1].data.id).to.equal("id");
+	});
+
+	it("Должен успешно отправлять PUT-запрос с переданными параметрами { data: { id: 'id' } }", async () => {
+		const requestStub = httpRequest.resolves();
+		await api.put(testUrl, testOptions);
+
+		expect(requestStub.calledOnce).to.be.true;
+		expect(requestStub.firstCall.args[0]).to.equal(`${baseUrl}/test`);
+		expect(requestStub.firstCall.args[1].method).to.equal("PUT");
+		expect(requestStub.firstCall.args[1].data.id).to.equal("id");
+	});
+
+	it("Должен успешно отправлять DELETE-запрос с переданными параметрами { data: { id: 'id' } }", async () => {
+		const requestStub = httpRequest.resolves();
+		await api.delete(testUrl, testOptions);
+
+		expect(requestStub.calledOnce).to.be.true;
+		expect(requestStub.firstCall.args[0]).to.equal(`${baseUrl}/test`);
+		expect(requestStub.firstCall.args[1].method).to.equal("DELETE");
+		expect(requestStub.firstCall.args[1].data.id).to.equal("id");
+	});
 });

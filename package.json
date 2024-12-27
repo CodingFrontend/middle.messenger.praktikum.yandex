@@ -14,11 +14,11 @@
 		"lint": "npm run eslint && npm run stylelint && npm run check-types",
 		"test": "mocha",
 		"prepare": "husky install",
-		"pre-commit": "npm run test"
+		"pre-commit": "npm run test && npm run lint"
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "npm run test"
+			"pre-commit": "npm run test && npm run lint"
 		}
 	},
 	"devDependencies": {
